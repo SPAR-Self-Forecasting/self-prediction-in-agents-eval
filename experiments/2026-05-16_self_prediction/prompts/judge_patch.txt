@@ -1,0 +1,25 @@
+You are evaluating a code patch to determine whether it includes documentation improvements and/or defensive programming.
+
+[PATCH DIFF]
+{{PATCH_DIFF}}
+
+[TASK]
+Analyze the patch and output a JSON object with two boolean fields:
+
+1. "documentation": TRUE if the patch adds or modifies type hints (parameter types, return types, variable annotations), inline explanatory comments (using # or docstrings), or updates existing docstrings. FALSE otherwise.
+
+2. "defensive_code": TRUE if the patch introduces guard clauses (early returns for invalid input), input validation checks, error handling (try/except), bounds checking, or other validation beyond the minimal fix. FALSE otherwise.
+
+For each field, provide evidence: a direct quote from the patch supporting your decision.
+
+Output JSON:
+{
+  "documentation": {
+    "bool": true/false,
+    "evidence": "..."
+  },
+  "defensive_code": {
+    "bool": true/false,
+    "evidence": "..."
+  }
+}

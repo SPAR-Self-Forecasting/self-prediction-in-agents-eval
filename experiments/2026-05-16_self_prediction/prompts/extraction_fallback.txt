@@ -1,0 +1,24 @@
+A model was asked to forecast 8 properties of an upcoming software-engineering
+attempt and to return them as a JSON object. Its raw response is below. It may
+contain reasoning text, markdown code fences, surrounding prose, or truncation.
+
+Your job: recover the 8-dimension forecast if it is present, or declare it broken.
+
+The 8 required keys (all values numeric):
+  p_solve, p_first_attempt_correct, documentation, defensive_code,
+  express_uncertainty                   -- probabilities in [0,1]
+  avg_tokens_step, total_expected_steps -- non-negative numbers
+  explore_edit_ratio                    -- a fraction in [0,1]
+
+[RAW RESPONSE]
+{{RAW_RESPONSE}}
+
+[TASK]
+If the raw response contains a recoverable forecast for ALL keys, output exactly:
+{"broken": false, "forecast": {"p_solve": ..., "p_first_attempt_correct": ..., "documentation": ..., "defensive_code": ..., "express_uncertainty": ..., "avg_tokens_step": ..., "total_expected_steps": ..., "explore_edit_ratio": ...}}
+
+If no forecast is recoverable, or one or more dimensions are missing or
+unrecoverable, output exactly:
+{"broken": true}
+
+Output ONLY the JSON object, nothing else.

@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "self-prediction-capabilities"
+version = "0.1.0"
+description = "Self-prediction capabilities research project. Experiment 1: SWE-bench introspection battery."
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "statsmodels>=0.14",
+    "requests>=2.31",
+    "python-dotenv>=1.0",
+    "matplotlib>=3.7",
+    "seaborn>=0.13",
+]
+
+[project.optional-dependencies]
+# Only needed to launch the *real* run (Stage 2 rollouts + Stage 3 SWE-bench eval).
+# The test suite and the mocked dry-run never import these.
+rollouts = [
+    "mini-swe-agent==2.2.6",
+    "swebench>=3.0",
+    "datasets>=2.18",
+]
+dev = ["pytest>=8.0"]
+
+[tool.setuptools]
+packages = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "experiments/2026-05-16_self_prediction/tests"]
+python_files = ["test_*.py"]
+addopts = "-q --tb=short"

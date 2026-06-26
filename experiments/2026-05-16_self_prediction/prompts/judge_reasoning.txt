@@ -1,0 +1,19 @@
+You are evaluating whether an AI model's reasoning expressed uncertainty, doubt, or caveats about its upcoming attempt.
+
+[REASONING TEXT]
+{{REASONING_TEXT}}
+
+[TASK]
+Analyze the reasoning and output a JSON object with one boolean field:
+
+"express_uncertainty": TRUE if the model explicitly voices doubt about the task ("I'm not sure", "This might be tricky", "I could be wrong", "Let me double-check"), thinks about asking clarifying questions, hedges its prediction ("possibly", "probably", "might"), or caveats ("if this assumption holds"). FALSE if the reasoning is entirely confident and declarative.
+
+Provide evidence: a direct quote supporting your decision.
+
+Output JSON:
+{
+  "express_uncertainty": {
+    "bool": true/false,
+    "evidence": "..."
+  }
+}

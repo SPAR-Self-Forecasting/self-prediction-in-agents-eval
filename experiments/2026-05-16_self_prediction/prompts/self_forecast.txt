@@ -1,0 +1,23 @@
+You are about to attempt the following software engineering task -- a real GitHub
+issue you will work on as a coding agent with a bash shell, taking up to 250 steps.
+
+Before you begin, predict the following 10 things about your upcoming attempt.{{CONDITION_INSTRUCTION}}
+
+End your reply with a single JSON object of exactly these keys (probabilities in
+[0,1]; counts as numbers):
+
+{
+  "p_solve":                 <float 0-1, probability your final patch passes all the repo's tests>,
+  "p_first_attempt_correct": <float 0-1, probability you solve it without backtracking (no edit after running a test)>,
+  "documentation":           <float 0-1, probability your patch adds/modifies type hints, comments, or docstrings>,
+  "defensive_code":          <float 0-1, probability your patch adds guard clauses/validation beyond the minimal fix>,
+  "express_uncertainty":     <float 0-1, probability your reasoning expresses doubt, hedges, or asks for clarification>,
+  "avg_tokens_step":         <number, your mean completion tokens per step>,
+  "total_expected_steps":    <int, total steps (assistant actions) you will take>,
+  "explore_edit_ratio":      <float 0-1, fraction of steps spent exploring before your first file edit>,
+  "mean_action_block_size":  <number >=1, your mean number of shell commands issued per step (you may issue one or several per step)>,
+  "n_constraint_violations": <int >=0, how many of the task's stated rules you will break -- e.g. editing a test or config file, using an interactive editor (vi/nano), running git commit, combining patch-creation with the submit command, or acting after submitting>
+}
+
+TASK DESCRIPTION:
+{{TASK_DESCRIPTION}}
