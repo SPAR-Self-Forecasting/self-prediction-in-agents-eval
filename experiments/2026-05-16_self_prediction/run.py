@@ -1,17 +1,21 @@
-"""Experiment 1 entrypoint -- the 7-stage pipeline (EVAL_SPEC_V1.md sec 12.1).
+"""Experiment 1 entrypoint -- the 9-stage pipeline (EVAL_SPEC_V1.md sec 12.1).
 
     1. Dataset                -- select 30 SWE-bench Verified tasks (10/10/10).
-    2. Rollouts               -- 14 x 30 x 8 mini-swe-agent rollouts.
-    3. Ground truth           -- extract all 9 dimensions; dims 4-6 via 2 judges.
+    2. Rollouts               -- 12 x 30 x 8 mini-swe-agent rollouts.
+    3. Ground truth           -- extract all 10 dimensions; dims 3-5 via 2 judges.
     4. Cross-predictor        -- designate the highest-solve-rate model.
     5. Forecasting            -- self + cross forecasts, two-stage extraction.
     6. Scoring                -- wins-fraction loss-difference aggregation.
     7. Analysis               -- descriptive readout (point estimates only; the
                                  inferential statistics tier is pruned for the MVP).
+    8. Murphy                 -- Brier decomposition of the binary dims
+                                 (REL - RES + UNC; murphy.py) -> murphy.json.
+    9. Figures                -- every figure: the flat headline plots/ set
+                                 (make_plots.py) + the full figures/ set (plots.py).
 
 Every stage caches to ``data/`` at (model, task) granularity, so an interrupted
 run resumes by re-reading the cache. ``--dry-run`` swaps in the mocked LLM client
-and mocked rollouts: the full 7 stages run with no network, no Docker, no spend.
+and mocked rollouts: the full 9 stages run with no network, no Docker, no spend.
 """
 
 from __future__ import annotations
@@ -39,6 +43,7 @@ import dataset
 import forecasting
 import judge
 import metrics
+import murphy
 import rollout
 import trajectory
 from src.llm_client import LLMClient
@@ -77,11 +82,18 @@ class RunConfig:
     #: targets ~4 containers @ ~2 GB each = ~8 GB peak; bump to 4 or 6 on a
     #: machine with 16+ GB free RAM to cut stage 2 wall-clock further.
     rollout_workers: int = 2
+    #: Stage 9 toggle -- figures render by default so one ``run.py`` invocation
+    #: produces every artifact; tests that re-run the pipeline repeatedly turn
+    #: it off to keep the suite fast.
+    render_figures: bool = True
     fallback_template: str | None = field(default=None, repr=False)
 
     def __post_init__(self) -> None:
-        self.data_dir = Path(self.data_dir)
-        self.results_dir = Path(self.results_dir)
+        # Resolve to absolute paths. Stage 2 runs the SWE-bench eval subprocess
+        # with cwd=rollout_work, so a *relative* data_dir would make the
+        # predictions path resolve against the wrong directory (FileNotFoundError).
+        self.data_dir = Path(self.data_dir).resolve()
+        self.results_dir = Path(self.results_dir).resolve()
         if self.fallback_template is None:
             tmpl = _EXP_DIR / "prompts" / "extraction_fallback.txt"
             self.fallback_template = tmpl.read_text(encoding="utf-8")
@@ -298,12 +310,20 @@ def _extract_outcome(rollout_obj: Rollout, llm) -> Outcome:
                        {d: None for d in config.DIMENSION_NAMES},
                        errored=True, error=rollout_obj.error)
     traj = rollout_obj.trajectory
-    values = dict(trajectory.extract_deterministic(traj, rollout_obj.solved))
-    values.update(judge.judge_trajectory(
-        llm,
-        trajectory.extract_final_patch(traj),
-        trajectory.concatenated_reasoning(traj),
-    ))
+    try:
+        values = dict(trajectory.extract_deterministic(traj, rollout_obj.solved))
+        values.update(judge.judge_trajectory(
+            llm,
+            trajectory.extract_final_patch(traj),
+            trajectory.concatenated_reasoning(traj),
+        ))
+    except Exception as exc:
+        # A single malformed/pathological rollout (e.g. weird trajectory shape)
+        # becomes missing data -- never crash the whole ground-truth stage, which
+        # is scoring already-collected data (sec 9.6 drop-never-impute).
+        return Outcome(rollout_obj.model, rollout_obj.task_id, rollout_obj.rollout_idx,
+                       {d: None for d in config.DIMENSION_NAMES},
+                       errored=True, error=f"outcome extraction failed: {exc}")
     return Outcome(rollout_obj.model, rollout_obj.task_id, rollout_obj.rollout_idx, values)
 
 
@@ -330,7 +350,7 @@ def _parallel_fill(units, worker, max_workers: int) -> None:
 
 
 def stage_ground_truth(cfg: RunConfig, rollouts: dict, llm) -> dict:
-    """Extract the 8-dimension Outcome per rollout; cached per (model, task, rollout_idx).
+    """Extract the 10-dimension Outcome per rollout; cached per (model, task, rollout_idx).
 
     Sub-cell checkpointing (Fix 2) + parallel judges (Fix 3): missing outcomes
     are computed across a ThreadPoolExecutor of ``cfg.max_workers`` threads;
@@ -369,7 +389,7 @@ def stage_ground_truth(cfg: RunConfig, rollouts: dict, llm) -> dict:
                 path = _outcome_cache_path(outcomes_root, slug, task_id, r.rollout_idx)
                 outs.append(Outcome.from_dict(_read_json(path)))
             by_model[model][task_id] = outs
-    _log(f"stage 3 ground truth: 8-dim outcomes extracted "
+    _log(f"stage 3 ground truth: 10-dim outcomes extracted "
          f"({n_to_run} judged, rest from cache; {cfg.max_workers}x workers)")
     return by_model
 
@@ -418,7 +438,7 @@ def _forecast_sample_path(cfg: RunConfig, kind: str, slug: str, task_id: str, sa
 
 
 def stage_forecasting(cfg: RunConfig, tasks, llm, designation: dict) -> dict:
-    """Self forecasts (13 bottom models) + cross forecasts (the top model).
+    """Self forecasts (11 bottom models) + cross forecasts (the top model).
 
     Parallel forecasting (Fix 3) + multi-sample (sec 9.6 amendment 2026-05-20):
     N = ``config.N_FORECAST_SAMPLES`` independent samples per (forecaster, task,
@@ -542,8 +562,53 @@ def stage_analysis(cfg: RunConfig, data: metrics.ScoringData) -> dict:
     _write_json(cfg.results_dir / "analysis.json", report)
     rq1 = report["rq1_existence"]
     _log(f"stage 7 analysis: mean wins = {rq1['point_estimate']:.4f} "
-         f"(null = {rq1['null']})")
+         f"(null = {rq1['null']}); "
+         f"wins~capability Spearman rho = {report['rq2_scaling']['spearman_rho']:.3f}")
     return report
+
+
+# --------------------------------------------------------------------------
+# Stage 8 -- Murphy decomposition (binary dims; downstream of scoring)
+# --------------------------------------------------------------------------
+def stage_murphy(cfg: RunConfig, data: metrics.ScoringData) -> dict:
+    report = murphy.murphy_report(data)
+    _write_json(cfg.results_dir / "murphy.json", report)
+    p_solve = report["conditions"]["no_thinking"].get("p_solve", {})
+    mean = p_solve.get("mean_across_models", {})
+    s, c = mean.get("self", {}), mean.get("cross", {})
+    _log(f"stage 8 murphy: p_solve REL self {s.get('reliability', float('nan')):.3f} "
+         f"vs cross {c.get('reliability', float('nan')):.3f}; "
+         f"RES self {s.get('resolution', float('nan')):.3f} "
+         f"vs cross {c.get('resolution', float('nan')):.3f} -> murphy.json")
+    return report
+
+
+# --------------------------------------------------------------------------
+# Stage 9 -- figures (headline plots/ + full figures/ sets)
+# --------------------------------------------------------------------------
+def stage_figures(cfg: RunConfig) -> list[Path]:
+    """Render every figure from the results just written to ``cfg.results_dir``.
+
+    Two sets: the flat headline ``plots/`` set (make_plots.py; RQ1-3 + the two
+    Murphy figures) and the full ``figures/primary__<cross>/`` set (plots.py;
+    A1-A3, B1-B2, C1-C2). Imported lazily so the compute stages never pay the
+    matplotlib/seaborn import cost.
+    """
+    import make_plots
+    import plots
+
+    headline = make_plots.render_headline_plots(cfg.results_dir)
+
+    scores = _read_json(cfg.results_dir / "scores.json")
+    analysis_obj = _read_json(cfg.results_dir / "analysis.json")
+    murphy_obj = _read_json(cfg.results_dir / "murphy.json")
+    full = plots.render_all(scores, analysis_obj, cfg.results_dir / "figures",
+                            murphy=murphy_obj)
+
+    written = headline + full
+    _log(f"stage 9 figures: {len(headline)} headline plot(s) -> plots/, "
+         f"{len(full)} figure(s) -> figures/")
+    return written
 
 
 # --------------------------------------------------------------------------
@@ -573,6 +638,9 @@ def run(cfg: RunConfig) -> dict:
     forecasts = stage_forecasting(cfg, tasks, llm, designation)
     data = stage_scoring(cfg, outcomes, forecasts, designation, task_ids)
     report = stage_analysis(cfg, data)
+    stage_murphy(cfg, data)
+    if cfg.render_figures:
+        stage_figures(cfg)
 
     summary = {
         "mode": "dry_run" if cfg.dry_run else "real",
@@ -581,6 +649,7 @@ def run(cfg: RunConfig) -> dict:
         "n_iai_models": len(cfg.model_ids) - 1,
         "cross_model": designation["cross_model"],
         "rq1_mean_wins": report["rq1_existence"]["point_estimate"],
+        "rq2_spearman_rho_wins_vs_solve_rate": report["rq2_scaling"]["spearman_rho"],
         "rq3_delta_wins": report["rq3_elicitation"]["point_estimate"],
         "llm_accounting": llm.accounting(),
         "elapsed_seconds": round(time.time() - started, 1),
@@ -605,8 +674,12 @@ def build_config(args: argparse.Namespace) -> RunConfig:
         cfg = replace(cfg, model_ids=QUICK_MODELS, n_tasks=4)
     if args.n_tasks is not None:
         cfg = replace(cfg, n_tasks=args.n_tasks)
+    if args.step_limit is not None:
+        cfg = replace(cfg, step_limit=args.step_limit)
     if args.models:
         cfg = replace(cfg, model_ids=tuple(args.models))
+    if args.skip_figures:
+        cfg = replace(cfg, render_figures=False)
     return cfg
 
 
@@ -617,6 +690,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--quick", action="store_true",
                         help="Small 5-model / 4-task smoke run.")
     parser.add_argument("--n-tasks", type=int, default=None, help="Override the task count.")
+    parser.add_argument("--step-limit", type=int, default=None,
+                        help=f"Override the per-rollout step budget (default {config.STEP_LIMIT}).")
     parser.add_argument("--models", nargs="+", default=None, help="Override the model id list.")
     parser.add_argument("--max-workers", type=int, default=6,
                         help="ThreadPoolExecutor workers for the LLM-bound stages "
@@ -627,6 +702,8 @@ def main(argv: list[str] | None = None) -> int:
                              "later a SWE-bench eval container, so peak in-flight "
                              "containers ~= 2 * rollout_workers. Default 2 (~8 GB peak); "
                              "bump to 4 or 6 on a 16+ GB free-RAM machine.")
+    parser.add_argument("--skip-figures", action="store_true",
+                        help="Skip stage 9 (figure rendering); compute-only run.")
     parser.add_argument("--data-dir", default=None)
     parser.add_argument("--results-dir", default=None)
     args = parser.parse_args(argv)

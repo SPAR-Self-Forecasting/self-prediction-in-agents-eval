@@ -50,10 +50,8 @@ def run_experiment_1(
     results_dir: Path | None = None,
     dry_run: bool = True,
     quick: bool = False,
-    bootstrap_b: int = 10_000,
     n_tasks: int | None = None,
     model_ids: tuple[str, ...] | None = None,
-    n_alt_cross: int = 0,
 ) -> dict:
     """Invoke Experiment 1 with the given tunable settings; return its run summary."""
     exp1 = _load_exp1()
@@ -61,12 +59,9 @@ def run_experiment_1(
         data_dir=data_dir or (_EXP1_DIR / "data"),
         results_dir=results_dir or (_EXP1_DIR / "results"),
         dry_run=dry_run,
-        bootstrap_b=bootstrap_b,
-        n_alt_cross=n_alt_cross,
     )
     if quick:
-        cfg = dataclasses.replace(cfg, model_ids=exp1.QUICK_MODELS, n_tasks=4,
-                                  bootstrap_b=min(bootstrap_b, 200))
+        cfg = dataclasses.replace(cfg, model_ids=exp1.QUICK_MODELS, n_tasks=4)
     if n_tasks is not None:
         cfg = dataclasses.replace(cfg, n_tasks=n_tasks)
     if model_ids is not None:
@@ -81,10 +76,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--real", action="store_true",
                         help="REAL run (spends money, needs Docker + API key). Default: dry-run.")
     parser.add_argument("--quick", action="store_true", help="Small smoke run (Experiment 1).")
-    parser.add_argument("--bootstrap-b", type=int, default=10_000)
     parser.add_argument("--n-tasks", type=int, default=None)
-    parser.add_argument("--n-alt-cross", type=int, default=0,
-                        help="Alternative cross-predictors for the sec 9.5 sensitivity battery.")
     parser.add_argument("--data-dir", default=None, help="Override Experiment 1's data/ cache directory.")
     parser.add_argument("--results-dir", default=None, help="Override Experiment 1's results/ directory.")
     args = parser.parse_args(argv)
@@ -106,8 +98,7 @@ def main(argv: list[str] | None = None) -> int:
                 data_dir=Path(args.data_dir) if args.data_dir else None,
                 results_dir=Path(args.results_dir) if args.results_dir else None,
                 dry_run=not args.real, quick=args.quick,
-                bootstrap_b=args.bootstrap_b, n_tasks=args.n_tasks,
-                n_alt_cross=args.n_alt_cross,
+                n_tasks=args.n_tasks,
             )
         else:
             print(f"  Experiment {exp_id} is not yet implemented "

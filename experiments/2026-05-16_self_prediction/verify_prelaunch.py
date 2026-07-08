@@ -1,10 +1,10 @@
 """Pre-launch verification (EVAL_SPEC_V1.md sec 10.6, sec 14).
 
-A one-time, opt-in script run *before* any rollout spend. For each of the 14
+A one-time, opt-in script run *before* any rollout spend. For each of the 12
 models it confirms, against the live OpenRouter API:
 
   1. **Provider access** -- the model id is reachable and returns a response.
-  2. **JSON parseability** -- a forecast call returns a 9-dimension JSON object
+  2. **JSON parseability** -- a forecast call returns a 10-dimension JSON object
      that the two-stage extractor (sec 10.9) can parse, in both conditions.
   3. **Reasoning toggle** -- for the 10 hybrid models, the no-thinking and
      thinking conditions both succeed (the OpenRouter ``reasoning`` parameter is

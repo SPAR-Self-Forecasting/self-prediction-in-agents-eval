@@ -31,7 +31,7 @@ class Task:
     problem_statement: str
 
     def forecast_description(self) -> str:
-        """The task text shown to forecasters in the ``{{TASK_DESCRIPTION}}`` slot."""
+        """Repo + problem statement (the mock rollout's synthetic user message)."""
         return f"Repository: {self.repo}\n\n{self.problem_statement}"
 
     def to_dict(self) -> dict:

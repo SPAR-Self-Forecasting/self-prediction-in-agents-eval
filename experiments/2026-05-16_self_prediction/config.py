@@ -1,8 +1,8 @@
-"""Experiment-1 configuration: the 14-model list, the 9-dimension battery, the
+"""Experiment-1 configuration: the 12-model list, the 10-dimension battery, the
 per-model reasoning-control map, and the locked scalar constants.
 
 Single source of truth for everything the spec (EVAL_SPEC_V1.md) pins down:
-sec 2 (dimensions), sec 6 (scale), sec 7 (models), sec 9.3 (bootstrap),
+sec 2 (dimensions), sec 6 (scale), sec 7 (models),
 sec 10.4 (thinking control), sec 10.6 (judge model).
 """
 
@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from src.types import Dimension
 
 # --------------------------------------------------------------------------
-# Locked scalar constants (sec 6, sec 9.3, sec 10.6)
+# Locked scalar constants (sec 6, sec 10.6)
 # --------------------------------------------------------------------------
 SEED = 42                       # deterministic task selection (sec 6)
 STEP_LIMIT = 250                # rollout step budget (sec 6)
@@ -26,8 +26,6 @@ CONDITIONS = ("no_thinking", "thinking")  # the two forecast conditions (sec 4)
 #: silently confound p_hit_step_limit (Phase-1 finding F3 / Q9).
 ROLLOUT_COST_LIMIT = 1e9
 
-BOOTSTRAP_B = 10_000            # hierarchical-bootstrap resamples (sec 9.3)
-BOOTSTRAP_SEED = 42             # bootstrap RNG seed (sec 9.3)
 MIN_VALID_ROLLOUTS = 5          # >=5 of 8 rollouts for a cell to be retained (sec 9.6)
 FLAG_FRACTION = 0.20            # flag a model with >20% dropped cells / broken forecasts (sec 9.6)
 
@@ -38,16 +36,14 @@ FLAG_FRACTION = 0.20            # flag a model with >20% dropped cells / broken 
 # carry real diversity for non-thinking deterministic models.
 N_FORECAST_SAMPLES = 5
 FORECAST_TEMPERATURE = 0.7
-# Extractor fallback retries (Layer B, sec 10.9): up to N independent calls to
-# the fallback model before declaring a sample broken.
-EXTRACTOR_FALLBACK_ATTEMPTS = 3
-# Re-elicit retries (Layer C, sec 10.9): if all Layer-B attempts still yield a
-# broken extraction, re-elicit the forecaster up to this many times total
-# before giving up on this sample. The N samples (N_FORECAST_SAMPLES) are
-# independent; this is the per-sample resilience cap.
-ELICIT_ATTEMPTS = 3
+# Forecast JSON recovery is single-pass (sec 10.9, simplified for the MVP):
+# elicit once, then a programmatic parse, then one cheap-model fallback call; an
+# unrecovered sample is flagged broken and handled as missing data (sec 9.6).
+# The former multi-attempt retry layers (EXTRACTOR_FALLBACK_ATTEMPTS /
+# ELICIT_ATTEMPTS) were removed; src/extraction.extract_forecast still exposes a
+# ``fallback_attempts`` knob if a future run needs more than one fallback call.
 
-# Judge / extraction-fallback model -- cheap, not one of the 14 executors (sec 10.6).
+# Judge / extraction-fallback model -- cheap, not one of the 12 executors (sec 10.6).
 JUDGE_MODEL = "openai/gpt-4o-mini"
 FALLBACK_MODEL = "openai/gpt-4o-mini"
 
@@ -84,7 +80,7 @@ NO_THINKING_INSTRUCTION = (
 
 
 # --------------------------------------------------------------------------
-# The 8-dimension battery (sec 2, canonical numbering -- §15.1 A1 + A2)
+# The 10-dimension battery (sec 2, canonical numbering -- §15.1 A1 + A2)
 # --------------------------------------------------------------------------
 DIMENSIONS: tuple[Dimension, ...] = (
     # binary dims (1-5): Brier loss
@@ -104,8 +100,7 @@ DIMENSIONS: tuple[Dimension, ...] = (
 DIMENSION_NAMES: tuple[str, ...] = tuple(d.name for d in DIMENSIONS)
 DIMENSION_BY_NAME: dict[str, Dimension] = {d.name: d for d in DIMENSIONS}
 
-# Judge-based dimensions = dims 3-5 under the §15.1 A2 canonical numbering
-# (sec 9.5 sensitivity analysis).
+# Judge-based dimensions = dims 3-5 under the §15.1 A2 canonical numbering.
 JUDGE_DIMENSIONS = ("documentation", "defensive_code", "express_uncertainty")
 # Deterministically extracted dimensions (everything else).
 DETERMINISTIC_DIMENSIONS = tuple(d for d in DIMENSION_NAMES if d not in JUDGE_DIMENSIONS)
@@ -115,11 +110,11 @@ BEHAVIORAL_DIMENSIONS = tuple(d for d in DIMENSION_NAMES if d not in CAPABILITY_
 
 
 # --------------------------------------------------------------------------
-# The 14-model executor list (sec 7)
+# The 12-model executor list (sec 7)
 # --------------------------------------------------------------------------
 @dataclass(frozen=True)
 class ModelSpec:
-    """One of the 14 executor models.
+    """One of the 12 executor models.
 
     ``thinking_class``:
       - "hybrid"        -- reasoning toggled via OpenRouter's ``reasoning`` param.
@@ -154,12 +149,8 @@ MODELS: tuple[ModelSpec, ...] = (
               "hybrid", _OFF, _ON, 0.12),
     ModelSpec("Qwen3-14B", "qwen/qwen3-14b", "Qwen",
               "hybrid", _OFF, _ON, 0.15),
-    ModelSpec("GPT-4.1 Mini", "openai/gpt-4.1-mini", "OpenAI",
-              "non_reasoning", None, None, 0.18),
     ModelSpec("Qwen3-32B", "qwen/qwen3-32b", "Qwen",
               "hybrid", _OFF, _ON, 0.18),
-    ModelSpec("Qwen3-235B-A22B-2507", "qwen/qwen3-235b-a22b-2507", "Qwen",
-              "non_reasoning", None, None, 0.25),
     ModelSpec("Gemini 2.5 Flash Lite", "google/gemini-2.5-flash-lite", "Google",
               "hybrid", None, {"max_tokens": 4096}, 0.40),
     # Med-confidence (sec 10.4): API "off" unreliable; no-thinking caps reasoning
@@ -187,9 +178,9 @@ MODEL_BY_ID: dict[str, ModelSpec] = {m.openrouter_id: m for m in MODELS}
 #: RL-trained reasoner hybrids whose API "off" lever is unreliable (the
 #: Med-confidence rows of sec 10.4). For these, the no-thinking condition uses
 #: ``reasoning:{max_tokens:1024}`` *and* the NO_THINKING_INSTRUCTION prompt
-#: instruction; the thinking condition keeps its native lever. Same set drives
-#: the sec 9.5 thinking-implementation-sensitivity analysis (these models are
-#: excluded from RQ3 because their lever is a bundle, not a clean API toggle).
+#: instruction; the thinking condition keeps its native lever. The same set can
+#: be excluded from RQ3 (``rq3_elicitation(exclude_models=...)``) because their
+#: thinking lever is a bundle, not a clean API toggle.
 RL_TRAINED_REASONERS = (
     "google/gemini-3.1-flash-lite",
     "deepseek/deepseek-v3.2",
@@ -207,7 +198,7 @@ def model_by_id(openrouter_id: str) -> ModelSpec:
 
 
 def families() -> dict[str, list[str]]:
-    """Map family -> list of member OpenRouter ids (the bootstrap cluster level, sec 9.3)."""
+    """Map family -> list of member OpenRouter ids (the model-to-family grouping)."""
     out: dict[str, list[str]] = {}
     for m in MODELS:
         out.setdefault(m.family, []).append(m.openrouter_id)

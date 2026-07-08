@@ -5,9 +5,8 @@ pipeline. Each is JSON-round-trippable (``to_dict`` / ``from_dict``) so the
 pipeline stages can cache to ``data/`` and resume (EVAL_SPEC_V1.md sec 12.1).
 
 The generic ``Dimension`` descriptor lets ``src/scoring.py`` stay experiment
--agnostic: the concrete 9-dimension battery is built in the experiment's
-``config.py`` (sec 2), but scoring/standardisation only need ``kind``/``loss``/
-``scale``.
+-agnostic: the concrete 10-dimension battery is built in the experiment's
+``config.py`` (sec 2), but scoring only needs each dimension's ``kind``.
 """
 
 from __future__ import annotations
@@ -26,7 +25,7 @@ MIN_VALID_ROLLOUTS = 5
 
 @dataclass(frozen=True)
 class Dimension:
-    """A single forecastable dimension of the 8-dimension battery (sec 2 / §15.1 A1).
+    """A single forecastable dimension of the 10-dimension battery (sec 2 / §15.1 A1).
 
     ``kind`` selects the per-cell loss (per the §15.7 amendment): ``binary`` →
     Brier loss; ``continuous`` → MAE on the raw scale. No log transform; no
@@ -92,7 +91,7 @@ class Rollout:
 
 @dataclass
 class Outcome:
-    """The extracted 9-dimension ground truth for a single rollout (sec 8).
+    """The extracted 10-dimension ground truth for a single rollout (sec 8).
 
     ``values`` maps dimension name -> numeric value (binary dims as 0.0/1.0).
     A value of ``None`` means that dimension could not be extracted for this

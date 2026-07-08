@@ -1,4 +1,4 @@
-"""Integration test for run.py -- the mocked dry-run executes all 7 stages."""
+"""Integration test for run.py -- the mocked dry-run executes all 9 stages."""
 
 import dataclasses
 import json
@@ -9,13 +9,16 @@ import run
 from run import QUICK_MODELS, RunConfig
 
 
-def _quick_config(tmp_path) -> RunConfig:
+def _quick_config(tmp_path, render_figures: bool = False) -> RunConfig:
+    """Figures off by default: most tests re-run the pipeline repeatedly and
+    only the dedicated end-to-end test needs stage 9's matplotlib work."""
     return RunConfig(
         data_dir=tmp_path / "data",
         results_dir=tmp_path / "results",
         dry_run=True,
         model_ids=QUICK_MODELS,
         n_tasks=4,
+        render_figures=render_figures,
     )
 
 
@@ -34,28 +37,48 @@ def test_mock_client_dispatches_by_prompt():
 # --------------------------------------------------------------------------
 # End-to-end dry-run
 # --------------------------------------------------------------------------
-def test_dry_run_executes_all_seven_stages(tmp_path):
-    summary = run.run(_quick_config(tmp_path))
+def test_dry_run_executes_all_nine_stages(tmp_path):
+    summary = run.run(_quick_config(tmp_path, render_figures=True))
 
     # all artifacts written
     for name in ("tasks.json", "cross_predictor.json"):
         assert (tmp_path / "data" / name).exists()
-    for name in ("scores.json", "analysis.json", "run_summary.json"):
+    for name in ("scores.json", "analysis.json", "murphy.json", "run_summary.json"):
         assert (tmp_path / "results" / name).exists()
+
+    # stage 9: the flat headline plots/ set (RQ1-3 + the two Murphy figures)...
+    plots_dir = tmp_path / "results" / "plots"
+    for name in ("rq1_wins_by_model", "rq2_wins_vs_solverate", "rq3_thinking_delta",
+                 "murphy_decomposition", "reliability_diagrams"):
+        assert (plots_dir / f"{name}.png").exists(), f"missing headline plot {name}"
+    # ...and the full figures/ set under primary__<cross_slug>/ (A1-A3, B1-B2, C1-C2)
+    cross_slug = json.loads(
+        (tmp_path / "data" / "cross_predictor.json").read_text())["cross_model"].replace("/", "__")
+    figures_dir = tmp_path / "results" / "figures" / f"primary__{cross_slug}"
+    assert len(list(figures_dir.glob("*.png"))) == 7
+
+    # stage 8: murphy.json covers the binary dims with the exact CORP identity
+    murphy = json.loads((tmp_path / "results" / "murphy.json").read_text())
+    block = murphy["conditions"]["no_thinking"]["p_solve"]
+    for entry in block["per_model"].values():
+        for kind in ("self", "cross"):
+            comp = entry[kind]
+            assert comp["brier"] == pytest.approx(
+                comp["reliability"] - comp["resolution"] + comp["uncertainty"], abs=1e-12)
 
     # summary carries each RQ's headline point estimate (wins-based, sec 15.6)
     assert summary["mode"] == "dry_run"
     assert summary["n_models"] == 5 and summary["n_tasks"] == 4
     assert summary["n_iai_models"] == 4              # 5 models - 1 cross-predictor
-    for key in ("rq1_mean_wins", "rq3_delta_wins"):
+    for key in ("rq1_mean_wins", "rq2_spearman_rho_wins_vs_solve_rate", "rq3_delta_wins"):
         assert isinstance(summary[key], float)
 
     analysis = json.loads((tmp_path / "results" / "analysis.json").read_text())
-    for section in ("rq1_existence", "rq3_elicitation", "exploratory",
-                    "missingness", "solve_rates"):
+    for section in ("rq1_existence", "rq2_scaling", "rq3_elicitation",
+                    "exploratory", "missingness", "solve_rates"):
         assert section in analysis
-    # statistics tier is pruned for the MVP
-    assert "rq2_scaling" not in analysis
+    # rq2 is descriptive (Spearman rho only); the inferential battery stays pruned
+    assert "spearman_rho" in analysis["rq2_scaling"]
     assert "robustness" not in analysis
 
 

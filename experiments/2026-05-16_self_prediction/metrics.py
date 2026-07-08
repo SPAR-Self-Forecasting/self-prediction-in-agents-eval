@@ -60,8 +60,7 @@ class ScoringData:
     def __post_init__(self) -> None:
         first = self.outcomes[self.models[0]][self.tasks[0]]
         self.n_rollouts = len(first)
-        # retention is a fixed data-quality decision on the original data (sec 9.6);
-        # the bootstrap resamples *within* retained cells, it does not re-decide.
+        # retention is a fixed data-quality decision on the original data (sec 9.6).
         self._retained: dict[str, dict[str, dict[str, bool]]] = {}
         for model in self.models:
             self._retained[model] = {}
@@ -117,7 +116,7 @@ def _sample_variance(samples: list[Forecast] | None, dim_name: str) -> float | N
 
 
 def _has_self_forecasts(data: ScoringData, model: str) -> bool:
-    """Whether self-forecasts were collected for ``model`` (option-β alt-cross design)."""
+    """Whether self-forecasts were collected for ``model`` (the cross-predictor has none)."""
     return model in data.self_forecasts and bool(data.self_forecasts[model])
 
 

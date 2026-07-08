@@ -179,10 +179,10 @@ def extract_forecast(
 ) -> ExtractionResult:
     """Convert a raw forecast response to an :class:`ExtractionResult` (sec 10.9).
 
-    ``fallback_attempts`` (Layer B, multi-attempt amendment 2026-05-20): up to
-    this many independent calls to ``fallback_model`` before declaring the
-    sample broken. The fallback prompt is identical across attempts; diversity
-    comes from the fallback model's default temperature (server-side, ~1.0).
+    ``fallback_attempts``: up to this many independent calls to ``fallback_model``
+    before declaring the sample broken (default 1 = a single fallback call). The
+    fallback prompt is identical across attempts; diversity comes from the
+    fallback model's default temperature (server-side, ~1.0).
     """
     programmatic = _programmatic(raw, dimension_names, value_validator)
     if programmatic is not None:

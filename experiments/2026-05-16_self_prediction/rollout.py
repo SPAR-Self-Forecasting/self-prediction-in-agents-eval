@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import random
 import subprocess
 import sys
@@ -110,8 +111,17 @@ def run_real_rollout(
     cell_dir = Path(output_dir) / model_id.replace("/", "__") / f"rollout_{rollout_idx}" / task.instance_id
     cell_dir.mkdir(parents=True, exist_ok=True)
     cmd = build_swebench_command(model_id, task.instance_id, cell_dir, step_limit)
+    # mini-swe-agent prices each call via litellm; litellm lacks a price entry for
+    # some openrouter/* ids and raises, which aborts the agent after one call.
+    # ``ignore_errors`` skips cost accounting (real billing is unaffected).
+    env = {**os.environ, "MSWEA_COST_TRACKING": "ignore_errors"}
     try:
-        subprocess.run(cmd, check=True, capture_output=True, text=True)
+        # Cap each rollout: a hung model API call (no inner timeout) would otherwise
+        # run forever and permanently occupy a worker slot, starving throughput.
+        # On timeout the subprocess is killed and TimeoutExpired -> errored rollout
+        # (recoverable; retried in the end cleanup pass). 6000s comfortably exceeds
+        # legit slow rollouts (~50 min) while catching multi-hour hangs.
+        subprocess.run(cmd, check=True, capture_output=True, text=True, env=env, timeout=6000)
         traj_files = sorted(cell_dir.rglob("*.traj.json"))
         if not traj_files:
             raise FileNotFoundError(f"no .traj.json produced under {cell_dir}")

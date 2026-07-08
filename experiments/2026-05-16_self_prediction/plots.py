@@ -9,6 +9,12 @@ transparency layer:
   B1 -- per-dim self vs cross mean loss bars          (sec 15.7 transparency)
   B2 -- per-(model, dim) wins-fraction heatmap        (sec 15.7 transparency)
 
+Two further downstream figures render when ``results/murphy.json`` exists
+(produced by ``murphy.py`` -- the Murphy decomposition of the binary dims):
+
+  C1 -- Murphy components (REL / RES vs the UNC floor), mean across models
+  C2 -- pooled reliability diagrams (calibration curves) per binary dim
+
 Every figure shows **both forecast conditions together** (`no_thinking` and
 `thinking`); the user reads the thinking effect off the same plot as the
 existence claim. A3 is unchanged (Δwins already encodes both).
@@ -83,6 +89,8 @@ _DIM_UNITS: dict[str, str] = {
     "avg_tokens_step": "tokens",
     "total_expected_steps": "steps",
     "explore_edit_ratio": "ratio",
+    "mean_action_block_size": "cmds/step",
+    "n_constraint_violations": "count",
 }
 
 _CONDITIONS = ("no_thinking", "thinking")
@@ -207,6 +215,16 @@ def figure_a2_scaling(
     ax.axhline(0.5, color=_NEUTRAL_GREY, linestyle="--", linewidth=1.0,
                label="RQ1 null (0.5)")
 
+    # Descriptive Spearman rho (no_thinking) -- monotonic-association summary,
+    # explicitly an upper bound (W2 variance confound), not a significance test.
+    rho = analysis.get("rq2_scaling", {}).get("spearman_rho")
+    if rho is not None and not (isinstance(rho, float) and np.isnan(rho)):
+        ax.text(0.02, 0.97,
+                f"Spearman ρ = {rho:.3f}\n(upper bound; not a test)",
+                transform=ax.transAxes, va="top", ha="left", fontsize=9,
+                bbox=dict(boxstyle="round,pad=0.4", facecolor="white",
+                          edgecolor="#cccccc"))
+
     ax.set_xlabel("empirical solve rate (mean p_solve)")
     ax.set_ylabel("wins(M, condition)")
     ax.set_title("RQ2 — introspection vs model capability (descriptive)")
@@ -286,12 +304,10 @@ def figure_b1_per_dim_loss(
 
     Each dimension gets its own subplot (its own y-axis, native units). Inside
     each subplot: 4 bars in two condition-pair groups
-    ``[self_nt, cross_nt] | [self_t, cross_t]``. BH-FDR significance from the
-    canonical (no_thinking) exploratory test still anchors the asterisk in
-    the title.
+    ``[self_nt, cross_nt] | [self_t, cross_t]``. Descriptive means only -- the
+    per-dimension significance test (and its asterisk) was part of the pruned
+    statistics tier.
     """
-    per_dim_p_bh = analysis.get("exploratory", {}).get("per_dimension_pvalue_bh", {})
-
     # Grid sized to the dimension count (A6: 10 dims -> 3x4). Generalises so the
     # battery can grow without a hardcoded subplot count.
     n_dims = len(dimensions)
@@ -345,12 +361,8 @@ def figure_b1_per_dim_loss(
         ax.tick_params(axis="x", which="minor", labelsize=7, pad=12, length=0)
 
         units = _DIM_UNITS.get(name, "")
-        sig = ""
-        p_bh = per_dim_p_bh.get(name)
-        if p_bh is not None and not np.isnan(p_bh) and p_bh < 0.05:
-            sig = " *"
         ax.set_title(
-            f"{name}{sig}\nadv: nt = {advantages['no_thinking']:+.3f}, "
+            f"{name}\nadv: nt = {advantages['no_thinking']:+.3f}, "
             f"t = {advantages['thinking']:+.3f} ({units})",
             fontsize=8,
         )
@@ -368,7 +380,7 @@ def figure_b1_per_dim_loss(
                bbox_to_anchor=(0.5, -0.02), fontsize=9, framealpha=0.95)
     fig.suptitle(
         "§15.7 transparency — per-dimension mean loss in native units\n"
-        "darker = no_thinking, lighter = thinking; * = BH-FDR-significant (p < 0.05)",
+        "darker = no_thinking, lighter = thinking",
         fontsize=11,
     )
     fig.tight_layout(rect=[0, 0.04, 1, 0.94])
@@ -385,7 +397,7 @@ def figure_b2_wins_heatmap(
     one heatmap per condition.
 
     Rows are the same IAI-eligible models in both panels (sorted by empirical
-    solve rate, strongest at top); columns are the 8 dimensions in spec order.
+    solve rate, strongest at top); columns are the 10 dimensions in spec order.
     Diverging RdBu colormap is centred at 0.5 -- red = self wins the cell,
     blue = self loses.
     """
@@ -436,6 +448,182 @@ def figure_b2_wins_heatmap(
 
 
 # --------------------------------------------------------------------------
+# C1 -- Murphy decomposition components (binary dims; downstream analysis)
+# --------------------------------------------------------------------------
+def _binary_dim_names(dimensions) -> list[str]:
+    """Names of the binary (Brier-scored) dimensions, in battery order."""
+    out = []
+    for d in dimensions:
+        name = d.name if hasattr(d, "name") else d[0]
+        kind = d.kind if hasattr(d, "kind") else d[1]
+        if kind == "binary":
+            out.append(name)
+    return out
+
+
+def figure_c1_murphy_components(
+    *, murphy: dict, dimensions,
+) -> plt.Figure:
+    """Murphy decomposition (CORP), mean across models: what drives Brier errors.
+
+    One subplot per binary dimension. Two component groups on the x-axis --
+    reliability (miscalibration, lower better) and resolution (discrimination,
+    higher better) -- each with the B1-style 4 bars ``[self_nt, cross_nt,
+    self_t, cross_t]``. The uncertainty floor (identical for self and cross by
+    construction) is drawn as one dashed line per condition. The Brier totals
+    (= REL - RES + UNC, exact under CORP) are annotated per subplot.
+    """
+    dim_names = _binary_dim_names(dimensions)
+    n_dims = len(dim_names)
+    ncols = min(3, n_dims) or 1
+    nrows = math.ceil(n_dims / ncols)
+    fig, axes = plt.subplots(nrows, ncols, figsize=(5.2 * ncols, 3.9 * nrows))
+    flat = np.atleast_1d(axes).flatten()
+    for ax in flat:
+        ax.set_visible(False)
+
+    # x layout: [self_nt, cross_nt, self_t, cross_t] within each component group.
+    offsets = [0.0, 0.7, 1.8, 2.5]
+    group_x = {"reliability": 0.0, "resolution": 4.5}
+
+    for k, name in enumerate(dim_names):
+        ax = flat[k]
+        ax.set_visible(True)
+        block = murphy["conditions"]
+        brier_note: list[str] = []
+        unc_by_cond: dict[str, float] = {}
+        for j, cond in enumerate(_CONDITIONS):
+            mean = block.get(cond, {}).get(name, {}).get("mean_across_models", {})
+            s = mean.get("self", {})
+            c = mean.get("cross", {})
+            unc_by_cond[cond] = s.get("uncertainty", float("nan"))
+            brier_note.append(
+                f"{cond[:2]}: BS self {s.get('brier', float('nan')):.3f} / "
+                f"cross {c.get('brier', float('nan')):.3f}"
+            )
+            for comp, gx in group_x.items():
+                xs = [gx + offsets[2 * j], gx + offsets[2 * j + 1]]
+                ys = [s.get(comp, float("nan")), c.get(comp, float("nan"))]
+                ax.bar(xs, ys, width=0.6,
+                       color=[_SELF_COLORS[cond], _CROSS_COLORS[cond]],
+                       edgecolor="white")
+                for x, val in zip(xs, ys):
+                    if not np.isnan(val):
+                        # bbox + zorder keep the label legible when a bar top
+                        # sits just under a UNC floor line (which would
+                        # otherwise strike through the digits).
+                        ax.text(x, val, f"{val:.3f}", ha="center", va="bottom",
+                                fontsize=6, zorder=5,
+                                bbox=dict(boxstyle="square,pad=0.05",
+                                          facecolor="white", edgecolor="none",
+                                          alpha=0.8))
+
+        # Uncertainty floor -- one dashed line per condition (self == cross).
+        for cond, ls in zip(_CONDITIONS, ("--", ":")):
+            v = unc_by_cond.get(cond, float("nan"))
+            if not np.isnan(v):
+                ax.axhline(v, color=_NEUTRAL_GREY, linestyle=ls, linewidth=1.1,
+                           label=f"UNC ({cond})" if k == 0 else None)
+
+        ax.set_xticks([group_x["reliability"] + 1.25, group_x["resolution"] + 1.25],
+                      ["reliability ↓", "resolution ↑"], fontsize=9)
+        ax.set_title(f"{name}\n{';  '.join(brier_note)}", fontsize=8)
+        ax.set_ylabel("Brier component", fontsize=8)
+        ax.margins(y=0.25)
+
+    legend_handles = [
+        plt.Rectangle((0, 0), 1, 1, color=_SELF_COLORS["no_thinking"], label="self (no_thinking)"),
+        plt.Rectangle((0, 0), 1, 1, color=_CROSS_COLORS["no_thinking"], label="cross (no_thinking)"),
+        plt.Rectangle((0, 0), 1, 1, color=_SELF_COLORS["thinking"], label="self (thinking)"),
+        plt.Rectangle((0, 0), 1, 1, color=_CROSS_COLORS["thinking"], label="cross (thinking)"),
+        plt.Line2D([], [], color=_NEUTRAL_GREY, linestyle="--", label="UNC floor (no_thinking)"),
+        plt.Line2D([], [], color=_NEUTRAL_GREY, linestyle=":", label="UNC floor (thinking)"),
+    ]
+    fig.legend(handles=legend_handles, loc="lower center", ncol=3,
+               bbox_to_anchor=(0.5, -0.02), fontsize=8, framealpha=0.95)
+    fig.suptitle(
+        "Murphy decomposition (CORP) — Brier = REL − RES + UNC, mean across models\n"
+        "self loses by being miscalibrated (REL ↑) or by not discriminating (RES ↓ vs the UNC floor)",
+        fontsize=11,
+    )
+    fig.tight_layout(rect=[0, 0.06, 1, 0.90])
+    return fig
+
+
+# --------------------------------------------------------------------------
+# C2 -- reliability diagrams (pooled bins; binary dims)
+# --------------------------------------------------------------------------
+def figure_c2_reliability_diagrams(
+    *, murphy: dict, dimensions,
+) -> plt.Figure:
+    """Calibration curves per binary dim: observed rate vs stated probability.
+
+    Pooled events across models (per-model bins are too thin), self vs cross x
+    both conditions, from the fixed-bin table in ``murphy.json``. Marker area
+    scales with the bin's share of total weight; the diagonal is perfect
+    calibration. Pooling caveat (mixed base rates; shared cross forecast) is
+    stated in the suptitle.
+    """
+    dim_names = _binary_dim_names(dimensions)
+    n_dims = len(dim_names)
+    ncols = min(3, n_dims) or 1
+    nrows = math.ceil(n_dims / ncols)
+    fig, axes = plt.subplots(nrows, ncols, figsize=(4.6 * ncols, 4.2 * nrows))
+    flat = np.atleast_1d(axes).flatten()
+    for ax in flat:
+        ax.set_visible(False)
+
+    colors = {"self": _SELF_COLORS, "cross": _CROSS_COLORS}
+    for k, name in enumerate(dim_names):
+        ax = flat[k]
+        ax.set_visible(True)
+        ax.plot([0, 1], [0, 1], color=_NEUTRAL_GREY, linestyle="--", linewidth=1.0,
+                zorder=1)
+        for cond in _CONDITIONS:
+            pooled = murphy["conditions"].get(cond, {}).get(name, {}).get("pooled", {})
+            for kind in ("self", "cross"):
+                comp = pooled.get(kind, {})
+                bins = comp.get("binned", {}).get("bins", [])
+                if not bins:
+                    continue
+                total_w = sum(b["weight"] for b in bins) or 1.0
+                xs = [b["mean_forecast"] for b in bins]
+                ys = [b["observed_rate"] for b in bins]
+                sizes = [30 + 220 * (b["weight"] / total_w) for b in bins]
+                style = "-" if cond == "no_thinking" else ":"
+                ax.plot(xs, ys, style, color=colors[kind][cond], linewidth=1.4,
+                        zorder=2)
+                ax.scatter(xs, ys, s=sizes, color=colors[kind][cond],
+                           edgecolor="white", linewidth=0.8, zorder=3)
+            base = pooled.get("self", {}).get("base_rate", float("nan"))
+            if not np.isnan(base):
+                ax.axhline(base, color=_NEUTRAL_GREY, linewidth=0.8, alpha=0.6)
+        ax.set_xlim(-0.02, 1.02)
+        ax.set_ylim(-0.02, 1.02)
+        ax.set_xlabel("stated probability", fontsize=8)
+        ax.set_ylabel("observed frequency", fontsize=8)
+        ax.set_title(name, fontsize=9)
+
+    legend_handles = [
+        plt.Line2D([], [], color=_SELF_COLORS["no_thinking"], marker="o", label="self (no_thinking)"),
+        plt.Line2D([], [], color=_CROSS_COLORS["no_thinking"], marker="o", label="cross (no_thinking)"),
+        plt.Line2D([], [], color=_SELF_COLORS["thinking"], marker="o", linestyle=":", label="self (thinking)"),
+        plt.Line2D([], [], color=_CROSS_COLORS["thinking"], marker="o", linestyle=":", label="cross (thinking)"),
+        plt.Line2D([], [], color=_NEUTRAL_GREY, linestyle="--", label="perfect calibration"),
+        plt.Line2D([], [], color=_NEUTRAL_GREY, linewidth=0.8, alpha=0.6, label="pooled base rate"),
+    ]
+    fig.legend(handles=legend_handles, loc="lower center", ncol=3,
+               bbox_to_anchor=(0.5, -0.02), fontsize=8, framealpha=0.95)
+    fig.suptitle(
+        "Reliability diagrams — pooled events across models (marker area = bin weight)\n"
+        "caveat: pooling mixes per-model base rates; the cross forecast is shared across targets",
+        fontsize=11,
+    )
+    fig.tight_layout(rect=[0, 0.06, 1, 0.90])
+    return fig
+
+
+# --------------------------------------------------------------------------
 # Per-cross iteration & rendering
 # --------------------------------------------------------------------------
 def _iter_cross_views(scores_obj: dict, analysis_obj: dict):
@@ -454,6 +642,7 @@ def _render_one_cross(
     role: str, cross_slug: str, scores_view: dict, analysis_view: dict,
     figures_root: Path,
     *, families_by_model: dict[str, str], dimensions, formats: tuple[str, ...],
+    murphy: dict | None = None,
 ) -> list[Path]:
     out_dir = figures_root / f"{role}__{cross_slug}"
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -477,6 +666,13 @@ def _render_one_cross(
             scores=scores_view, analysis=analysis_view, dimensions=dimensions,
         ),
     }
+    if murphy is not None:
+        figures["c1_murphy_components"] = figure_c1_murphy_components(
+            murphy=murphy, dimensions=dimensions,
+        )
+        figures["c2_reliability_diagrams"] = figure_c2_reliability_diagrams(
+            murphy=murphy, dimensions=dimensions,
+        )
     written: list[Path] = []
     for name, fig in figures.items():
         for fmt in formats:
@@ -492,10 +688,13 @@ def render_all(
     *, families_by_model: dict[str, str] | None = None,
     dimensions=None,
     formats=("png",),
+    murphy: dict | None = None,
 ) -> list[Path]:
-    """Render the five figures for the cross-predictor under ``figures_dir``.
+    """Render the figures for the cross-predictor under ``figures_dir``.
 
-    The cross-predictor lands in a ``primary__<slug>/`` subfolder. Returns the
+    The Core 5 always; the two Murphy figures (C1 components, C2 reliability
+    diagrams) additionally when a ``murphy`` report dict is supplied. The
+    cross-predictor lands in a ``primary__<slug>/`` subfolder. Returns the
     list of written file paths in render order.
     """
     families_by_model = families_by_model or _default_families_by_model()
@@ -507,7 +706,7 @@ def render_all(
         written.extend(_render_one_cross(
             role, cross_slug, sv, av, figures_dir,
             families_by_model=families_by_model, dimensions=dimensions,
-            formats=formats,
+            formats=formats, murphy=murphy,
         ))
     return written
 
@@ -542,7 +741,11 @@ def main(argv: list[str] | None = None) -> int:
     formats = tuple(args.format) if args.format else ("png",)
 
     scores, analysis = _load_results(results_dir)
-    written = render_all(scores, analysis, figures_dir, formats=formats)
+    # The Murphy figures render only when murphy.py has produced its report.
+    murphy_path = results_dir / "murphy.json"
+    murphy = (json.loads(murphy_path.read_text(encoding="utf-8"))
+              if murphy_path.exists() else None)
+    written = render_all(scores, analysis, figures_dir, formats=formats, murphy=murphy)
     print(f"[plots] wrote {len(written)} figure file(s) under {figures_dir}")
     cross_folders = sorted({p.parent.name for p in written})
     for folder in cross_folders:

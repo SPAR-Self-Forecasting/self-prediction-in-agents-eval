@@ -38,8 +38,8 @@ def test_mock_trajectory_has_canonical_structure():
 # Determinism
 # --------------------------------------------------------------------------
 def test_mock_rollout_is_deterministic():
-    a = rollout.mock_rollout("openai/gpt-4.1-mini", TASKS[5], 1)
-    b = rollout.mock_rollout("openai/gpt-4.1-mini", TASKS[5], 1)
+    a = rollout.mock_rollout("qwen/qwen3-coder", TASKS[5], 1)
+    b = rollout.mock_rollout("qwen/qwen3-coder", TASKS[5], 1)
     assert a.trajectory == b.trajectory
     assert a.solved == b.solved
 

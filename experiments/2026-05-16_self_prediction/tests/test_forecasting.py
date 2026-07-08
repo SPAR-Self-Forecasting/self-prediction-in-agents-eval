@@ -1,6 +1,8 @@
 """Tests for forecasting.py -- self/cross forecast prompts and elicitation (sec 4, 5)."""
 
+import importlib.util
 import json
+from pathlib import Path
 
 import pytest
 
@@ -10,7 +12,7 @@ from dataset import mock_tasks
 
 TASK = mock_tasks()[0]
 QWEN8B = config.model_by_id("qwen/qwen3-8b")          # hybrid
-GPT41 = config.model_by_id("openai/gpt-4.1-mini")      # non-reasoning
+QWEN_CODER = config.model_by_id("qwen/qwen3-coder")    # non-reasoning
 
 
 def _good_forecast_json(**ov):
@@ -49,12 +51,12 @@ def test_self_prompt_contains_task_and_all_dimensions():
 
 
 def test_self_prompt_no_thinking_omits_instruction():
-    prompt = forecasting.build_self_prompt(TASK, GPT41, "no_thinking")
+    prompt = forecasting.build_self_prompt(TASK, QWEN_CODER, "no_thinking")
     assert config.THINKING_INSTRUCTION not in prompt
 
 
 def test_self_prompt_thinking_adds_instruction_for_non_reasoning_model():
-    prompt = forecasting.build_self_prompt(TASK, GPT41, "thinking")
+    prompt = forecasting.build_self_prompt(TASK, QWEN_CODER, "thinking")
     assert config.THINKING_INSTRUCTION in prompt
 
 
@@ -71,6 +73,52 @@ def test_cross_prompt_is_anonymous():
     # the target model is never named in the cross prompt (sec 5)
     assert QWEN8B.name not in prompt
     assert QWEN8B.openrouter_id not in prompt
+
+
+# --------------------------------------------------------------------------
+# Agent scaffold in the forecast prompt
+# --------------------------------------------------------------------------
+def test_prompts_include_agent_system_prompt_and_instructions():
+    # Both forecast kinds must show the verbatim scaffold: the system prompt, the
+    # task message, and the stated rules the n_constraint_violations dim scores.
+    markers = [
+        "You are a helpful assistant that can interact with a computer shell",
+        "DO NOT MODIFY: Tests, configuration files",
+        "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT",
+        "Do NOT commit your changes.",
+    ]
+    for build in (forecasting.build_self_prompt, forecasting.build_cross_prompt):
+        prompt = build(TASK, QWEN8B, "no_thinking")
+        for marker in markers:
+            assert marker in prompt
+        # the real task is substituted into the scaffold's {{task}} slot
+        assert TASK.problem_statement in prompt
+        assert "{{TASK}}" not in prompt and "{{task}}" not in prompt
+
+
+def test_scaffold_does_not_name_executor_model():
+    # The yaml's default model_name must not leak into the (anonymous) scaffold.
+    scaffold = forecasting.build_agent_scaffold(TASK)
+    assert "claude" not in scaffold.lower()
+    assert "model_name" not in scaffold
+
+
+def test_vendored_scaffold_matches_installed_swebench_yaml():
+    # Drift guard: when mini-swe-agent + yaml are importable, the vendored
+    # prompts/agent_scaffold.txt must still contain the live swebench.yaml
+    # system_template and instance_template verbatim.
+    yaml = pytest.importorskip("yaml")
+    spec = importlib.util.find_spec("minisweagent")  # locate without importing (Windows banner)
+    if spec is None or not spec.submodule_search_locations:
+        pytest.skip("mini-swe-agent not installed")
+    yaml_path = Path(spec.submodule_search_locations[0]) / "config" / "benchmarks" / "swebench.yaml"
+    if not yaml_path.exists():
+        pytest.skip("swebench.yaml not found in installed package")
+
+    data = yaml.safe_load(yaml_path.read_text(encoding="utf-8"))["agent"]
+    scaffold = (forecasting.PROMPTS_DIR / "agent_scaffold.txt").read_text(encoding="utf-8")
+    assert data["system_template"].strip() in scaffold
+    assert data["instance_template"].replace("{{task}}", "{{TASK}}").strip() in scaffold
 
 
 # --------------------------------------------------------------------------
@@ -109,7 +157,7 @@ def test_elicit_thinking_condition_threads_reasoning_on():
 
 def test_elicit_non_reasoning_model_sends_no_reasoning_param():
     llm = FakeLLM([_good_forecast_json()])
-    forecasting.elicit_forecast(llm, GPT41, TASK, "thinking", "self")
+    forecasting.elicit_forecast(llm, QWEN_CODER, TASK, "thinking", "self")
     assert llm.calls[0]["kwargs"].get("reasoning") is None
 
 
@@ -121,33 +169,25 @@ def test_elicit_cross_forecast():
 
 
 def test_elicit_broken_forecast_flagged():
-    # Multi-attempt extraction (Layer B, sec 10.9) + multi-elicit (Layer C):
-    # garbage every time -> ELICIT_ATTEMPTS rounds of (1 elicit + EXTRACTOR_FALLBACK_ATTEMPTS fallback) calls.
-    n_per_round = 1 + config.EXTRACTOR_FALLBACK_ATTEMPTS
-    expected_calls = config.ELICIT_ATTEMPTS * n_per_round
-    contents: list[str] = []
-    for _ in range(config.ELICIT_ATTEMPTS):
-        contents.append("total garbage no json")  # elicit call
-        contents.extend([json.dumps({"broken": True})] * config.EXTRACTOR_FALLBACK_ATTEMPTS)
-    llm = FakeLLM(contents)
+    # Single-pass recovery (sec 10.9): one elicit call + one fallback call; both
+    # fail -> the sample is flagged broken with empty predictions.
+    llm = FakeLLM(["total garbage no json", json.dumps({"broken": True})])
     fc = forecasting.elicit_forecast(llm, QWEN8B, TASK, "no_thinking", "self")
     assert fc.broken
     assert fc.predictions == {}
-    assert len(llm.calls) == expected_calls
+    assert len(llm.calls) == 2
 
 
-def test_elicit_recovers_on_second_attempt():
-    # First elicit returns garbage AND its fallbacks all declare broken; the
-    # second elicit (Layer C) returns valid JSON and parses programmatically.
-    contents: list[str] = [
-        "garbage",
-        *([json.dumps({"broken": True})] * config.EXTRACTOR_FALLBACK_ATTEMPTS),
-        _good_forecast_json(),
-    ]
-    llm = FakeLLM(contents)
+def test_elicit_recovers_via_fallback():
+    # The raw reply fails the programmatic parse; the single cheap-model fallback
+    # call recovers the forecast.
+    good = json.loads(_good_forecast_json())
+    llm = FakeLLM(["garbage, no parseable forecast",
+                   json.dumps({"broken": False, "forecast": good})])
     fc = forecasting.elicit_forecast(llm, QWEN8B, TASK, "no_thinking", "self")
     assert not fc.broken
     assert set(fc.predictions) == set(config.DIMENSION_NAMES)
+    assert len(llm.calls) == 2
 
 
 def test_elicit_passes_temperature_for_diversity():

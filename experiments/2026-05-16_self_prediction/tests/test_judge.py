@@ -1,4 +1,4 @@
-"""Tests for judge.py -- the 2 LLM judges for dims 4-6 (sec 10.1)."""
+"""Tests for judge.py -- the 2 LLM judges for dims 3-5 (sec 10.1)."""
 
 import json
 
@@ -37,7 +37,7 @@ def test_reasoning_judge_prompt_embeds_text():
 
 
 # --------------------------------------------------------------------------
-# judge_patch (dims 4 & 5)
+# judge_patch (dims 3 & 4)
 # --------------------------------------------------------------------------
 def test_judge_patch_parses_nested_bools():
     reply = json.dumps({
@@ -66,7 +66,7 @@ def test_judge_patch_tolerates_flat_bool_form():
 
 
 # --------------------------------------------------------------------------
-# judge_reasoning (dim 6)
+# judge_reasoning (dim 5)
 # --------------------------------------------------------------------------
 def test_judge_reasoning_parses_bool():
     reply = json.dumps({"express_uncertainty": {"bool": True, "evidence": "not sure"}})

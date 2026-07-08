@@ -77,6 +77,11 @@ def make_analysis(cross_model: str = "z-ai/glm-5") -> dict:
             "n_models": 4, "point_estimate": 0.575,
             "per_model_wins": per_model_wins,
         },
+        "rq2_scaling": {
+            "estimand": "Spearman rho", "condition": "no_thinking", "n_models": 4,
+            "spearman_rho": 0.8, "per_model_wins": per_model_wins,
+            "solve_rates": solve_rates, "caveat": "upper bound; not a test",
+        },
         "rq3_elicitation": {
             "estimand": "mean Δwins", "null": 0.0, "n_models": 4, "excluded_models": [],
             "point_estimate": 0.05, "per_model_difference": per_model_diff,
@@ -154,6 +159,16 @@ def test_a2_scaling_has_two_markers_per_iai_model(scores, analysis, families_by_
     ax = fig.axes[0]
     n_points = sum(len(coll.get_offsets()) for coll in ax.collections)
     assert n_points == 2 * len(MODELS)
+
+
+def test_a2_scaling_annotates_spearman_rho(scores, analysis, families_by_model):
+    fig = plots.figure_a2_scaling(
+        scores=scores, analysis=analysis, families_by_model=families_by_model,
+    )
+    ax = fig.axes[0]
+    texts = [t.get_text() for t in ax.texts]
+    assert any("ρ" in t or "Spearman" in t for t in texts), \
+        "A2 must annotate the descriptive Spearman rho"
 
 
 # --------------------------------------------------------------------------
@@ -245,3 +260,105 @@ def test_main_errors_loudly_on_missing_results(tmp_path):
     missing = tmp_path / "nowhere"
     with pytest.raises(SystemExit):
         plots.main(["--results-dir", str(missing), "--figures-dir", str(tmp_path / "out")])
+
+
+# --------------------------------------------------------------------------
+# C1/C2 -- Murphy decomposition figures (render only when murphy.json exists)
+# --------------------------------------------------------------------------
+BINARY_DIM_NAMES = [d[0] for d in DIMS if d[1] == "binary"]
+
+
+def _components(brier, rel, res, unc):
+    return {
+        "brier": brier, "reliability": rel, "resolution": res, "uncertainty": unc,
+        "bs_recalibrated": brier - rel, "base_rate": 0.4, "n_events": 200,
+        "binned": {
+            "reliability": rel, "resolution": res, "uncertainty": unc, "residual": 0.001,
+            "bins": [
+                {"lo": 0.0, "hi": 0.5, "n_events": 120, "weight": 15.0,
+                 "mean_forecast": 0.3, "observed_rate": 0.25},
+                {"lo": 0.5, "hi": 1.0, "n_events": 80, "weight": 10.0,
+                 "mean_forecast": 0.7, "observed_rate": 0.6},
+            ],
+        },
+    }
+
+
+def make_murphy() -> dict:
+    conditions = {}
+    for cond in ("no_thinking", "thinking"):
+        conditions[cond] = {}
+        for name in BINARY_DIM_NAMES:
+            per_model = {m: {"n_cells": 25,
+                             "self": _components(0.20, 0.05, 0.09, 0.24),
+                             "cross": _components(0.22, 0.07, 0.09, 0.24)}
+                         for m in MODELS}
+            conditions[cond][name] = {
+                "per_model": per_model,
+                "mean_across_models": {
+                    "self": {k: v for k, v in _components(0.20, 0.05, 0.09, 0.24).items()
+                             if k != "binned"},
+                    "cross": {k: v for k, v in _components(0.22, 0.07, 0.09, 0.24).items()
+                              if k != "binned"},
+                    "n_models": len(MODELS),
+                },
+                "pooled": {"self": _components(0.20, 0.05, 0.09, 0.24),
+                           "cross": _components(0.22, 0.07, 0.09, 0.24),
+                           "caveat": "pooled caveat"},
+            }
+    return {"method": {}, "n_bins": 10, "cross_model": "z-ai/glm-5",
+            "models": MODELS, "conditions": conditions}
+
+
+@pytest.fixture
+def murphy_report() -> dict:
+    return make_murphy()
+
+
+def test_c1_murphy_renders_one_subplot_per_binary_dim(murphy_report, dims):
+    fig = plots.figure_c1_murphy_components(murphy=murphy_report, dimensions=dims)
+    visible = [ax for ax in fig.axes if ax.get_visible() and ax.has_data()]
+    assert len(visible) == len(BINARY_DIM_NAMES)
+
+
+def test_c1_murphy_has_eight_bars_and_unc_lines_per_subplot(murphy_report, dims):
+    fig = plots.figure_c1_murphy_components(murphy=murphy_report, dimensions=dims)
+    visible = [ax for ax in fig.axes if ax.get_visible() and ax.has_data()]
+    for ax in visible:
+        n_bars = sum(len(c) for c in ax.containers if hasattr(c, "patches"))
+        assert n_bars == 8, "REL + RES groups x [self_nt, cross_nt, self_t, cross_t]"
+        # the UNC floor: one dashed horizontal line per condition
+        hlines = [ln for ln in ax.get_lines()
+                  if len(set(ln.get_ydata())) == 1 and len(ln.get_ydata()) > 0]
+        assert len(hlines) >= 2
+
+
+def test_c2_reliability_renders_curves_and_diagonal(murphy_report, dims):
+    fig = plots.figure_c2_reliability_diagrams(murphy=murphy_report, dimensions=dims)
+    visible = [ax for ax in fig.axes if ax.get_visible() and ax.has_data()]
+    assert len(visible) == len(BINARY_DIM_NAMES)
+    for ax in visible:
+        # diagonal + 4 calibration curves (self/cross x 2 conditions) at minimum
+        assert len(ax.get_lines()) >= 5
+        # scatter points carry the bin weights (4 curves x 2 bins each)
+        n_points = sum(len(coll.get_offsets()) for coll in ax.collections)
+        assert n_points == 8
+
+
+def test_main_adds_murphy_figures_when_report_present(tmp_path, scores, analysis, murphy_report):
+    results_dir = tmp_path / "results"
+    results_dir.mkdir()
+    (results_dir / "scores.json").write_text(json.dumps(scores), encoding="utf-8")
+    (results_dir / "analysis.json").write_text(json.dumps(analysis), encoding="utf-8")
+    (results_dir / "murphy.json").write_text(json.dumps(murphy_report), encoding="utf-8")
+    figures_dir = tmp_path / "figures"
+
+    rc = plots.main(["--results-dir", str(results_dir), "--figures-dir", str(figures_dir)])
+    assert rc == 0
+    primary_folder = figures_dir / f"primary__{scores['cross_model'].replace('/', '__')}"
+    pngs = sorted(p.name for p in primary_folder.glob("*.png"))
+    assert pngs == sorted([
+        "a1_wins_bar.png", "a2_scaling.png", "a3_delta_wins_forest.png",
+        "b1_per_dim_loss.png", "b2_wins_heatmap.png",
+        "c1_murphy_components.png", "c2_reliability_diagrams.png",
+    ])

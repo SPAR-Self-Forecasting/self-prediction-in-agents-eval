@@ -12,7 +12,6 @@ def test_scalar_constants():
     assert config.N_ROLLOUTS == 8
     assert config.N_TASKS == 30
     assert config.CONDITIONS == ("no_thinking", "thinking")
-    assert config.BOOTSTRAP_B == 10_000
 
 
 def test_difficulty_split_sums_to_n_tasks():
@@ -31,21 +30,21 @@ def test_difficulty_map_buckets():
 # --------------------------------------------------------------------------
 # Model list (sec 7)
 # --------------------------------------------------------------------------
-def test_fourteen_models():
-    assert len(config.MODELS) == 14
+def test_twelve_models():
+    assert len(config.MODELS) == 12
 
 
 def test_model_ids_and_slugs_unique():
-    assert len({m.openrouter_id for m in config.MODELS}) == 14
-    assert len({m.slug for m in config.MODELS}) == 14
-    assert len({m.name for m in config.MODELS}) == 14
+    assert len({m.openrouter_id for m in config.MODELS}) == 12
+    assert len({m.slug for m in config.MODELS}) == 12
+    assert len({m.name for m in config.MODELS}) == 12
 
 
-def test_six_families_with_expected_counts():
+def test_five_families_with_expected_counts():
     fams = config.families()
-    assert set(fams) == {"Qwen", "OpenAI", "Google", "DeepSeek", "Zhipu", "Moonshot"}
+    assert set(fams) == {"Qwen", "Google", "DeepSeek", "Zhipu", "Moonshot"}
     counts = {f: len(v) for f, v in fams.items()}
-    assert counts == {"Qwen": 6, "OpenAI": 1, "Google": 2, "DeepSeek": 1, "Zhipu": 3, "Moonshot": 1}
+    assert counts == {"Qwen": 5, "Google": 2, "DeepSeek": 1, "Zhipu": 3, "Moonshot": 1}
 
 
 def test_models_in_ascending_capability_order():
@@ -53,15 +52,13 @@ def test_models_in_ascending_capability_order():
     assert est == sorted(est)
 
 
-def test_thinking_classes_partition_10_hybrid_4_nonreasoning():
+def test_thinking_classes_partition_10_hybrid_2_nonreasoning():
     hybrid = [m for m in config.MODELS if m.thinking_class == "hybrid"]
     non = [m for m in config.MODELS if m.thinking_class == "non_reasoning"]
     assert len(hybrid) == 10
-    assert len(non) == 4
+    assert len(non) == 2
     assert {m.name for m in non} == {
-        "GPT-4.1 Mini",
         "Qwen3-Next-80B-A3B-Instruct",
-        "Qwen3-235B-A22B-2507",
         "Qwen3-Coder-480B-A35B",
     }
 
@@ -105,7 +102,7 @@ def test_rl_trained_reasoner_no_thinking_caps_tokens_and_adds_prompt():
 
 
 def test_non_reasoning_model_uses_prompt_suffix_not_api_param():
-    m = config.model_by_id("openai/gpt-4.1-mini")
+    m = config.model_by_id("qwen/qwen3-coder")
     assert config.forecast_reasoning(m, "no_thinking") is None
     assert config.forecast_reasoning(m, "thinking") is None
     assert config.forecast_condition_suffix(m, "no_thinking") == ""

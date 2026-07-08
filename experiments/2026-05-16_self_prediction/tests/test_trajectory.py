@@ -1,4 +1,4 @@
-"""Tests for trajectory.py -- deterministic 9-dimension ground-truth extraction (sec 8)."""
+"""Tests for trajectory.py -- deterministic 7-dimension ground-truth extraction (sec 8)."""
 
 import pytest
 
@@ -51,7 +51,7 @@ DIFF = (
 
 
 # --------------------------------------------------------------------------
-# Step counting (dim 8: total_expected_steps)
+# Step counting (dim 7: total_expected_steps)
 # --------------------------------------------------------------------------
 def test_count_steps_counts_action_messages_only():
     traj = make_traj(["ls", "cat foo", "pytest"])
@@ -71,7 +71,7 @@ def test_is_action_message_detects_code_fence_form():
 
 
 # --------------------------------------------------------------------------
-# avg_tokens_step (dim 7)
+# avg_tokens_step (dim 6)
 # --------------------------------------------------------------------------
 def test_avg_tokens_per_step():
     traj = make_traj(["a", "b", "c"], tokens=[100, 200, 300])
@@ -128,7 +128,7 @@ def test_classify_keyword_only_fallback_when_target_unparseable(monkeypatch):
 
 
 # --------------------------------------------------------------------------
-# Edits / explore_edit_ratio / first_attempt_correct (dims 2, 9)
+# Edits / explore_edit_ratio / first_attempt_correct (dims 2, 8)
 # --------------------------------------------------------------------------
 def test_count_edits():
     traj = make_traj(["ls", "sed -i 's/a/b/' src/foo.py", "pytest",

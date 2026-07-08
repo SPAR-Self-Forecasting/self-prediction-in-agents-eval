@@ -99,15 +99,15 @@ def commands_of(msg: dict) -> list[str]:
 
 
 # --------------------------------------------------------------------------
-# Dim 8: total_expected_steps
+# Dim 7: total_expected_steps
 # --------------------------------------------------------------------------
 def count_steps(traj: dict) -> int:
-    """Count of assistant action messages (sec 8 dim 7 = sec 2 dim 8)."""
+    """Count of assistant action messages (sec 2 dim 7)."""
     return len(action_messages(traj))
 
 
 # --------------------------------------------------------------------------
-# Dim 7: avg_tokens_step
+# Dim 6: avg_tokens_step
 # --------------------------------------------------------------------------
 def _completion_tokens(msg: dict) -> int | None:
     usage = msg.get("extra", {}).get("response", {}).get("usage", {}) or {}
@@ -205,7 +205,11 @@ def classify_command(command: str, patch_files: set[str]) -> str:
     Q14). A write to a parseable non-patch file is not an edit and falls through
     to the test / explore check.
     """
-    cmd = command or ""
+    # A trajectory step occasionally encodes its command as a list of tokens (or
+    # some other non-str); coerce so the regex classifiers never hit a TypeError.
+    if isinstance(command, list):
+        command = " ".join(str(c) for c in command)
+    cmd = command if isinstance(command, str) else ("" if not command else str(command))
     if _is_write_command(cmd):
         target = _extract_write_target(cmd)
         if target is None:
@@ -227,7 +231,7 @@ def _step_is_test(msg: dict, patch_files: set[str]) -> bool:
 
 
 # --------------------------------------------------------------------------
-# Dims 2 & 9 (sec 2): first_attempt_correct & explore_edit_ratio
+# Dims 2 & 8 (sec 2): first_attempt_correct & explore_edit_ratio
 # --------------------------------------------------------------------------
 def count_edits(traj: dict, patch_files: set[str]) -> int:
     """Number of action messages that issued at least one edit command."""

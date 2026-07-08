@@ -33,13 +33,32 @@ def _load_template(name: str) -> str:
 # --------------------------------------------------------------------------
 # Prompt construction
 # --------------------------------------------------------------------------
+def build_agent_scaffold(task: Task) -> str:
+    """The verbatim mini-swe-agent scaffold the executor receives for ``task``.
+
+    Renders ``prompts/agent_scaffold.txt`` -- a vendored, verbatim copy of the
+    ``swebench.yaml`` ``system_template`` + ``instance_template`` the rollout
+    runs under (rollout.py ``-c swebench.yaml``) -- substituting the real
+    ``problem_statement`` into the ``{{task}}`` slot exactly as the agent sees
+    it. The yaml's executor ``model_name`` is deliberately not part of this text,
+    so the scaffold is safe to show in the anonymous cross prompt (sec 5).
+
+    Vendored rather than read from the installed package so forecasting needs no
+    ``minisweagent``/``yaml`` at import time; ``test_forecasting`` asserts the
+    vendored copy still matches the installed ``swebench.yaml`` (drift guard).
+    """
+    return _load_template("agent_scaffold.txt").replace("{{TASK}}", task.problem_statement)
+
+
 def build_self_prompt(task: Task, model: config.ModelSpec, condition: str) -> str:
     """The naturalistic self-forecast prompt for ``model`` in ``condition`` (sec 4)."""
     template = _load_template("self_forecast.txt")
+    # AGENT_SCAFFOLD is substituted last so task-derived text it carries is never
+    # re-scanned for other placeholders.
     return (
         template
         .replace("{{CONDITION_INSTRUCTION}}", config.forecast_condition_suffix(model, condition))
-        .replace("{{TASK_DESCRIPTION}}", task.forecast_description())
+        .replace("{{AGENT_SCAFFOLD}}", build_agent_scaffold(task))
     )
 
 
@@ -53,7 +72,7 @@ def build_cross_prompt(task: Task, cross_model: config.ModelSpec, condition: str
     return (
         template
         .replace("{{CONDITION_INSTRUCTION}}", config.forecast_condition_suffix(cross_model, condition))
-        .replace("{{TASK_DESCRIPTION}}", task.forecast_description())
+        .replace("{{AGENT_SCAFFOLD}}", build_agent_scaffold(task))
     )
 
 
@@ -101,6 +120,13 @@ def elicit_forecast(
     (multi-sample amendment, sec 9.6). ``temperature`` defaults to
     ``config.FORECAST_TEMPERATURE`` -- non-zero so the N samples for a
     deterministic-mode forecaster carry real diversity.
+
+    Single-pass recovery (sec 10.9, simplified for the MVP): elicit the
+    forecaster once, then convert the reply to numbers via the two-step
+    extractor -- a programmatic JSON parse, then one cheap-model fallback call.
+    If both fail the sample is flagged ``broken`` and treated as missing data
+    (sec 9.6); with N samples per cell, one broken sample is absorbed by the
+    others.
     """
     if kind == "self":
         prompt = build_self_prompt(task, forecaster, condition)
@@ -112,35 +138,25 @@ def elicit_forecast(
     reasoning = config.forecast_reasoning(forecaster, condition)
     temp = config.FORECAST_TEMPERATURE if temperature is None else temperature
 
-    # Layer C (sec 10.9): if extraction is broken even after Layer-B fallback
-    # attempts, re-elicit. The N samples per cell remain independent across
-    # sample_idx; this loop is the per-sample resilience cap.
-    last_response_content = ""
-    last_result = None
-    for _ in range(max(1, config.ELICIT_ATTEMPTS)):
-        response = llm_client.complete(
-            forecaster.openrouter_id, prompt, reasoning=reasoning, temperature=temp,
-        )
-        last_response_content = response.content
-        last_result = extract_forecast(
-            response.content,
-            list(config.DIMENSION_NAMES),
-            llm_client=llm_client,
-            fallback_model=fallback_model,
-            fallback_template=fallback_template,
-            value_validator=forecast_value_validator,
-            fallback_attempts=config.EXTRACTOR_FALLBACK_ATTEMPTS,
-        )
-        if not last_result.broken:
-            break
+    response = llm_client.complete(
+        forecaster.openrouter_id, prompt, reasoning=reasoning, temperature=temp,
+    )
+    result = extract_forecast(
+        response.content,
+        list(config.DIMENSION_NAMES),
+        llm_client=llm_client,
+        fallback_model=fallback_model,
+        fallback_template=fallback_template,
+        value_validator=forecast_value_validator,
+    )
 
     return Forecast(
         model=forecaster.openrouter_id,
         task_id=task.instance_id,
         condition=condition,
         kind=kind,
-        predictions=(last_result.predictions if last_result else {}) or {},
-        broken=bool(last_result.broken) if last_result else True,
-        raw_response=last_response_content,
+        predictions=result.predictions or {},
+        broken=bool(result.broken),
+        raw_response=response.content,
         sample_idx=sample_idx,
     )

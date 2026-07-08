@@ -107,10 +107,10 @@ def synth_data(n_tasks: int = 8) -> metrics.ScoringData:
 # --------------------------------------------------------------------------
 def test_rq1_detects_wins_above_half():
     res = analysis.rq1_existence(synth_data())
-    assert res["n_models"] == 13                       # 14 executors - 1 cross-predictor
+    assert res["n_models"] == 11                       # 12 executors - 1 cross-predictor
     assert res["null"] == 0.5                          # wins null reference
     assert res["point_estimate"] > 0.5                 # self beats cross by construction
-    assert len(res["per_model_wins"]) == 13
+    assert len(res["per_model_wins"]) == 11
 
 
 def test_rq1_is_deterministic():
@@ -121,20 +121,34 @@ def test_rq1_is_deterministic():
 
 
 # --------------------------------------------------------------------------
+# RQ2 -- wins ~ solve_rate scaling (descriptive Spearman rho)
+# --------------------------------------------------------------------------
+def test_rq2_scaling_descriptive_spearman():
+    res = analysis.rq2_scaling(synth_data())
+    assert res["n_models"] == 11
+    assert -1.0 <= res["spearman_rho"] <= 1.0
+    assert res["spearman_rho"] > 0                     # wins rises with capability by construction
+    assert len(res["solve_rates"]) == 11
+    # the statistics tier stays pruned: no fitted slope, CI, or p-value
+    for absent in ("linear_coef", "ci_lo", "ci_hi", "bootstrap_p"):
+        assert absent not in res
+
+
+# --------------------------------------------------------------------------
 # RQ3 -- Δwins > 0 (point estimate)
 # --------------------------------------------------------------------------
 def test_rq3_detects_thinking_benefit():
     res = analysis.rq3_elicitation(synth_data())
     assert res["null"] == 0.0
     assert res["point_estimate"] > 0                   # thinking lowers self error -> more wins
-    assert len(res["per_model_difference"]) == 13
+    assert len(res["per_model_difference"]) == 11
 
 
 def test_rq3_excludes_models():
     res = analysis.rq3_elicitation(
         synth_data(), exclude_models=config.THINKING_SENSITIVITY_EXCLUDE,
     )
-    assert res["n_models"] == 13 - len(config.THINKING_SENSITIVITY_EXCLUDE)
+    assert res["n_models"] == 11 - len(config.THINKING_SENSITIVITY_EXCLUDE)
 
 
 # --------------------------------------------------------------------------
@@ -142,7 +156,7 @@ def test_rq3_excludes_models():
 # --------------------------------------------------------------------------
 def test_solve_rates_cover_iai_pool():
     rates = analysis.solve_rates(synth_data())
-    assert len(rates) == 13                            # one per IAI-eligible model
+    assert len(rates) == 11                            # one per IAI-eligible model
     assert all(0.0 <= r <= 1.0 for r in rates.values())
 
 
@@ -150,7 +164,7 @@ def test_missingness_report_clean_data():
     rep = analysis.missingness_report(synth_data())
     assert rep["flagged_models_dropped_cells"] == []      # synth data is fully valid
     assert rep["flagged_models_broken_forecasts"] == []
-    assert len(rep["dropped_cell_rate"]) == 13
+    assert len(rep["dropped_cell_rate"]) == 11
 
 
 # --------------------------------------------------------------------------
@@ -158,11 +172,11 @@ def test_missingness_report_clean_data():
 # --------------------------------------------------------------------------
 def test_run_full_analysis_runs_end_to_end():
     out = analysis.run_full_analysis(synth_data())
-    for key in ("rq1_existence", "rq3_elicitation", "exploratory",
+    for key in ("rq1_existence", "rq2_scaling", "rq3_elicitation", "exploratory",
                 "missingness", "solve_rates"):
         assert key in out
-    # statistics tier is pruned -- no rq2 / robustness blocks
-    assert "rq2_scaling" not in out
+    # rq2 is descriptive (Spearman rho); the inferential robustness battery stays pruned
+    assert "spearman_rho" in out["rq2_scaling"]
     assert "robustness" not in out
     # per-dim breakdown covers all 10 dimensions in native units (A6)
     assert len(out["exploratory"]["per_dimension_raw_iai_mean"]) == 10

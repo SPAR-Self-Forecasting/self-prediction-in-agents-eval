@@ -10,6 +10,9 @@ What remains, all descriptive:
 
 - **RQ1 Existence**   -- mean ``wins(M, no_thinking)`` across IAI-eligible models
                          (the headline "is it > 0.5?" number, no CI).
+- **RQ2 Scaling**     -- Spearman rho of ``wins(M)`` vs empirical solve rate (a
+                         monotonic-association summary, no slope/CI/p-value; an
+                         upper bound on the genuine effect -- see ``rq2_scaling``).
 - **RQ3 Elicitation** -- mean paired ``Δwins(M) = wins(thinking) − wins(no_thinking)``.
 - **Exploratory**     -- per-dimension mean ``raw_iai`` in native units.
 - **Missingness**     -- dropped-cell / broken-forecast rates with the sec 9.6 flags.
@@ -73,6 +76,62 @@ def solve_rates(data: metrics.ScoringData, models: Sequence[str] | None = None) 
     """Empirical solve rate per IAI-eligible model (sec 7) -- descriptive context."""
     model_list = _iai_eligible_models(data, models)
     return {m: metrics.empirical_solve_rate(data.outcomes, m) for m in model_list}
+
+
+def _spearman_rho(x: Sequence[float], y: Sequence[float]) -> float:
+    """Spearman rank-correlation coefficient (descriptive); NaN if undefined.
+
+    Computed inline (rank-correlation = Pearson on average ranks) so this module
+    stays free of the pruned ``src.stats`` tier. Only the coefficient is
+    returned -- no test statistic, no p-value.
+    """
+    from scipy.stats import spearmanr
+
+    xa = np.asarray(list(x), dtype=float)
+    ya = np.asarray(list(y), dtype=float)
+    mask = ~(np.isnan(xa) | np.isnan(ya))
+    # rho is undefined with <3 points or no variation on either axis.
+    if mask.sum() < 3 or np.unique(xa[mask]).size < 2 or np.unique(ya[mask]).size < 2:
+        return float("nan")
+    return float(spearmanr(xa[mask], ya[mask])[0])
+
+
+def rq2_scaling(
+    data: metrics.ScoringData,
+    *,
+    condition: str = "no_thinking",
+    dimensions: tuple[Dimension, ...] | None = None,
+    models: Sequence[str] | None = None,
+) -> dict:
+    """RQ2 (sec 15.6): does ``wins(M)`` scale with model capability?
+
+    Descriptive: the Spearman rank correlation between empirical solve rate and
+    ``wins(M)`` -- a single coefficient in [-1, 1]. No fitted slope, no CI, no
+    p-value; the inferential scaling test (quadratic OLS + family-clustered
+    bootstrap, sec 9.3/9.5) is part of the pruned statistics tier.
+
+    Rigour: a monotonic-association *summary* only, and an **upper bound** on the
+    genuine introspection-scaling effect. ``wins`` is confounded upward by the
+    sec 15.4 W2 forecaster-variance bias -- weaker models are noisier forecasters
+    and lose cells mechanically, not only for poorer self-knowledge. Read the
+    sign and rough strength of rho; do not read significance or a magnitude.
+    """
+    dims = dimensions if dimensions is not None else data.dimensions
+    model_list = _iai_eligible_models(data, models)
+    per_model_wins = _per_model_wins(data, condition, dims, model_list)
+    rates = {m: metrics.empirical_solve_rate(data.outcomes, m) for m in model_list}
+    rho = _spearman_rho([rates[m] for m in model_list],
+                        [per_model_wins[m] for m in model_list])
+    return {
+        "estimand": "Spearman rho of wins(M) vs empirical solve rate",
+        "condition": condition,
+        "n_models": len(model_list),
+        "spearman_rho": rho,
+        "per_model_wins": per_model_wins,
+        "solve_rates": rates,
+        "caveat": ("descriptive monotonic association; upper bound (W2 variance "
+                   "confound); not a significance test"),
+    }
 
 
 # --------------------------------------------------------------------------
@@ -203,6 +262,7 @@ def run_full_analysis(data: metrics.ScoringData) -> dict:
     missingness, and per-model solve rates."""
     return {
         "rq1_existence": rq1_existence(data),
+        "rq2_scaling": rq2_scaling(data),
         "rq3_elicitation": rq3_elicitation(data),
         "exploratory": exploratory(data),
         "missingness": missingness_report(data),

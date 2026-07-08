@@ -2,3 +2,14 @@ data/*
 !data/.gitkeep
 results/*
 !results/.gitkeep
+
+# Real-run output (isolated from the committed mock data)
+data_real/
+results_real/
+
+# Transient run output (pull/launch logs, crash logs)
+logs/*.log
+logs/*.log.err
+
+data_pilot/
+results_pilot/
