@@ -190,7 +190,7 @@ GLM-5's cross-forecast REL on `p_solve` is 0.332 — barely better than the self
 
 ### 4.4 Practical read: recalibrate before trusting self-reports
 
-If an application needs an agent's own probability of success (e.g., for deferral or routing), the raw self-report is worse than useless at these capability levels — a constant base-rate would beat it. But because the error is nearly all *reliability*, a small amount of historical data buys a large fix: isotonic/Platt recalibration of self-forecasts would recover ~75% of `p_solve` Brier (0.492 → ~0.125). What recalibration cannot buy is discrimination — RES ≤ 0.06 everywhere means even recalibrated forecasts barely separate solvable from unsolvable tasks. Discrimination, not calibration, is the binding research problem for agent self-prediction.
+If an application needs an agent's own probability of success (e.g., for deferral or routing), the raw self-report is worse than useless at these capability levels — a constant base-rate would beat it. But because the error is nearly all *reliability*, a small amount of historical data buys a large fix: isotonic/Platt recalibration of self-forecasts would recover ~75% of `p_solve` Brier (0.492 → ~0.125). What recalibration cannot buy is discrimination — mean RES never exceeds 0.062 on any dimension for either forecaster, so even recalibrated forecasts barely separate solvable from unsolvable tasks. Discrimination, not calibration, is the binding research problem for agent self-prediction.
 
 ### 4.5 Limitations
 
