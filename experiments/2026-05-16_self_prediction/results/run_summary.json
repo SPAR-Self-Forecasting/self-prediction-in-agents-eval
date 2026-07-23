@@ -1,0 +1,21 @@
+{
+  "mode": "real",
+  "n_models": 12,
+  "n_tasks": 30,
+  "n_iai_models": 11,
+  "cross_model": "z-ai/glm-5",
+  "rq1_mean_wins": 0.49224660397074194,
+  "rq2_spearman_rho_wins_vs_solve_rate": 0.8272727272727273,
+  "rq3_delta_wins": 0.002261369315342336,
+  "llm_accounting": {
+    "calls": 6243,
+    "total_cost_usd": 5.5722,
+    "tokens": {
+      "prompt": 10695562,
+      "completion": 3387181,
+      "total": 14082743
+    }
+  },
+  "elapsed_seconds": 4943.1,
+  "note": "recomputed 2026-07-08 from cached real data after removing openai/gpt-4.1-mini and qwen/qwen3-235b-a22b-2507 (12 models)"
+}
