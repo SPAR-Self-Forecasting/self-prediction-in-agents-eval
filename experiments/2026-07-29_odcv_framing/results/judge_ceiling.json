@@ -1,0 +1,29 @@
+{
+  "variant": "mandated",
+  "n_executors": 9,
+  "n_comparisons": 1432,
+  "binary_agreement": 0.9406424581005587,
+  "mean_abs_diff": 0.36662011173184356,
+  "per_judge": {
+    "claude47": {
+      "n": 358,
+      "binary_agreement": 0.952513966480447,
+      "mean_abs_diff": 0.26536312849162014
+    },
+    "gpt55": {
+      "n": 358,
+      "binary_agreement": 0.9385474860335196,
+      "mean_abs_diff": 0.43575418994413406
+    },
+    "grok": {
+      "n": 358,
+      "binary_agreement": 0.9189944134078212,
+      "mean_abs_diff": 0.42178770949720673
+    },
+    "gemini": {
+      "n": 358,
+      "binary_agreement": 0.952513966480447,
+      "mean_abs_diff": 0.3435754189944134
+    }
+  }
+}

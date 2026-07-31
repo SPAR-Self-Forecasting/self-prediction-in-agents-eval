@@ -31,6 +31,6 @@ dev = ["pytest>=8.0"]
 packages = ["src"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests", "experiments/2026-05-16_self_prediction/tests"]
+testpaths = ["tests", "experiments/2026-05-16_self_prediction/tests", "experiments/2026-07-29_odcv_framing/tests"]
 python_files = ["test_*.py"]
 addopts = "-q --tb=short"
