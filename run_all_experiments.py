@@ -1,14 +1,18 @@
-"""Root orchestrator for the self-prediction capabilities project (EVAL_SPEC_V1.md sec 0).
+"""Root orchestrator for the self-prediction capabilities project.
 
-Sequences the three experiments with a tunable configuration. Experiment 1
-(SWE-bench introspection) is implemented; Experiments 2 and 3 are not yet
-started and are reported as such rather than silently skipped.
+Sequences the experiments with a tunable configuration. Experiment 1
+(SWE-bench introspection) is driven end-to-end from here. Experiment 2
+(ODCV framing gap) has shipped but is *not* orchestrated: it is a ladder of
+individually-approved paid steps against a read-only external benchmark
+checkout, so it prints its reproduction recipe rather than launching spend
+from a batch entry point. Experiment 3 is not started.
 
 Usage examples
 --------------
     python run_all_experiments.py --experiments 1 --quick      # fast mocked smoke run
     python run_all_experiments.py --experiments 1              # full mocked dry-run
     python run_all_experiments.py --experiments 1 --real       # the real run (spends money)
+    python run_all_experiments.py --experiments 2              # print exp2's recipe
 """
 
 from __future__ import annotations
@@ -22,13 +26,50 @@ from pathlib import Path
 
 _ROOT = Path(__file__).parent.resolve()
 _EXP1_DIR = _ROOT / "experiments" / "2026-05-16_self_prediction"
+_EXP2_DIR = _ROOT / "experiments" / "2026-07-29_odcv_framing"
 
-#: Registry of the three experiments (sec 0).
+#: Ordered stages of Experiment 2, as run on 2026-07-30 (see its REPORT.md §6).
+#: Each is a separate module invocation with its own checkpoint and spend rung.
+EXP2_STEPS: tuple[tuple[str, str], ...] = (
+    ("odcv.judge_ceiling", "free"),
+    ("odcv.extract_conflicts", "paid ~$0.8"),
+    ("odcv.discovery_check", "paid ~$4"),
+    ("odcv.fidelity_gate", "free gate"),
+    ("odcv.elicit smoke", "paid ~$0.12"),
+    ("odcv.elicit full", "paid ~$23"),
+    ("odcv.analysis", "free"),
+    ("odcv.qual_coding", "paid ~$0.03"),
+)
+
+#: Registry of the project's experiments.
 EXPERIMENT_REGISTRY: dict[int, dict] = {
-    1: {"name": "SWE-bench introspection battery", "status": "ready"},
-    2: {"name": "Adversarial evaluation / scheming", "status": "not_started"},
-    3: {"name": "Self-prediction integrating Petri", "status": "not_started"},
+    1: {"name": "SWE-bench introspection battery", "status": "ready",
+        "orchestrated": True,
+        "report": "experiments/2026-05-16_self_prediction/REPORT.md"},
+    2: {"name": "ODCV-Bench self/other framing gap", "status": "complete",
+        "orchestrated": False,
+        "report": "experiments/2026-07-29_odcv_framing/REPORT.md"},
+    3: {"name": "Self-prediction integrating Petri", "status": "not_started",
+        "orchestrated": False, "report": None},
 }
+
+
+def describe_experiment_2() -> dict:
+    """Print Experiment 2's reproduction recipe; return its registry summary.
+
+    Deliberately does not launch anything: the run is a sequence of paid steps
+    gated on a read-only ``external/ODCV-Bench`` checkout and an approved spend
+    rung per step.
+    """
+    meta = EXPERIMENT_REGISTRY[2]
+    print(f"  Status: {meta['status']} — results are committed under {_EXP2_DIR.name}/.")
+    print(f"  Report: {meta['report']}")
+    print("  Not orchestrated from here (paid steps are approved individually).")
+    print("  To reproduce, from the repo root with external/ODCV-Bench present:")
+    for module, cost in EXP2_STEPS:
+        print(f"    PYTHONPATH={_EXP2_DIR.relative_to(_ROOT)} python -m {module:<24} # {cost}")
+    return {"status": meta["status"], "name": meta["name"],
+            "report": meta["report"], "orchestrated": False}
 
 
 def _load_exp1():
@@ -100,10 +141,12 @@ def main(argv: list[str] | None = None) -> int:
                 dry_run=not args.real, quick=args.quick,
                 n_tasks=args.n_tasks,
             )
+        elif exp_id == 2:
+            summaries[exp_id] = describe_experiment_2()
         else:
             print(f"  Experiment {exp_id} is not yet implemented "
-                  f"(status: {meta['status']}; see EVAL_SPEC_V1.md sec 0). Skipping.")
-            summaries[exp_id] = {"status": "not_started"}
+                  f"(status: {meta['status']}). Skipping.")
+            summaries[exp_id] = {"status": meta["status"], "name": meta["name"]}
 
     print("\n=== Orchestration summary ===")
     print(json.dumps(summaries, indent=2, default=str))

@@ -93,7 +93,7 @@ def synth_data(n_tasks: int = 8) -> metrics.ScoringData:
             for d in dims:
                 e = _rng("cross", d.name, t, cond).uniform(-0.05, 0.05)
                 preds[d.name] = _clamp(d, centre[d.name] * (1.0 + e))
-            cross_fc[t][cond] = [Forecast(CROSS_MODEL, t, cond, "cross", preds, sample_idx=0)]
+            cross_fc[t][cond] = [Forecast(CROSS_MODEL, t, cond, "anonymous", preds, sample_idx=0)]
 
     return metrics.ScoringData(
         dimensions=dims, models=models, families=families, tasks=tasks,

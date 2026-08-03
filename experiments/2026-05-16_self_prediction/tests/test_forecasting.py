@@ -161,11 +161,18 @@ def test_elicit_non_reasoning_model_sends_no_reasoning_param():
     assert llm.calls[0]["kwargs"].get("reasoning") is None
 
 
-def test_elicit_cross_forecast():
+def test_elicit_anonymous_forecast():
     llm = FakeLLM([_good_forecast_json()])
-    fc = forecasting.elicit_forecast(llm, QWEN8B, TASK, "no_thinking", "cross")
-    assert fc.kind == "cross"
+    fc = forecasting.elicit_forecast(llm, QWEN8B, TASK, "no_thinking", "anonymous")
+    assert fc.kind == "anonymous"
     assert "An AI coding agent" in llm.calls[0]["prompt"]
+
+
+def test_the_retired_cross_kind_is_rejected():
+    """"cross" once meant anonymous; it must not quietly resolve to either kind."""
+    llm = FakeLLM([_good_forecast_json()])
+    with pytest.raises(ValueError, match="kind"):
+        forecasting.elicit_forecast(llm, QWEN8B, TASK, "no_thinking", "cross")
 
 
 def test_elicit_broken_forecast_flagged():
@@ -208,3 +215,148 @@ def test_elicit_rejects_bad_kind():
     llm = FakeLLM([_good_forecast_json()])
     with pytest.raises(ValueError):
         forecasting.elicit_forecast(llm, QWEN8B, TASK, "no_thinking", "sideways")
+
+
+# --------------------------------------------------------------------------
+# Named cross forecast (the target is told to the peer)
+# --------------------------------------------------------------------------
+GLM5 = config.model_by_id("z-ai/glm-5")     # the designated cross-predictor
+
+
+class FakeChatLLM(FakeLLM):
+    """FakeLLM plus the multi-turn entry point the primed self-forecast uses."""
+
+    def __init__(self, contents):
+        super().__init__(contents)
+        self.chats = []
+
+    def chat(self, model, messages, **kwargs):
+        self.chats.append({"model": model, "messages": messages, "kwargs": kwargs})
+        return type("R", (), {"content": self.contents.pop(0)})()
+
+
+def test_named_cross_prompt_names_the_target():
+    prompt = forecasting.build_cross_prompt(TASK, GLM5, "no_thinking", target=QWEN8B)
+    assert QWEN8B.name in prompt
+    assert "{{MODEL}}" not in prompt
+
+
+def test_named_cross_prompt_names_the_target_not_the_forecaster():
+    """The subject is who is being predicted, never who is doing the predicting."""
+    prompt = forecasting.build_cross_prompt(TASK, GLM5, "no_thinking", target=QWEN8B)
+    assert GLM5.name not in prompt
+
+
+def test_anonymous_prompt_survives_the_named_edit():
+    """The RQ1 baseline must stay runnable after cross_forecast.txt was renamed."""
+    prompt = forecasting.build_cross_prompt(TASK, GLM5, "no_thinking")
+    assert "An AI coding agent" in prompt
+    assert QWEN8B.name not in prompt
+    assert "{{MODEL}}" not in prompt
+
+
+def test_both_cross_variants_ask_for_every_dimension():
+    """Naming the target must not have quietly dropped part of the battery."""
+    for target in (None, QWEN8B):
+        prompt = forecasting.build_cross_prompt(TASK, GLM5, "no_thinking", target=target)
+        for dim in config.DIMENSION_NAMES:
+            assert dim in prompt, (target, dim)
+        assert TASK.problem_statement in prompt
+        assert "{{AGENT_SCAFFOLD}}" not in prompt
+
+
+def test_named_and_anonymous_cross_prompts_actually_differ():
+    anon = forecasting.build_cross_prompt(TASK, GLM5, "no_thinking")
+    named = forecasting.build_cross_prompt(TASK, GLM5, "no_thinking", target=QWEN8B)
+    assert anon != named
+
+
+def test_elicit_cross_named_records_the_target():
+    llm = FakeLLM([_good_forecast_json()])
+    fc = forecasting.elicit_forecast(
+        llm, GLM5, TASK, "no_thinking", "cross_named", target=QWEN8B)
+    assert fc.kind == "cross_named"
+    assert fc.model == GLM5.openrouter_id        # forecaster
+    assert fc.target == QWEN8B.openrouter_id     # subject
+    assert QWEN8B.name in llm.calls[0]["prompt"]
+
+
+def test_cross_named_without_a_target_is_a_loud_failure():
+    """Silently falling back to anonymous would mislabel the estimand."""
+    llm = FakeLLM([_good_forecast_json()])
+    with pytest.raises(ValueError, match="target"):
+        forecasting.elicit_forecast(llm, GLM5, TASK, "no_thinking", "cross_named")
+
+
+def test_anonymous_forecast_refuses_a_target():
+    llm = FakeLLM([_good_forecast_json()])
+    with pytest.raises(ValueError, match="target"):
+        forecasting.elicit_forecast(
+            llm, GLM5, TASK, "no_thinking", "anonymous", target=QWEN8B)
+
+
+# --------------------------------------------------------------------------
+# Identity-primed self forecast
+# --------------------------------------------------------------------------
+def test_identity_question_is_the_shared_template():
+    """forecasting and check_model_identity must ask the identical question."""
+    import check_model_identity as cmi
+    assert forecasting.identity_question() == cmi.load_identity_question()
+    assert "what model you are" in forecasting.identity_question().lower()
+
+
+def test_primed_messages_are_three_turns_in_order():
+    msgs = forecasting.build_primed_self_messages(TASK, QWEN8B, "no_thinking", "I am Qwen3-8B.")
+    assert [m["role"] for m in msgs] == ["user", "assistant", "user"]
+    assert msgs[0]["content"] == forecasting.identity_question()
+    assert msgs[1]["content"] == "I am Qwen3-8B."
+
+
+def test_primed_forecast_request_is_byte_identical_to_the_unprimed_one():
+    """Priming is the only treatment -- a reworded prompt would confound it."""
+    msgs = forecasting.build_primed_self_messages(TASK, QWEN8B, "thinking", "I am Qwen3-8B.")
+    assert msgs[-1]["content"] == forecasting.build_self_prompt(TASK, QWEN8B, "thinking")
+
+
+def test_elicit_primed_self_asks_identity_first_then_forecasts():
+    llm = FakeChatLLM(["I am Qwen3-8B, a Qwen model.", _good_forecast_json()])
+    fc = forecasting.elicit_forecast(llm, QWEN8B, TASK, "no_thinking", "self_primed")
+    assert fc.kind == "self_primed"
+    assert fc.identity_reply == "I am Qwen3-8B, a Qwen model."
+    assert not fc.broken
+    assert set(fc.predictions) == set(config.DIMENSION_NAMES)
+    # one single-turn call for the identity question, one multi-turn call for the forecast
+    assert len(llm.calls) == 1 and len(llm.chats) == 1
+    assert llm.calls[0]["prompt"] == forecasting.identity_question()
+    assert llm.chats[0]["messages"][1]["content"] == "I am Qwen3-8B, a Qwen model."
+
+
+def test_primed_forecast_is_extracted_from_the_second_reply():
+    """The forecast must come from the forecast turn, not the identity turn."""
+    llm = FakeChatLLM(["I am Qwen3-8B.", _good_forecast_json(p_solve=0.11)])
+    fc = forecasting.elicit_forecast(llm, QWEN8B, TASK, "no_thinking", "self_primed")
+    assert fc.predictions["p_solve"] == pytest.approx(0.11)
+    assert "I am Qwen3-8B." not in fc.raw_response
+
+
+def test_priming_turn_uses_the_same_reasoning_and_temperature_as_the_forecast():
+    llm = FakeChatLLM(["I am Qwen3-8B.", _good_forecast_json()])
+    forecasting.elicit_forecast(llm, QWEN8B, TASK, "thinking", "self_primed")
+    assert llm.calls[0]["kwargs"]["reasoning"] == {"enabled": True}
+    assert llm.chats[0]["kwargs"]["reasoning"] == {"enabled": True}
+    assert llm.calls[0]["kwargs"]["temperature"] == pytest.approx(config.FORECAST_TEMPERATURE)
+
+
+def test_empty_identity_reply_is_recorded_not_dropped():
+    """A model that says nothing was still primed; the record must show it."""
+    llm = FakeChatLLM(["", _good_forecast_json()])
+    fc = forecasting.elicit_forecast(llm, QWEN8B, TASK, "no_thinking", "self_primed")
+    assert fc.identity_reply == ""
+    assert fc.kind == "self_primed"
+
+
+def test_unprimed_self_forecast_carries_no_identity_reply():
+    llm = FakeLLM([_good_forecast_json()])
+    fc = forecasting.elicit_forecast(llm, QWEN8B, TASK, "no_thinking", "self")
+    assert fc.identity_reply is None
+    assert fc.target is None

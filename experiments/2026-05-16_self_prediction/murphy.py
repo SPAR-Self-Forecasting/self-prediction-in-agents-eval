@@ -265,6 +265,10 @@ def binary_events(
     become events sharing the cell's aggregated forecast, weighted
     ``1 / n_valid`` so cells contribute equally (see module docstring).
     """
+    # ``kind`` here selects which *forecast set* to decompose -- self vs the
+    # cross-predictor's -- and is a different vocabulary from ``Forecast.kind``,
+    # where the peer forecast is called "anonymous". This name is what murphy.json
+    # keys its output by, so it stays stable.
     if kind not in ("self", "cross"):
         raise ValueError(f"kind must be 'self' or 'cross', got {kind!r}")
     fs: list[float] = []
@@ -428,7 +432,7 @@ def load_scoring_data(data_dir: Path) -> metrics.ScoringData:
 
     self_forecasts = {m: _read_samples(m, "self")
                       for m in config.MODEL_IDS if m != cross_model}
-    cross_forecasts = _read_samples(cross_model, "cross")
+    cross_forecasts = _read_samples(cross_model, "anonymous")
 
     return metrics.ScoringData(
         dimensions=config.DIMENSIONS,

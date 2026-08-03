@@ -56,7 +56,7 @@ def build_data(self_p, cross_p, *, outcome_value=1.0, n_valid=N_ROLL, broken_sel
                 p = 0.0 if (t == "t2" and self_p == 1.0) else self_p
                 self_fc[m][t][cond] = _fc(m, t, cond, "self", {"p_solve": p}, broken=brk)
     for t in tasks:
-        cross_fc[t] = {c: _fc("m3", t, c, "cross", {"p_solve": cross_p}) for c in ("no_thinking", "thinking")}
+        cross_fc[t] = {c: _fc("m3", t, c, "anonymous", {"p_solve": cross_p}) for c in ("no_thinking", "thinking")}
     return metrics.ScoringData(
         dimensions=(PSOLVE,), models=models, families=families, tasks=tasks,
         cross_model="m3", outcomes=outcomes, self_forecasts=self_fc, cross_forecasts=cross_fc,
@@ -95,7 +95,7 @@ def test_wins_zero_when_cross_is_perfect():
     data = build_data(self_p=0.5, cross_p=1.0)
     # patch cross t2 to also match its truth (0.0)
     for cond in ("no_thinking", "thinking"):
-        data.cross_forecasts["t2"][cond] = _fc("m3", "t2", cond, "cross", {"p_solve": 0.0})
+        data.cross_forecasts["t2"][cond] = _fc("m3", "t2", cond, "anonymous", {"p_solve": 0.0})
     assert metrics.wins_fraction(data, "m1", "no_thinking") == pytest.approx(0.0)
 
 

@@ -27,11 +27,65 @@ def _quick_config(tmp_path, render_figures: bool = False) -> RunConfig:
 # --------------------------------------------------------------------------
 def test_mock_client_dispatches_by_prompt():
     llm = run.MockLLMClient()
-    assert "p_solve" in llm.complete("m", "...\nTASK DESCRIPTION:\nfix it").content
     assert "documentation" in llm.complete("m", "[PATCH DIFF]\ndiff").content
     assert "express_uncertainty" in llm.complete("m", "[REASONING TEXT]\nhmm").content
     assert "broken" in llm.complete("m", "[RAW RESPONSE]\ngarbage").content
-    assert llm.call_count == 4
+    assert llm.call_count == 3
+
+
+@pytest.mark.parametrize("kind", ["self", "anonymous", "cross_named", "self_primed"])
+def test_mock_client_recognises_the_real_forecast_prompts(kind):
+    """Fed a hand-written marker instead of a real prompt, this test once passed
+    while the mock's forecast branch was dead -- every dry-run forecast fell
+    through to "{}" and was quietly rescued by the fallback call. Build the
+    prompts the pipeline actually sends."""
+    import config
+    import forecasting
+    from dataset import mock_tasks
+
+    task = mock_tasks()[0]
+    spec = config.model_by_id("qwen/qwen3-8b")
+    target = config.model_by_id("z-ai/glm-5")
+    if kind == "self":
+        prompt = forecasting.build_self_prompt(task, spec, "no_thinking")
+    elif kind == "self_primed":
+        prompt = forecasting.build_primed_self_messages(
+            task, spec, "no_thinking", "I am Qwen3-8B.")[-1]["content"]
+    elif kind == "anonymous":
+        prompt = forecasting.build_cross_prompt(task, spec, "no_thinking")
+    else:
+        prompt = forecasting.build_cross_prompt(task, spec, "no_thinking", target=target)
+
+    llm = run.MockLLMClient()
+    assert "p_solve" in llm.complete("m", prompt).content
+    assert llm.by_type["forecast"] == 1
+    assert llm.by_type["other"] == 0
+
+
+def test_mock_client_answers_the_identity_question_as_the_model_asked():
+    llm = run.MockLLMClient()
+    reply = llm.complete("z-ai/glm-5", "Do you know what model you are?").content
+    assert "GLM-5" in reply
+    assert llm.by_type["identity"] == 1
+
+
+def test_mock_client_chat_dispatches_on_the_last_user_turn():
+    """The primed forecast's earlier turns are context; the request is the last one."""
+    llm = run.MockLLMClient()
+    reply = llm.chat("m", [
+        {"role": "user", "content": "Do you know what model you are?"},
+        {"role": "assistant", "content": "I am m."},
+        {"role": "user", "content": "[PATCH DIFF]\ndiff"},
+    ]).content
+    assert "documentation" in reply
+
+
+def test_dry_run_forecasts_never_need_the_fallback(tmp_path):
+    """A dry run should exercise the happy extraction path, not the recovery one."""
+    summary = run.run(_quick_config(tmp_path))
+    accounting = summary["llm_accounting"]
+    assert accounting["by_type"]["forecast"] > 0
+    assert accounting["by_type"]["fallback"] == 0
 
 
 # --------------------------------------------------------------------------

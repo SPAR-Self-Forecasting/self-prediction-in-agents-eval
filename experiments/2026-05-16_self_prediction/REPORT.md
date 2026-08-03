@@ -1,7 +1,7 @@
 # Do coding agents know themselves? — Self- vs. peer-prediction on SWE-bench Verified
 
 **Experiment 1 report — final results (recomputed 2026-07-08).**
-Artifacts: [`results_real/`](results_real/) (scores, analysis, Murphy decomposition, figures). Pipeline: [`run.py`](run.py) (9 stages), spec constants in [`config.py`](config.py).
+Artifacts: [`results/`](results/) (scores, analysis, Murphy decomposition, figures). Pipeline: [`run.py`](run.py) (9 stages), spec constants in [`config.py`](config.py).
 
 ## TL;DR
 
@@ -114,19 +114,19 @@ Estimator: **CORP** (isotonic/PAV recalibration; Dimitriadis et al. 2021, PNAS) 
 | qwen/qwen3-8b | 0.056 | 0.433 | 0.432 |
 | google/gemini-3.1-flash-lite | 0.219 | 0.377 | 0.396 |
 
-![RQ1](results_real/plots/rq1_wins_by_model.png)
+![RQ1](results/plots/rq1_wins_by_model.png)
 
 ### 3.3 RQ2 — scaling: strongly monotone (descriptive)
 
 **Spearman ρ = 0.827** between wins and solve rate (OLS slope on the scatter: +0.25 wins per unit solve rate). The four models above chance are the four strongest self-predictors and among the most capable. Two visible off-trend points: gemini-3.1-flash-lite (0.377, far below trend) and glm-4.7 (0.505, below trend for its 0.569 solve rate). Reminder: upper bound, not a test (§2.4 W2).
 
-![RQ2](results_real/plots/rq2_wins_vs_solverate.png)
+![RQ2](results/plots/rq2_wins_vs_solverate.png)
 
 ### 3.4 RQ3 — elicitation: thinking does not help
 
 **Mean Δwins = +0.002.** Per-model deltas are small and mixed (−0.047 for qwen3-32b to +0.060 for glm-4.7); no exclusions were applied in this readout. The thinking condition also does not change any other conclusion (see the per-condition columns throughout).
 
-![RQ3](results_real/plots/rq3_thinking_delta.png)
+![RQ3](results/plots/rq3_thinking_delta.png)
 
 ### 3.5 Where self wins and loses (per dimension)
 
@@ -145,7 +145,7 @@ Mean raw introspective advantage (`mean cross loss − mean self loss`, native u
 | `mean_action_block_size` | +0.256 cmds/step | self better |
 | `n_constraint_violations` | +0.004 | tie |
 
-The per-(model, dimension) wins heatmap ([figures/primary__z-ai__glm-5/b2_wins_heatmap.png](results_real/figures/primary__z-ai__glm-5/b2_wins_heatmap.png)) shows the same split with per-model texture: capability columns are mostly blue (self loses), `defensive_code`/`express_uncertainty` mostly red, and the continuous style dims are strongly model-idiosyncratic (e.g. `avg_tokens_step` wins are 1.00 for qwen3-next-80b but 0.00 for the small Qwens — cell-level wins and mean losses can disagree because means are outlier-dominated).
+The per-(model, dimension) wins heatmap ([figures/primary__z-ai__glm-5/b2_wins_heatmap.png](results/figures/primary__z-ai__glm-5/b2_wins_heatmap.png)) shows the same split with per-model texture: capability columns are mostly blue (self loses), `defensive_code`/`express_uncertainty` mostly red, and the continuous style dims are strongly model-idiosyncratic (e.g. `avg_tokens_step` wins are 1.00 for qwen3-next-80b but 0.00 for the small Qwens — cell-level wins and mean losses can disagree because means are outlier-dominated).
 
 ### 3.6 Murphy decomposition — miscalibration is the error budget
 
@@ -167,8 +167,8 @@ Three facts jump out:
 
 Calibration also tracks capability at the per-model level: on `p_solve`, kimi-k2.5 is the best self-calibrated (REL 0.085 at base rate 0.606) and qwen3-14b the worst (REL 0.616 at base rate 0.059 — stating high confidence while solving ~6%).
 
-![Murphy decomposition](results_real/plots/murphy_decomposition.png)
-![Reliability diagrams](results_real/plots/reliability_diagrams.png)
+![Murphy decomposition](results/plots/murphy_decomposition.png)
+![Reliability diagrams](results/plots/reliability_diagrams.png)
 
 ### 3.7 Data quality
 
@@ -222,9 +222,9 @@ One invocation produces every artifact: `results/{scores,analysis,murphy}.json`,
 
 | File | Content |
 |---|---|
-| [`results_real/run_summary.json`](results_real/run_summary.json) | headline numbers + accounting |
-| [`results_real/scores.json`](results_real/scores.json) | per-model wins + per-dim losses, both conditions |
-| [`results_real/analysis.json`](results_real/analysis.json) | RQ1/RQ2/RQ3, per-dim advantages, missingness |
-| [`results_real/murphy.json`](results_real/murphy.json) | Murphy decomposition (per model / mean / pooled) |
-| [`results_real/plots/`](results_real/plots/) | RQ1–3 + Murphy headline figures |
-| [`results_real/figures/primary__z-ai__glm-5/`](results_real/figures/primary__z-ai__glm-5/) | full figure set (A1–A3, B1–B2, C1–C2) |
+| [`results/run_summary.json`](results/run_summary.json) | headline numbers + accounting |
+| [`results/scores.json`](results/scores.json) | per-model wins + per-dim losses, both conditions |
+| [`results/analysis.json`](results/analysis.json) | RQ1/RQ2/RQ3, per-dim advantages, missingness |
+| [`results/murphy.json`](results/murphy.json) | Murphy decomposition (per model / mean / pooled) |
+| [`results/plots/`](results/plots/) | RQ1–3 + Murphy headline figures |
+| [`results/figures/primary__z-ai__glm-5/`](results/figures/primary__z-ai__glm-5/) | full figure set (A1–A3, B1–B2, C1–C2) |

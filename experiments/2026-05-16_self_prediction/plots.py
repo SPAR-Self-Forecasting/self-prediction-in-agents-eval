@@ -69,18 +69,18 @@ _CONDITION_COLORS = {
     "thinking":    "#d4663b",   # orange
 }
 #: Self-vs-cross colors within a single condition (B1's 4-bar groups).
-_SELF_COLORS = {
+SELF_COLORS = {
     "no_thinking": "#3b6fb6",   # solid blue
     "thinking":    "#7aa3d4",   # lighter blue
 }
-_CROSS_COLORS = {
+CROSS_COLORS = {
     "no_thinking": "#d4663b",   # solid orange
     "thinking":    "#e9a380",   # lighter orange
 }
 
 #: Pretty axis labels per dimension -- native units the §15.7 transparency
 #: layer reads literally as ("self off by X tokens", "by Y steps", etc.).
-_DIM_UNITS: dict[str, str] = {
+DIM_UNITS: dict[str, str] = {
     "p_solve": "Brier",
     "p_first_attempt_correct": "Brier",
     "documentation": "Brier",
@@ -117,6 +117,35 @@ def _short_label(model_id: str) -> str:
 def _slug(model_id: str) -> str:
     """Filesystem-safe slug (matches ``config.ModelSpec.slug``)."""
     return model_id.replace("/", "__")
+
+
+def peer_phrase(cross_model: str | None) -> str:
+    """How the peer forecast is named in figure text, e.g. "glm5 forecasting anonymous".
+
+    Figures used to label this series "cross", which overstated what was run in two
+    ways: only *one* model ever produced a peer forecast (the stage-4 designated
+    cross-predictor), and it was never told whose behaviour it was predicting. The
+    label now says both, so a reader cannot mistake it for a panel of peers or for
+    a peer that knew its subject.
+
+    Derived from the data, never hardcoded -- the predictor is whichever model tops
+    the solve-rate ranking at stage 4, so a re-run on different models relabels
+    itself.
+    """
+    if not cross_model:
+        return "peer forecasting anonymous"
+    spec = config.MODEL_BY_ID.get(cross_model)
+    if spec is not None:
+        # "GLM-5" -> "glm5", "Kimi K2.5" -> "kimik2.5" -- compact enough for legends.
+        name = spec.name.lower().replace(" ", "").replace("-", "")
+    else:
+        name = _short_label(cross_model).replace("-", "")
+    return f"{name} forecasting anonymous"
+
+
+def peer_short(cross_model: str | None) -> str:
+    """Just the predictor's name, for annotations with no room for the phrase."""
+    return _short_label(cross_model) if cross_model else "peer"
 
 
 def _sort_by_solve_rate(
@@ -169,7 +198,8 @@ def figure_a1_wins_bar(
 
     ax.set_xlabel("wins(M, condition)")
     ax.set_xlim(0.0, 1.0)
-    ax.set_title("RQ1 — fraction of (task, dim) cells where self beats cross")
+    ax.set_title("RQ1 — fraction of (task, dim) cells where self beats "
+                 f"{peer_phrase(scores.get('cross_model'))}")
     ax.legend(loc="lower right", framealpha=0.95, fontsize=8)
     fig.tight_layout()
     return fig
@@ -310,6 +340,8 @@ def figure_b1_per_dim_loss(
     """
     # Grid sized to the dimension count (A6: 10 dims -> 3x4). Generalises so the
     # battery can grow without a hardcoded subplot count.
+    peer_lbl = peer_phrase(scores.get("cross_model"))
+    peer_abbr = peer_short(scores.get("cross_model"))
     n_dims = len(dimensions)
     ncols = 4
     nrows = math.ceil(n_dims / ncols)
@@ -343,9 +375,9 @@ def figure_b1_per_dim_loss(
                           if np.any(~np.isnan(cross_vals)) else float("nan"))
             advantages[cond] = mean_cross - mean_self
             bars.append((x_positions[2 * j],     mean_self,
-                         _SELF_COLORS[cond], f"self ({cond[:2]})"))
+                         SELF_COLORS[cond], f"self ({cond[:2]})"))
             bars.append((x_positions[2 * j + 1], mean_cross,
-                         _CROSS_COLORS[cond], f"cross ({cond[:2]})"))
+                         CROSS_COLORS[cond], f"{peer_abbr} ({cond[:2]})"))
 
         xs = [b[0] for b in bars]
         ys = [b[1] for b in bars]
@@ -356,11 +388,11 @@ def figure_b1_per_dim_loss(
                 ax.text(x, val, f"{val:.3f}" if val < 10 else f"{val:.1f}",
                         ha="center", va="bottom", fontsize=7)
         ax.set_xticks([0.35, 2.15], ["no_thinking", "thinking"], fontsize=8)
-        # under-axis self/cross sub-tick guide
-        ax.set_xticks(xs, ["s", "c", "s", "c"], minor=True)
+        # under-axis sub-tick guide: s = self, p = peer (spelled out in the legend)
+        ax.set_xticks(xs, ["s", "p", "s", "p"], minor=True)
         ax.tick_params(axis="x", which="minor", labelsize=7, pad=12, length=0)
 
-        units = _DIM_UNITS.get(name, "")
+        units = DIM_UNITS.get(name, "")
         ax.set_title(
             f"{name}\nadv: nt = {advantages['no_thinking']:+.3f}, "
             f"t = {advantages['thinking']:+.3f} ({units})",
@@ -371,10 +403,12 @@ def figure_b1_per_dim_loss(
 
     # Legend on the figure once.
     legend_handles = [
-        plt.Rectangle((0, 0), 1, 1, color=_SELF_COLORS["no_thinking"], label="self (no_thinking)"),
-        plt.Rectangle((0, 0), 1, 1, color=_CROSS_COLORS["no_thinking"], label="cross (no_thinking)"),
-        plt.Rectangle((0, 0), 1, 1, color=_SELF_COLORS["thinking"], label="self (thinking)"),
-        plt.Rectangle((0, 0), 1, 1, color=_CROSS_COLORS["thinking"], label="cross (thinking)"),
+        plt.Rectangle((0, 0), 1, 1, color=SELF_COLORS["no_thinking"], label="self (no_thinking)"),
+        plt.Rectangle((0, 0), 1, 1, color=CROSS_COLORS["no_thinking"],
+                      label=f"{peer_lbl} (no_thinking)"),
+        plt.Rectangle((0, 0), 1, 1, color=SELF_COLORS["thinking"], label="self (thinking)"),
+        plt.Rectangle((0, 0), 1, 1, color=CROSS_COLORS["thinking"],
+                      label=f"{peer_lbl} (thinking)"),
     ]
     fig.legend(handles=legend_handles, loc="lower center", ncol=4,
                bbox_to_anchor=(0.5, -0.02), fontsize=9, framealpha=0.95)
@@ -435,7 +469,7 @@ def figure_b2_wins_heatmap(
                             color="black" if 0.35 <= v <= 0.65 else "white")
     axes[0].set_yticks(range(len(models)), [_short_label(m) for m in models])
     cbar = fig.colorbar(last_im, ax=axes, shrink=0.85,
-                        label="wins fraction (self vs cross)")
+                        label=f"wins fraction (self vs {peer_phrase(scores.get('cross_model'))})")
     cbar.ax.axhline(0.5, color="black", linewidth=1.0)
     fig.suptitle(
         "§15.7 transparency — where introspection wins  "
@@ -461,6 +495,67 @@ def _binary_dim_names(dimensions) -> list[str]:
     return out
 
 
+#: Axes label marking the C1 explainer panel (it is not a data subplot).
+MURPHY_KEY_LABEL = "murphy-key"
+
+#: Legend text for the C1 grid. Kept beside the figure it explains so the two
+#: cannot drift apart; the terms are the Murphy components, not our coinages.
+_MURPHY_KEY_TERMS = (
+    ("REL — lower is better",
+     "reliability (miscalibration): it states 0.7 where 0.3\n"
+     "happens. 0 = perfectly calibrated."),
+    ("RES — higher is better",
+     "resolution (discrimination), subtracted because it helps:\n"
+     "does the forecast separate cells where the outcome happens\n"
+     "from those where it doesn't? Ceiling is UNC."),
+    ("UNC — fixed floor",
+     "uncertainty (base-rate variance p(1\u2212p)): the floor neither\n"
+     "side can beat, here the agent's own rollout-to-rollout\n"
+     "randomness. Same for both forecasters, drawn as the dashed line."),
+)
+
+_MURPHY_KEY_CODA = (
+    "A perfect forecaster: REL 0, RES = UNC \u2192 Brier 0.\n"
+    "One that only states the base rate: REL 0, RES 0 \u2192 Brier = UNC.\n"
+    "Tall left-hand bars mean miscalibrated; flat right-hand bars mean\n"
+    "uninformative \u2014 and only the second cannot be fixed after the fact."
+)
+
+
+def _draw_murphy_key(ax, *, body_size: float = 7.2) -> None:
+    """Render the REL/RES/UNC explainer into a spare subplot slot.
+
+    Blocks are walked down the panel by line count rather than placed at hand
+    tuned offsets -- the term bodies are prose and any future edit to their
+    length would silently overlap the block beneath.
+    """
+    ax.set_visible(True)
+    ax.axis("off")
+    ax.set_label(MURPHY_KEY_LABEL)   # so callers/tests can tell it from a data panel
+    ax.add_patch(plt.Rectangle(
+        (0.01, 0.02), 0.98, 0.96, transform=ax.transAxes, clip_on=False,
+        facecolor="#fbfbfb", edgecolor="#dcdcdc", linewidth=1.0, zorder=0))
+
+    ax.text(0.5, 0.952, "How to read these panels", transform=ax.transAxes,
+            ha="center", va="top", fontsize=9.5, fontweight="bold")
+    ax.text(0.5, 0.872, "Brier  =  REL \u2212 RES + UNC", transform=ax.transAxes,
+            ha="center", va="top", fontsize=10.5, family="monospace")
+    ax.text(0.5, 0.803, "CORP estimator \u2014 exact identity, non-negative components",
+            transform=ax.transAxes, ha="center", va="top", fontsize=6.8,
+            color="#777", style="italic")
+
+    step, gap, y = 0.052, 0.018, 0.742
+    for term, body in _MURPHY_KEY_TERMS:
+        ax.text(0.045, y, term, transform=ax.transAxes, va="top",
+                fontsize=8.5, fontweight="bold", color="#222")
+        ax.text(0.21, y, body, transform=ax.transAxes, va="top",
+                fontsize=body_size, color="#333", linespacing=1.45)
+        y -= step * (body.count("\n") + 1) + gap
+
+    ax.text(0.045, y - 0.01, _MURPHY_KEY_CODA, transform=ax.transAxes,
+            va="top", fontsize=body_size, color="#333", linespacing=1.45)
+
+
 def figure_c1_murphy_components(
     *, murphy: dict, dimensions,
 ) -> plt.Figure:
@@ -473,6 +568,8 @@ def figure_c1_murphy_components(
     construction) is drawn as one dashed line per condition. The Brier totals
     (= REL - RES + UNC, exact under CORP) are annotated per subplot.
     """
+    peer_lbl = peer_phrase(murphy.get("cross_model"))
+    peer_abbr = peer_short(murphy.get("cross_model"))
     dim_names = _binary_dim_names(dimensions)
     n_dims = len(dim_names)
     ncols = min(3, n_dims) or 1
@@ -499,13 +596,13 @@ def figure_c1_murphy_components(
             unc_by_cond[cond] = s.get("uncertainty", float("nan"))
             brier_note.append(
                 f"{cond[:2]}: BS self {s.get('brier', float('nan')):.3f} / "
-                f"cross {c.get('brier', float('nan')):.3f}"
+                f"{peer_abbr} {c.get('brier', float('nan')):.3f}"
             )
             for comp, gx in group_x.items():
                 xs = [gx + offsets[2 * j], gx + offsets[2 * j + 1]]
                 ys = [s.get(comp, float("nan")), c.get(comp, float("nan"))]
                 ax.bar(xs, ys, width=0.6,
-                       color=[_SELF_COLORS[cond], _CROSS_COLORS[cond]],
+                       color=[SELF_COLORS[cond], CROSS_COLORS[cond]],
                        edgecolor="white")
                 for x, val in zip(xs, ys):
                     if not np.isnan(val):
@@ -526,16 +623,24 @@ def figure_c1_murphy_components(
                            label=f"UNC ({cond})" if k == 0 else None)
 
         ax.set_xticks([group_x["reliability"] + 1.25, group_x["resolution"] + 1.25],
-                      ["reliability ↓", "resolution ↑"], fontsize=9)
+                      ["reliability\n(lower is better)", "resolution\n(higher is better)"],
+                      fontsize=8.5)
         ax.set_title(f"{name}\n{';  '.join(brier_note)}", fontsize=8)
         ax.set_ylabel("Brier component", fontsize=8)
         ax.margins(y=0.25)
 
+    # The dimension grid rarely fills its last row; spend the spare slot on the
+    # key rather than leaving a hole. With no spare slot the figure is unchanged.
+    if len(flat) > n_dims:
+        _draw_murphy_key(flat[n_dims])
+
     legend_handles = [
-        plt.Rectangle((0, 0), 1, 1, color=_SELF_COLORS["no_thinking"], label="self (no_thinking)"),
-        plt.Rectangle((0, 0), 1, 1, color=_CROSS_COLORS["no_thinking"], label="cross (no_thinking)"),
-        plt.Rectangle((0, 0), 1, 1, color=_SELF_COLORS["thinking"], label="self (thinking)"),
-        plt.Rectangle((0, 0), 1, 1, color=_CROSS_COLORS["thinking"], label="cross (thinking)"),
+        plt.Rectangle((0, 0), 1, 1, color=SELF_COLORS["no_thinking"], label="self (no_thinking)"),
+        plt.Rectangle((0, 0), 1, 1, color=CROSS_COLORS["no_thinking"],
+                      label=f"{peer_lbl} (no_thinking)"),
+        plt.Rectangle((0, 0), 1, 1, color=SELF_COLORS["thinking"], label="self (thinking)"),
+        plt.Rectangle((0, 0), 1, 1, color=CROSS_COLORS["thinking"],
+                      label=f"{peer_lbl} (thinking)"),
         plt.Line2D([], [], color=_NEUTRAL_GREY, linestyle="--", label="UNC floor (no_thinking)"),
         plt.Line2D([], [], color=_NEUTRAL_GREY, linestyle=":", label="UNC floor (thinking)"),
     ]
@@ -543,7 +648,7 @@ def figure_c1_murphy_components(
                bbox_to_anchor=(0.5, -0.02), fontsize=8, framealpha=0.95)
     fig.suptitle(
         "Murphy decomposition (CORP) — Brier = REL − RES + UNC, mean across models\n"
-        "self loses by being miscalibrated (REL ↑) or by not discriminating (RES ↓ vs the UNC floor)",
+        "self loses by being miscalibrated (high REL) or by not discriminating (low RES vs the UNC floor)",
         fontsize=11,
     )
     fig.tight_layout(rect=[0, 0.06, 1, 0.90])
@@ -558,12 +663,18 @@ def figure_c2_reliability_diagrams(
 ) -> plt.Figure:
     """Calibration curves per binary dim: observed rate vs stated probability.
 
-    Pooled events across models (per-model bins are too thin), self vs cross x
+    Pooled events across models (per-model bins are too thin), self vs the peer x
     both conditions, from the fixed-bin table in ``murphy.json``. Marker area
     scales with the bin's share of total weight; the diagonal is perfect
-    calibration. Pooling caveat (mixed base rates; shared cross forecast) is
-    stated in the suptitle.
+    calibration. The grey horizontal is the base rate of the primary condition
+    only (they differ slightly per condition; see the axhline comment below).
+    Pooling caveat (mixed base rates; one shared anonymous forecast) is stated in
+    the suptitle.
+
+    The peer series is labelled ``"<predictor> forecasting anonymous"`` rather than
+    "cross" -- see :func:`peer_phrase` for why the old label misled.
     """
+    peer_lbl = peer_phrase(murphy.get("cross_model"))
     dim_names = _binary_dim_names(dimensions)
     n_dims = len(dim_names)
     ncols = min(3, n_dims) or 1
@@ -573,12 +684,13 @@ def figure_c2_reliability_diagrams(
     for ax in flat:
         ax.set_visible(False)
 
-    colors = {"self": _SELF_COLORS, "cross": _CROSS_COLORS}
+    colors = {"self": SELF_COLORS, "cross": CROSS_COLORS}
     for k, name in enumerate(dim_names):
         ax = flat[k]
         ax.set_visible(True)
         ax.plot([0, 1], [0, 1], color=_NEUTRAL_GREY, linestyle="--", linewidth=1.0,
                 zorder=1)
+        base_rates: dict[str, float] = {}
         for cond in _CONDITIONS:
             pooled = murphy["conditions"].get(cond, {}).get(name, {}).get("pooled", {})
             for kind in ("self", "cross"):
@@ -597,7 +709,16 @@ def figure_c2_reliability_diagrams(
                            edgecolor="white", linewidth=0.8, zorder=3)
             base = pooled.get("self", {}).get("base_rate", float("nan"))
             if not np.isnan(base):
-                ax.axhline(base, color=_NEUTRAL_GREY, linewidth=0.8, alpha=0.6)
+                base_rates[cond] = base
+
+        # One base-rate line, from the primary condition. The conditions differ
+        # by ~0.01 (a cell is scored only where both forecasts parse, and the
+        # surviving cell set differs), which drew two indistinguishable greys
+        # for a legend entry that promises one.
+        primary = next((c for c in _CONDITIONS if c in base_rates), None)
+        if primary is not None:
+            ax.axhline(base_rates[primary], color=_NEUTRAL_GREY, linewidth=0.8,
+                       alpha=0.6, zorder=1)
         ax.set_xlim(-0.02, 1.02)
         ax.set_ylim(-0.02, 1.02)
         ax.set_xlabel("stated probability", fontsize=8)
@@ -605,21 +726,32 @@ def figure_c2_reliability_diagrams(
         ax.set_title(name, fontsize=9)
 
     legend_handles = [
-        plt.Line2D([], [], color=_SELF_COLORS["no_thinking"], marker="o", label="self (no_thinking)"),
-        plt.Line2D([], [], color=_CROSS_COLORS["no_thinking"], marker="o", label="cross (no_thinking)"),
-        plt.Line2D([], [], color=_SELF_COLORS["thinking"], marker="o", linestyle=":", label="self (thinking)"),
-        plt.Line2D([], [], color=_CROSS_COLORS["thinking"], marker="o", linestyle=":", label="cross (thinking)"),
+        plt.Line2D([], [], color=SELF_COLORS["no_thinking"], marker="o", label="self (no_thinking)"),
+        plt.Line2D([], [], color=CROSS_COLORS["no_thinking"], marker="o",
+                   label=f"{peer_lbl} (no_thinking)"),
+        plt.Line2D([], [], color=SELF_COLORS["thinking"], marker="o", linestyle=":", label="self (thinking)"),
+        plt.Line2D([], [], color=CROSS_COLORS["thinking"], marker="o", linestyle=":",
+                   label=f"{peer_lbl} (thinking)"),
         plt.Line2D([], [], color=_NEUTRAL_GREY, linestyle="--", label="perfect calibration"),
-        plt.Line2D([], [], color=_NEUTRAL_GREY, linewidth=0.8, alpha=0.6, label="pooled base rate"),
+        plt.Line2D([], [], color=_NEUTRAL_GREY, linewidth=0.8, alpha=0.6,
+                   label=f"pooled base rate ({_CONDITIONS[0]})"),
     ]
     fig.legend(handles=legend_handles, loc="lower center", ncol=3,
-               bbox_to_anchor=(0.5, -0.02), fontsize=8, framealpha=0.95)
+               bbox_to_anchor=(0.5, 0.04), fontsize=8, framealpha=0.95)
     fig.suptitle(
-        "Reliability diagrams — pooled events across models (marker area = bin weight)\n"
-        "caveat: pooling mixes per-model base rates; the cross forecast is shared across targets",
+        "Reliability diagrams — pooled events across models\n"
+        f"caveat: pooling mixes per-model base rates; {peer_short(murphy.get('cross_model'))}'s "
+        "anonymous forecast is one set shared across all subjects",
         fontsize=11,
     )
-    fig.tight_layout(rect=[0, 0.06, 1, 0.90])
+    fig.text(
+        0.5, 0.008,
+        "Dot size shows how much evidence each bin carries: larger dots pooled more (model, task) events "
+        "at that stated probability; smaller dots are thin bins where the calibration point is less trustworthy. "
+        "The dashed diagonal is perfect calibration; the grey horizontal is the pooled base rate.",
+        ha="center", va="bottom", fontsize=8.5, color="#444", linespacing=1.45,
+    )
+    fig.tight_layout(rect=[0, 0.10, 1, 0.88])
     return fig
 
 

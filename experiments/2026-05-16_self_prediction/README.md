@@ -33,6 +33,32 @@ python run.py --real       # real run: spends money, needs Docker + an API key
 re-render or recompute from existing results (`--skip-figures` on `run.py`
 gives a compute-only run).
 
+### Side scripts — model identity
+
+Two scripts probe whether *knowing which model you are* changes a self-forecast.
+Neither is part of `run.py`; both are standalone and cost money unless `--dry-run`.
+
+```bash
+python check_model_identity.py                     # can each model name itself?
+python compare_self_forecasts.py --tasks 5         # unprimed vs identity-primed
+```
+
+- [`check_model_identity.py`](check_model_identity.py) asks every model the one
+  question in [`prompts/identity_check.txt`](prompts/identity_check.txt) and prints
+  the raw replies to `results/identity_check.json`. It reports a keyword hint but
+  deliberately issues no verdict: "I am Claude, made by Anthropic" and "I am a
+  large language model" both fail a keyword test and only one is a refusal to
+  self-identify. Run this first — the primed condition below is only meaningful
+  for models that can answer it.
+- [`compare_self_forecasts.py`](compare_self_forecasts.py) elicits **two**
+  self-forecasts per model over the same tasks, conditions and sample slots:
+  `self` (the prompt `run.py` sends) and `self_primed` (the identity question, the
+  model's own answer, then that *byte-identical* prompt as a third turn). It
+  reports the signed per-dimension shift between them. It does **not** report
+  which variant is more accurate — that needs the rollout outcomes, which live in
+  the uncommitted `data_real/`; without them the honest comparison is between the
+  two sets of beliefs, not their realised losses.
+
 ---
 
 ## The pipeline, in plain language
@@ -50,6 +76,46 @@ gives a compute-only run).
 | 7 | **Analysis** | Descriptive readout (point estimates only). | `results/analysis.json` |
 | 8 | **Murphy** | Brier decomposition of the binary dims (REL − RES + UNC; see below). | `results/murphy.json` |
 | 9 | **Figures** | Every figure: the flat headline set (RQ1–3 + the two Murphy plots) and the full set (A/B/C figures). | `results/plots/`, `results/figures/` |
+
+### The four forecast kinds ([`prompts/`](prompts/))
+
+`run.py` uses the first and third; the other two exist for the side scripts and
+for pricing what identity information is worth.
+
+| `kind` | Template | Who is named | Shared across subjects? |
+|--------|----------|--------------|-------------------------|
+| `self` | `self_forecast.txt` | the model, as itself | n/a |
+| `self_primed` | same file, verbatim, after the identity Q&A | the model, by itself | n/a |
+| `anonymous` | `cross_forecast_anonymous.txt` | nobody | **yes** — one forecast per task serves all 11 subjects |
+| `cross_named` | `cross_forecast.txt` (`{{MODEL}}`) | the subject | no — one forecast per (task, subject) |
+
+The two peer kinds are different estimands, not two spellings of one:
+
+- **`anonymous` is the RQ1 baseline.** Because the peer is not told whose behaviour
+  it is predicting, it cannot lean on reputation, so a self-forecast beating it is
+  evidence of *introspective* advantage. One forecast per task is reusable for
+  exactly this reason.
+- **`cross_named` prices the identity.** A peer told it is forecasting Qwen3-8B can
+  predict a low solve rate from public reputation alone, no behavioural insight
+  required. The gap between the two cross kinds is what the name alone buys; the
+  gap between `self` and `cross_named` is what self-knowledge buys *beyond*
+  reputation. Naming the subject makes the forecast subject-specific, so this kind
+  costs 11× the calls of the anonymous one.
+
+`kind="cross"` is retired, not reassigned: it used to mean the anonymous forecast,
+so pointing it at the named one would let an old cache and new code disagree about
+what was measured. It is now an invalid value that fails loudly. Two consequences
+if you hold a pre-rename `data_real/`:
+
+- The peer cache directory moved, since it is named after the kind. Migrate with
+  `mv data_real/forecasts/cross data_real/forecasts/anonymous` — otherwise the
+  samples are not found (not misread) and stage 5 re-elicits and re-bills them.
+- Any forecast JSON still recording `"kind": "cross"` raises on load. Rewrite the
+  field to `"anonymous"`.
+
+Result artifacts are unaffected: `murphy.json` and `scores.json` key the *forecast
+set* as `self` / `cross`, which is a separate namespace from the prompt-variant
+`kind` and still describes the cross-predictor's forecasts accurately.
 
 ### The 10 dimensions
 
@@ -205,13 +271,19 @@ forecast has zero between-model resolution by construction. A clearly-caveated
 pooled view feeds the reliability diagrams.
 
 Runs automatically as **stage 8** of `run.py` (figures in stage 9); standalone
-re-runs against an existing cache:
+re-runs against existing output:
 
 ```bash
-python murphy.py --data-dir data_real --results-dir results_real   # -> murphy.json
-python make_plots.py --results-dir results_real                    # plots/ incl. Murphy
-python plots.py  --results-dir results_real                        # figures/ incl. C1, C2
+python make_plots.py --results-dir results     # plots/ incl. Murphy
+python plots.py      --results-dir results     # figures/ incl. C1, C2
+python murphy.py     --data-dir data_real --results-dir results   # -> murphy.json
 ```
+
+The two figure commands work off the committed `results/`. `murphy.py`
+re-*computes* the decomposition, so it also needs the per-rollout cache a real
+run leaves in `data_real/` — that cache is gitignored (it is large and holds raw
+model output), so a fresh clone can re-render the figures but not recompute
+`murphy.json` without redoing the run.
 
 The two Murphy figures land in **both** figure sets when `murphy.json` exists:
 `plots/murphy_decomposition.png` + `plots/reliability_diagrams.png` (headline
@@ -221,46 +293,50 @@ diagrams.
 
 ---
 
-## Running the FULL real eval on a cloud pod
+## Running the FULL real eval
 
 A real run needs **Linux + Docker** (the SWE-bench eval is Unix-only and spawns a
-container per task). It is CPU/RAM/disk-bound — **no GPU**. [`run_on_pod.sh`](run_on_pod.sh)
-does the whole thing in one command: installs deps, checks Docker, builds the
-venv, pulls the eval images, and launches the full 12-model × 30-task run. It is
-**idempotent and resumable** — re-run it to continue after any interruption.
+container per task). It is CPU/RAM/disk-bound — **no GPU**. The published run
+used ~16–32 vCPU / 32–64 GB RAM / ~100 GB disk; any Ubuntu box or CPU cloud pod
+that permits Docker will do.
 
-**1. Pick a machine.** A CPU box, ~16–32 vCPU / 32–64 GB RAM / ~100 GB disk, no
-GPU. (RunPod CPU pod, or any Ubuntu VM with Docker. Note: RunPod *pods* must
-allow Docker — the script tells you immediately if the host can't run it.)
+**1. Provide the secret.** `OPENROUTER_API_KEY=sk-or-...` in the repo-root
+`.env` (or exported). Everything else is flags.
 
-**2. Get the code onto the pod**, either:
-- `git clone <your-private-repo-url>` (push this repo to a private remote first), or
-- copy it from your laptop: `rsync -az --exclude .venv --exclude data_real ./ root@<pod>:~/spc/`
+**2. Launch `run.py --real`** — there is no one-command wrapper in the repo; the
+launcher is the pipeline itself. Run it under `tmux` so it survives disconnects:
 
-**3. Provide the secrets:**
-- `export OPENROUTER_API_KEY=sk-or-...` (required; or copy your local `.env` into
-  the repo root on the pod — the script reads it).
-- `export GITHUB_TOKEN=github_pat_...` (recommended). With it set, the script
-  **auto-saves the output to `main` every ~10 minutes and once at the end** —
-  both `data_real/` (the rollouts/forecasts you paid OpenRouter for, which make a
-  re-run resumable) and `results_real/` (the scores). A crash or accidental pod
-  delete then can't lose the work. Needs a fine-grained token with **Contents:
-  Read and write** on this repo. Without it the output lives only on the pod.
-
-**4. Launch it** (inside `tmux` so it survives disconnects):
 ```bash
 tmux new -s eval
-bash experiments/2026-05-16_self_prediction/run_on_pod.sh
+python run.py --real \
+  --rollout-workers 20 --max-workers 12 --step-limit 250 \
+  --data-dir data_real --results-dir results_real
 ```
-Detach with `Ctrl-b d`; re-attach with `tmux attach -t eval`.
 
-**5. When `results_real/run_summary.json` appears, it's done.** If you set
-`GITHUB_TOKEN`, the results are already on `main` (`git pull` to get them); then
-**delete the pod** so it stops billing. (No token? `scp`/`rsync` `results_real/`
-back first.) Attach a **network volume** so the data survives a pod delete even
-mid-run.
+Detach with `Ctrl-b d`, re-attach with `tmux attach -t eval`. **It is resumable:**
+the per-`(model, task, rollout)` cache in `--data-dir` means re-running the same
+command continues after any crash, reboot, or interruption rather than re-paying
+for completed work. Trim cost with `--models` and `--n-tasks` for a partial run;
+size `--rollout-workers` to free RAM (peak in-flight containers is roughly twice
+that number).
+
+**3. When `results_real/run_summary.json` appears, it's done.** Copy
+`results_real/` off the machine before deleting it — and note that `data_real/`
+is the expensive artifact, since it is what makes a re-run resumable. On a cloud
+pod, attach a network volume so both survive a pod delete.
 
 Two cost notes: the **machine** is cheap (~$0.5–1/hr; whole run ~$30–60), and the
-**OpenRouter** spend (the agent + forecast calls) is the larger bill — order of
-hundreds of dollars for all 12 models. Trim with `MODELS=` / `NTASKS=` /
-`STEP_LIMIT=` env vars (see the script header) for a cheaper partial run.
+**OpenRouter** spend (agent rollouts + forecast calls) is the larger bill — order
+of hundreds of dollars for all 12 models.
+
+> **On the shipped launchers.** [`run_full_laptop.sh`](run_full_laptop.sh) is the
+> exact invocation used for the published run, and `logs/` holds the operational
+> helpers that drove it (`status.sh`, `monitor.sh`, `reset.sh`, `verify_data.py`,
+> …). They are kept as a provenance record, not as a portable entry point: paths,
+> venv, and host are hardcoded to the original WSL2 machine, so read them for the
+> flags rather than executing them.
+
+Note the directory convention: a real run writes to `data_real/` and
+`results_real/`, keeping it clear of the mocked dry-run's `data/` and `results/`.
+`data_real/` is gitignored. The published artifacts under `results/` are the real
+run's output, promoted there for release.

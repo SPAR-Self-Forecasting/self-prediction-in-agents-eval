@@ -141,7 +141,7 @@ class MockLLMClient:
     def __init__(self) -> None:
         self.call_count = 0
         self.total_cost = 0.0
-        self.by_type = {"forecast": 0, "judge": 0, "fallback": 0, "other": 0}
+        self.by_type = {"forecast": 0, "judge": 0, "fallback": 0, "identity": 0, "other": 0}
 
     def complete(self, model: str, prompt: str, **kwargs) -> _Resp:
         self.call_count += 1
@@ -161,11 +161,30 @@ class MockLLMClient:
             return _Resp(json.dumps({
                 "express_uncertainty": {"bool": rng.random() < 0.5, "evidence": "mock"},
             }))
-        if "TASK DESCRIPTION:" in prompt:
+        # "AGENT SCAFFOLD" heads the scaffold block in all three forecast templates.
+        # It replaced an older "TASK DESCRIPTION:" marker that no longer appears in
+        # any prompt, which left this branch dead: dry-run forecasts fell through to
+        # "{}", failed extraction, and were silently recovered by the fallback call,
+        # so a dry run exercised only the recovery path and never the happy one.
+        if "AGENT SCAFFOLD" in prompt:
             self.by_type["forecast"] += 1
             return _Resp(_mock_forecast_json(rng))
+        if "what model you are" in prompt.lower():
+            self.by_type["identity"] += 1
+            spec = config.MODEL_BY_ID.get(model)
+            return _Resp(f"I am {spec.name}." if spec else "I am a language model.")
         self.by_type["other"] += 1
         return _Resp("{}")
+
+    def chat(self, model: str, messages: list[dict], **kwargs) -> _Resp:
+        """Multi-turn entry point, used by the identity-primed self-forecast.
+
+        Dispatches on the last user turn, which carries the actual request; the
+        earlier identity turns only set context.
+        """
+        last_user = next(
+            (m["content"] for m in reversed(messages) if m.get("role") == "user"), "")
+        return self.complete(model, last_user, **kwargs)
 
     def accounting(self) -> dict:
         return {"calls": self.call_count, "total_cost_usd": 0.0,
@@ -433,6 +452,11 @@ def _forecast_sample_path(cfg: RunConfig, kind: str, slug: str, task_id: str, sa
     """Sub-cell layout (multi-sample, sec 9.6): one file per sample, both conditions inside.
 
     ``forecasts/<kind>/<slug>/<task_id>/s<sample_idx>.json``.
+
+    The peer directory is ``forecasts/anonymous/``; it was ``forecasts/cross/``
+    before the kind was renamed. A pre-rename cache is not misread, it is simply
+    not found, so the sweep would re-elicit and re-bill it -- migrate with
+    ``mv data_real/forecasts/cross data_real/forecasts/anonymous``.
     """
     return cfg.data_dir / "forecasts" / kind / slug / task_id / f"s{sample_idx}.json"
 
@@ -464,7 +488,7 @@ def stage_forecasting(cfg: RunConfig, tasks, llm, designation: dict) -> dict:
         if model not in cross_candidates:
             kinds.append("self")
         if model in cross_candidates:
-            kinds.append("cross")
+            kinds.append("anonymous")
         for kind in kinds:
             for task in tasks:
                 for sample_idx in range(config.N_FORECAST_SAMPLES):
@@ -500,7 +524,7 @@ def stage_forecasting(cfg: RunConfig, tasks, llm, designation: dict) -> dict:
         return out
 
     self_forecasts = {m: _read_samples(m, "self") for m in cfg.model_ids if m not in cross_candidates}
-    cross_forecasts = {m: _read_samples(m, "cross") for m in cross_candidates}
+    cross_forecasts = {m: _read_samples(m, "anonymous") for m in cross_candidates}
 
     _log(f"stage 5 forecasting: {len(self_forecasts)} self + {len(cross_forecasts)} cross "
          f"forecast sets ({n_to_run} sample-units run, rest from cache; "

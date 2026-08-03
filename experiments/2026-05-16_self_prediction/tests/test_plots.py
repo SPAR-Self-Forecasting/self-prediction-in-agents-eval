@@ -12,6 +12,7 @@ and assert each figure's *structure* (right number of bars/markers/images, the
 from __future__ import annotations
 
 import json
+import re
 
 import matplotlib
 matplotlib.use("Agg")
@@ -315,16 +316,24 @@ def murphy_report() -> dict:
     return make_murphy()
 
 
+def _data_panels(fig):
+    """Visible subplots that carry data -- excludes the C1 explainer panel."""
+    return [ax for ax in fig.axes if ax.get_visible() and ax.has_data()
+            and ax.get_label() != plots.MURPHY_KEY_LABEL]
+
+
+def _key_panel(fig):
+    return next(ax for ax in fig.axes if ax.get_label() == plots.MURPHY_KEY_LABEL)
+
+
 def test_c1_murphy_renders_one_subplot_per_binary_dim(murphy_report, dims):
     fig = plots.figure_c1_murphy_components(murphy=murphy_report, dimensions=dims)
-    visible = [ax for ax in fig.axes if ax.get_visible() and ax.has_data()]
-    assert len(visible) == len(BINARY_DIM_NAMES)
+    assert len(_data_panels(fig)) == len(BINARY_DIM_NAMES)
 
 
 def test_c1_murphy_has_eight_bars_and_unc_lines_per_subplot(murphy_report, dims):
     fig = plots.figure_c1_murphy_components(murphy=murphy_report, dimensions=dims)
-    visible = [ax for ax in fig.axes if ax.get_visible() and ax.has_data()]
-    for ax in visible:
+    for ax in _data_panels(fig):
         n_bars = sum(len(c) for c in ax.containers if hasattr(c, "patches"))
         assert n_bars == 8, "REL + RES groups x [self_nt, cross_nt, self_t, cross_t]"
         # the UNC floor: one dashed horizontal line per condition
@@ -345,6 +354,74 @@ def test_c2_reliability_renders_curves_and_diagonal(murphy_report, dims):
         assert n_points == 8
 
 
+def test_c1_key_panel_uses_the_spare_slot_and_defines_every_component(murphy_report, dims):
+    """The 5 binary dims leave a hole in the 2x3 grid; the key fills it."""
+    fig = plots.figure_c1_murphy_components(murphy=murphy_report, dimensions=dims)
+    try:
+        blob = " ".join(t.get_text() for t in _key_panel(fig).texts)
+        for term in ("REL", "RES", "UNC", "Brier"):
+            assert term in blob
+        for word in ("reliability", "resolution", "uncertainty"):
+            assert word in blob, f"{word} is never spelled out"
+        assert "lower is better" in blob and "higher is better" in blob
+    finally:
+        plt.close(fig)
+
+
+def test_c1_axis_labels_say_which_direction_is_better(murphy_report, dims):
+    """Arrows alone did not communicate 'lower/higher is better'."""
+    fig = plots.figure_c1_murphy_components(murphy=murphy_report, dimensions=dims)
+    try:
+        data_axes = [ax for ax in fig.axes if ax.get_label() != plots.MURPHY_KEY_LABEL and ax.has_data()]
+        labels = " ".join(t.get_text() for ax in data_axes for t in ax.get_xticklabels())
+        assert "lower is better" in labels and "higher is better" in labels
+        assert "\u2191" not in labels and "\u2193" not in labels
+    finally:
+        plt.close(fig)
+
+
+def test_c1_key_panel_text_stays_inside_its_box(murphy_report, dims):
+    """Prose laid out by line count overflows the moment someone adds a line."""
+    fig = plots.figure_c1_murphy_components(murphy=murphy_report, dimensions=dims)
+    try:
+        key = _key_panel(fig)
+        fig.canvas.draw()
+        box = key.patches[0].get_window_extent()
+        pad = 5.0   # px; the last line only grazed the border when this broke
+        for text in key.texts:
+            extent = text.get_window_extent()
+            label = text.get_text()[:40]
+            assert extent.y0 >= box.y0 + pad, f"text spills below the box: {label!r}"
+            assert extent.y1 <= box.y1 - pad, f"text spills above the box: {label!r}"
+            assert extent.x1 <= box.x1 - pad, f"text spills right of the box: {label!r}"
+    finally:
+        plt.close(fig)
+
+
+def test_c2_footnote_explains_dot_size(murphy_report, dims):
+    fig = plots.figure_c2_reliability_diagrams(murphy=murphy_report, dimensions=dims)
+    try:
+        blob = " ".join(t.get_text() for t in fig.texts).lower()
+        assert "dot size" in blob or "larger dots" in blob
+        assert "smaller dots" in blob or "thin bin" in blob
+    finally:
+        plt.close(fig)
+
+
+def test_c2_draws_exactly_one_base_rate_line(murphy_report, dims):
+    """One grey horizontal per panel, not one per condition.
+
+    The per-condition base rates differ slightly (the scored-cell set differs
+    where forecasts fail to parse), so drawing both renders as an unexplained
+    double-grey against a legend that promises a single line.
+    """
+    fig = plots.figure_c2_reliability_diagrams(murphy=murphy_report, dimensions=dims)
+    for ax in [a for a in fig.axes if a.get_visible() and a.has_data()]:
+        flat = [ln for ln in ax.get_lines()
+                if len(ln.get_xdata()) == 2 and len(set(ln.get_ydata())) == 1]
+        assert len(flat) == 1, f"expected 1 base-rate line, got {len(flat)}"
+
+
 def test_main_adds_murphy_figures_when_report_present(tmp_path, scores, analysis, murphy_report):
     results_dir = tmp_path / "results"
     results_dir.mkdir()
@@ -362,3 +439,98 @@ def test_main_adds_murphy_figures_when_report_present(tmp_path, scores, analysis
         "b1_per_dim_loss.png", "b2_wins_heatmap.png",
         "c1_murphy_components.png", "c2_reliability_diagrams.png",
     ])
+
+
+# --------------------------------------------------------------------------
+# Peer labelling -- "cross" overstated what was actually run
+# --------------------------------------------------------------------------
+def _all_text(fig) -> list[str]:
+    """Every string a reader can see: titles, axis labels, ticks, legends, annotations."""
+    out: list[str] = []
+    if fig._suptitle is not None:
+        out.append(fig._suptitle.get_text())
+    for ax in fig.axes:
+        out += [ax.get_title(), ax.get_xlabel(), ax.get_ylabel()]
+        out += [t.get_text() for t in ax.texts]
+        out += [t.get_text() for t in ax.get_xticklabels() + ax.get_yticklabels()]
+        legend = ax.get_legend()
+        if legend is not None:
+            out += [t.get_text() for t in legend.get_texts()]
+    for legend in fig.legends:
+        out += [t.get_text() for t in legend.get_texts()]
+    return [s for s in out if s]
+
+
+def test_peer_phrase_names_the_predictor_and_its_blindness():
+    assert plots.peer_phrase("z-ai/glm-5") == "glm5 forecasting anonymous"
+    assert plots.peer_short("z-ai/glm-5") == "glm-5"
+
+
+def test_peer_phrase_is_derived_not_hardcoded():
+    """The predictor is chosen by solve rate at stage 4, so a different winner
+    must relabel the figures rather than keep saying glm."""
+    assert plots.peer_phrase("moonshotai/kimi-k2.5") == "kimik2.5 forecasting anonymous"
+    assert "glm" not in plots.peer_phrase("moonshotai/kimi-k2.5")
+
+
+def test_peer_phrase_degrades_without_a_designated_predictor():
+    assert plots.peer_phrase(None) == "peer forecasting anonymous"
+    assert plots.peer_short(None) == "peer"
+
+
+@pytest.mark.parametrize("name", ["a1", "b1", "b2", "c1", "c2"])
+def test_no_figure_calls_the_peer_series_cross(name, scores, analysis, murphy_report):
+    """"cross" implied a panel of peers, and a peer that knew its subject. Only
+    one model ever forecast, and it was never told whose behaviour it was."""
+    if name == "a1":
+        fig = plots.figure_a1_wins_bar(scores=scores, analysis=analysis,
+                                       families_by_model=FAMILIES)
+    elif name == "b1":
+        fig = plots.figure_b1_per_dim_loss(scores=scores, analysis=analysis, dimensions=DIMS)
+    elif name == "b2":
+        fig = plots.figure_b2_wins_heatmap(scores=scores, analysis=analysis, dimensions=DIMS)
+    elif name == "c1":
+        fig = plots.figure_c1_murphy_components(murphy=murphy_report, dimensions=DIMS)
+    else:
+        fig = plots.figure_c2_reliability_diagrams(murphy=murphy_report, dimensions=DIMS)
+    text = " || ".join(_all_text(fig))
+    plt.close(fig)
+    # Word-bounded: "across" is innocent, "cross" and "cross-predictor" are not.
+    stray = re.search(r"\bcross\b|\bcross-", text, re.IGNORECASE)
+    assert stray is None, f"{name} still says 'cross': ...{text[max(0, stray.start() - 60):stray.end() + 60]}..."
+
+
+@pytest.mark.parametrize("name", ["a1", "b1", "b2", "c1", "c2"])
+def test_every_peer_figure_names_the_predictor(name, scores, analysis, murphy_report):
+    if name == "a1":
+        fig = plots.figure_a1_wins_bar(scores=scores, analysis=analysis,
+                                       families_by_model=FAMILIES)
+    elif name == "b1":
+        fig = plots.figure_b1_per_dim_loss(scores=scores, analysis=analysis, dimensions=DIMS)
+    elif name == "b2":
+        fig = plots.figure_b2_wins_heatmap(scores=scores, analysis=analysis, dimensions=DIMS)
+    elif name == "c1":
+        fig = plots.figure_c1_murphy_components(murphy=murphy_report, dimensions=DIMS)
+    else:
+        fig = plots.figure_c2_reliability_diagrams(murphy=murphy_report, dimensions=DIMS)
+    text = " || ".join(_all_text(fig))
+    plt.close(fig)
+    assert "glm5" in text, f"{name} never names the predictor: {text}"
+
+
+def test_c2_legend_says_who_predicted_and_that_it_was_blind(murphy_report):
+    fig = plots.figure_c2_reliability_diagrams(murphy=murphy_report, dimensions=DIMS)
+    labels = [t.get_text() for lg in fig.legends for t in lg.get_texts()]
+    plt.close(fig)
+    assert "glm5 forecasting anonymous (no_thinking)" in labels
+    assert "glm5 forecasting anonymous (thinking)" in labels
+    assert "self (no_thinking)" in labels
+
+
+def test_relabelling_follows_a_different_predictor_through_the_figure(murphy_report):
+    murphy_report["cross_model"] = "moonshotai/kimi-k2.5"
+    fig = plots.figure_c2_reliability_diagrams(murphy=murphy_report, dimensions=DIMS)
+    text = " || ".join(_all_text(fig))
+    plt.close(fig)
+    assert "kimik2.5 forecasting anonymous (no_thinking)" in text
+    assert "glm" not in text

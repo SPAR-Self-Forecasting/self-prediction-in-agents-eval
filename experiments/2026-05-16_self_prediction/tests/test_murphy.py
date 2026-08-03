@@ -228,7 +228,7 @@ def tiny_data() -> metrics.ScoringData:
         "t3": {c: [_fc(M_SELF, "t3", c, "self", 0.4),
                    _fc(M_SELF, "t3", c, "self", 0.8)] for c in config.CONDITIONS},
     }}
-    cross_fc = {t: {c: [_fc(M_CROSS, t, c, "cross", 0.5)] for c in config.CONDITIONS}
+    cross_fc = {t: {c: [_fc(M_CROSS, t, c, "anonymous", 0.5)] for c in config.CONDITIONS}
                 for t in TASKS}
     return metrics.ScoringData(
         dimensions=DIMS, models=[M_SELF, M_CROSS], families={"F": [M_SELF, M_CROSS]},

@@ -3,6 +3,9 @@
 # Real-run output (isolated from the committed mock data)
 data_real/
 
+# compare_self_forecasts.py sweep cache (raw replies, same reason as data_real/)
+data_self_primed/
+
 # Transient run output (pull/launch logs, crash logs)
 logs/*.log
 logs/*.log.err

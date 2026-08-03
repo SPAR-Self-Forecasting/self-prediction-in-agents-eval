@@ -103,6 +103,64 @@ def test_forecast_rejects_bad_enum():
         Forecast(model="m", task_id="t", condition="sometimes", kind="self")
 
 
+def test_named_cross_forecast_roundtrips_its_subject():
+    f = Forecast(model="z-ai/glm-5", task_id="t", condition="thinking",
+                 kind="cross_named", target="qwen/qwen3-8b")
+    assert Forecast.from_dict(f.to_dict()) == f
+
+
+def test_primed_self_forecast_roundtrips_its_priming_turn():
+    f = Forecast(model="qwen/qwen3-8b", task_id="t", condition="thinking",
+                 kind="self_primed", identity_reply="I am Qwen3-8B.")
+    assert Forecast.from_dict(f.to_dict()) == f
+
+
+def test_pre_existing_records_still_load():
+    """Old cache files have neither new field; they must keep deserialising."""
+    f = Forecast.from_dict({"model": "m", "task_id": "t", "condition": "thinking",
+                            "kind": "self", "predictions": {"p_solve": 0.5}})
+    assert f.target is None and f.identity_reply is None
+
+
+def test_the_retired_cross_kind_fails_loudly():
+    """"cross" meant anonymous before the rename. Rather than let a stale record
+    read as either peer kind, the value is retired and rejected outright."""
+    with pytest.raises(ValueError, match="kind"):
+        Forecast.from_dict({"model": "m", "task_id": "t", "condition": "thinking",
+                            "kind": "cross", "predictions": {"p_solve": 0.5}})
+
+
+def test_named_cross_forecast_demands_a_subject():
+    """Unscoreable otherwise: there is nothing to compare the forecast against."""
+    with pytest.raises(ValueError, match="target"):
+        Forecast(model="m", task_id="t", condition="thinking", kind="cross_named")
+
+
+def test_anonymous_forecast_refuses_a_subject():
+    """A named subject on an anonymous forecast would misreport the estimand."""
+    with pytest.raises(ValueError, match="target"):
+        Forecast(model="m", task_id="t", condition="thinking", kind="anonymous",
+                 target="qwen/qwen3-8b")
+
+
+def test_primed_forecast_demands_its_priming_turn():
+    with pytest.raises(ValueError, match="identity_reply"):
+        Forecast(model="m", task_id="t", condition="thinking", kind="self_primed")
+
+
+def test_unprimed_forecast_refuses_a_priming_turn():
+    with pytest.raises(ValueError, match="identity_reply"):
+        Forecast(model="m", task_id="t", condition="thinking", kind="self",
+                 identity_reply="I am m.")
+
+
+def test_an_empty_priming_turn_is_still_a_priming_turn():
+    """A model that answered with nothing was primed; "" must not read as absent."""
+    f = Forecast(model="m", task_id="t", condition="thinking", kind="self_primed",
+                 identity_reply="")
+    assert f.identity_reply == ""
+
+
 # --------------------------------------------------------------------------
 # Cell
 # --------------------------------------------------------------------------
