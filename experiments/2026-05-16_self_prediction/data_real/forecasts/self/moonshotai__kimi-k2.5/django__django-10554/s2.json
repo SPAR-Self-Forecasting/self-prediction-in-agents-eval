@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-10554",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.35,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 40.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.35,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 40,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-10554",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.45,
+      "documentation": 0.25,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.55,
+      "avg_tokens_step": 300.0,
+      "total_expected_steps": 28.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a Django ORM bug related to union queries with ordering. The error \"ORDER BY position 4 is not in select list\" suggests that when `order_by()` is called on a union queryset, the SQL compiler incorrectly references column positions that don't exist in the SELECT clause.\n\nLet me analyze the predictions:\n\n1. **p_solve**: The error message is specific and this appears to be a query compilation issue in Django's ORM. While Django's ORM is complex, the bug pattern is clear - ordering by column position after union operations. I'll estimate 0.75.\n\n2. **p_first_attempt_correct**: Given the complexity of SQL generation and the need to understand exactly how union and ordering interact, I might need one iteration to get it right. I'll estimate 0.45.\n\n3. **documentation**: I'll likely add minimal comments to explain the fix if the surrounding code has comments, but won't add extensive docstrings or type hints unless they're already present in the file. Estimate: 0.25.\n\n4. **defensive_code**: This seems like a specific bug that needs a targeted fix rather than broad validation. I'll stick to the minimal fix. Estimate: 0.15.\n\n5. **express_uncertainty**: I'll likely express some uncertainty when exploring the Django ORM codebase and understanding the query compilation flow. Estimate: 0.55.\n\n6. **avg_tokens_step**: For complex ORM debugging and reasoning about SQL generation, my responses will likely average around 300 tokens.\n\n7. **total_expected_steps**: I need to explore the codebase (finding compiler/query code), understand the issue, create a reproduction, fix it, verify, and submit. Estimate: 28 steps.\n\n8. **explore_edit_ratio**: I'll spend significant time exploring Django's query/compiler code before making my first edit. Estimate: 0.45.\n\n9. **mean_action_block_size**: I'll often run multiple commands per step (searching, reading files, testing). Estimate: 2.2.\n\n10. **n_constraint_violations**: I'm aware of the constraints and will be careful to avoid editing tests/configs, using interactive editors, or combining commands improperly. Estimate: 0.\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.45,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.55,\n  \"avg_tokens_step\": 300,\n  \"total_expected_steps\": 28,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

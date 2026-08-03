@@ -1,0 +1,33 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "sympy__sympy-24661",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.3,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.7,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.7,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "sympy__sympy-24661",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "I'll work through this software engineering task step by step. First, let me analyze what's needed based on the PR description.\n\nThe issue is that `parse_expr` with `evaluate=False` is ignoring the parameter for relational expressions like `1 < 2`. Instead of returning the unevaluated expression `Lt(1, 2, evaluate=False)`, it's evaluating and returning `True`.\n\nLet me start by exploring the codebase to understand how `parse_expr` works and where the issue might be.\n\n[{\"command\": \"find . -name \\\"*.py\\\" | grep -E \\\"(parse|expr)\\\" | head -20\"}]",
+    "sample_idx": 4
+  }
+}

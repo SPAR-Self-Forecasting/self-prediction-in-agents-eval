@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-10554",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.35,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 650.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.35,\n  \"defensive_code\": 0.30,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 650,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-10554",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.3,
+      "documentation": 0.15,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 320.0,
+      "total_expected_steps": 25.0,
+      "explore_edit_ratio": 0.28,
+      "mean_action_block_size": 1.9,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a Django ORM bug where using `.union()` with `.order_by()` on derived querysets causes a \"ORDER BY position N is not in select list\" error. This is a complex SQL generation issue in Django's query compiler.\n\nBased on my analysis of similar ORM bugs and my typical approach:\n\n1. **p_solve (0.65)**: Django ORM internals are complex, especially around UNION operations and ORDER BY handling. I have a good chance of solving this, but SQL generation edge cases can be tricky.\n\n2. **p_first_attempt_correct (0.30)**: ORM bugs almost always require iteration. The first fix attempt might address the immediate error but could break other cases or not handle all edge cases properly.\n\n3. **documentation (0.15)**: I tend to stick to minimal fixes for bug patches. I might add a brief comment explaining the fix, but unlikely to add extensive docstrings or type hints unless the code is particularly unclear.\n\n4. **defensive_code (0.25)**: I might add a guard clause or validation to ensure the ordering columns are properly mapped to the select list, but I generally avoid over-engineering beyond the minimal necessary fix.\n\n5. **express_uncertainty (0.40)**: While debugging complex ORM code, I often express uncertainty about the exact cause until I've traced through the SQL compiler logic, and may hedge when proposing solutions.\n\n6. **avg_tokens_step (320)**: I typically provide thorough reasoning in my thought sections, often including analysis of the code structure, hypotheses about the bug, and explanations of my approach.\n\n7. **total_expected_steps (25)**: Django bugs require: exploring the codebase (6-8 steps), creating a reproduction script (3-4 steps), analyzing the SQL compiler/query code (5-6 steps), implementing the fix (4-5 steps), and verifying (3-4 steps).\n\n8. **explore_edit_ratio (0.28)**: I usually spend significant time exploring first - understanding the query.py and compiler.py files, finding where UNION logic is handled, before making my first edit.\n\n9. **mean_action_block_size (1.9)**: I often issue 1-3 commands per step, typically grouping related file reads or running a command after an edit.\n\n10. **n_constraint_violations (0)**: I'm careful to follow the constraints: not modifying tests, not using interactive editors, not committing, and keeping patch creation separate from submission.\n\n```json\n{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.30,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.40,\n  \"avg_tokens_step\": 320,\n  \"total_expected_steps\": 25,\n  \"explore_edit_ratio\": 0.28,\n  \"mean_action_block_size\": 1.9,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

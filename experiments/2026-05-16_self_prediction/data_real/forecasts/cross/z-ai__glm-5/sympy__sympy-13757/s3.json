@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sympy__sympy-13757",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 850.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this issue, I need to predict how an AI coding agent will handle fixing a SymPy bug where multiplying an expression by a Poly doesn't evaluate when the expression is on the left side.\n\nLet me analyze the task:\n\n1. **The bug**: `x*Poly(x)` returns unevaluated `x*Poly(x, x, domain='ZZ')` instead of `Poly(x**2, x, domain='ZZ')` like `Poly(x)*x` does. This is a missing `__rmul__` method issue in the Poly class.\n\n2. **The fix**: This is a well-defined issue in SymPy's polynomial handling. The fix involves implementing proper reverse multiplication methods (`__rmul__`, `__radd__`, etc.) in the Poly class to handle cases where Poly is on the right side of operations.\n\n3. **Complexity**: This is a moderately complex fix requiring understanding of Python's operator precedence and SymPy's polynomial architecture. The agent will need to explore the codebase, find where Poly's operators are defined, and implement the missing reverse methods.\n\nHere are my predictions:\n\n```json\n{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 850,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.50,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sympy__sympy-13757",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.45,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.45,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.5,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  }
+}

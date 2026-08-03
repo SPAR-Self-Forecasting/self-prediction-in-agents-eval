@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sphinx-doc__sphinx-11510",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.15,
+      "documentation": 0.15,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.45,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, the agent needs to fix a bug in Sphinx where the `source-read` event doesn't properly modify the source of `include`'d files. The issue is that while the event handler is called and modifies `source[0]` for included files, the modification doesn't propagate to the final output. This is a known Sphinx issue related to how the `include` directive reads files separately from the main document reading process.\n\nThe fix likely involves modifying how Sphinx's `include` directive handles the `source-read` event, probably in the RST parser or the include directive implementation. The agent will need to explore the Sphinx codebase, find the relevant code, understand the flow, and implement a fix.\n\nLet me predict the 10 values:\n\n- **p_solve**: This is a moderately complex bug in a large codebase (Sphinx). The agent needs to understand the interaction between the `include` directive and the `source-read` event. The fix is non-trivial but well-documented in the issue. I'll estimate 0.65.\n- **p_first_attempt_correct**: Unlikely - the agent will probably need to explore, try a fix, test it, and potentially iterate. 0.15.\n- **documentation**: The fix is likely a code change without adding docstrings. 0.15.\n- **defensive_code**: Some guard clauses might be added but the fix is likely targeted. 0.25.\n- **express_uncertainty**: The agent may express some uncertainty while exploring the codebase. 0.45.\n- **avg_tokens_step**: The agent will be reading files and reasoning, so moderate token usage. ~450.\n- **total_expected_steps**: Explore codebase (~8), create reproduction (~4), implement fix (~3), test (~3), create patch and submit (~2). ~20 steps.\n- **explore_edit_ratio**: About 8/20 = 0.40.\n- **mean_action_block_size**: The agent will often issue single commands to read files or run tests. ~1.5.\n- **n_constraint_violations**: The agent should follow the rules (no test modifications, no git commit, separate patch creation and submission). 0.\n\n```json\n{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.15,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.45,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sphinx-doc__sphinx-11510",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.35,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.45,
+      "avg_tokens_step": 850.0,
+      "total_expected_steps": 28.0,
+      "explore_edit_ratio": 0.55,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.35,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.45,\n  \"avg_tokens_step\": 850,\n  \"total_expected_steps\": 28,\n  \"explore_edit_ratio\": 0.55,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  }
+}

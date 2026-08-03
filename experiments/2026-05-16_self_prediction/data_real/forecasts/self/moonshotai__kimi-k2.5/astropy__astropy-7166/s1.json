@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "astropy__astropy-7166",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.75,
+      "documentation": 0.2,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.75,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "astropy__astropy-7166",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.35,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 16.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix an `InheritDocstrings` metaclass that doesn't work for properties because `inspect.isfunction` returns `False` for properties. This is a fairly straightforward metaclass fix.\n\nLet me analyze my likely approach:\n1. Find the `InheritDocstrings` metaclass (likely via grep/find)\n2. Understand the current implementation\n3. Reproduce the issue\n4. Fix by adding property detection (using `isinstance(..., property)` or `inspect.isdatadescriptor`)\n5. Verify the fix\n\nThis is a localized fix in a single location. I expect to find the code quickly, understand the issue (properties are descriptors, not functions), and apply a targeted fix.\n\n```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.35,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 16,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

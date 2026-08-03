@@ -1,0 +1,19 @@
+{
+  "model": "qwen/qwen3-14b",
+  "task_id": "pydata__xarray-4356",
+  "rollout_idx": 5,
+  "values": {
+    "p_solve": 0.0,
+    "p_first_attempt_correct": 0.0,
+    "avg_tokens_step": 1079.25,
+    "total_expected_steps": 12.0,
+    "explore_edit_ratio": 0.16666666666666666,
+    "mean_action_block_size": 1.9166666666666667,
+    "n_constraint_violations": 0.0,
+    "documentation": 0.0,
+    "defensive_code": 1.0,
+    "express_uncertainty": 1.0
+  },
+  "errored": false,
+  "error": null
+}

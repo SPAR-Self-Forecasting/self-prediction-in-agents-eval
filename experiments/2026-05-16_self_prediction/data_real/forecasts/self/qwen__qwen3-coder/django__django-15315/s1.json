@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "django__django-15315",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.3,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.5,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "django__django-15315",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.2,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.7,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "I'll analyze the task and predict my approach to solving this Django issue about Field.__hash__() immutability.\n\nLet me think through each dimension:\n\n1. **p_solve**: This seems like a well-defined issue about making Field.__hash__() immutable. The problem is clear and the fix likely involves reverting changes from PR #31750. I estimate high probability of solving it correctly.\n\n2. **p_first_attempt_correct**: Since I need to understand the current implementation and the previous changes, I'll likely need to explore and iterate. There's a good chance I'll need to make adjustments after initial testing.\n\n3. **documentation**: This is a bug fix rather than new functionality, so I'm unlikely to add extensive documentation, though I might add comments explaining the hash immutability.\n\n4. **defensive_code**: The fix is about correctness rather than adding defensive measures, so I'll likely focus on the minimal change needed.\n\n5. **express_uncertainty**: Given that I need to understand existing code and the specific issue, I'll probably express some uncertainty during exploration.\n\n6. **avg_tokens_step**: I expect to write moderately long reasoning steps with detailed analysis, probably around 150-200 tokens per step on average.\n\n7. **total_expected_steps**: I'll need to explore the codebase, understand the issue, create a reproduction script, implement the fix, and verify it - probably around 15-20 steps.\n\n8. **explore_edit_ratio**: I'll spend considerable time exploring before making edits to understand the problem space, maybe 40-50% of steps.\n\n9. **mean_action_block_size**: I'll likely run multiple commands per step during exploration (find, grep, cat), probably 2-3 commands per step on average.\n\n10. **n_constraint_violations**: I should be able to follow all the rules by avoiding interactive editors, not modifying test files, and following the submission process correctly.\n\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.7,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.3,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  }
+}

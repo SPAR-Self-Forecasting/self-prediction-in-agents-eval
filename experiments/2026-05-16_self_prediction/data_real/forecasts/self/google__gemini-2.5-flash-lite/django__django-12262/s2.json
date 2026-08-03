@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "google/gemini-2.5-flash-lite",
+    "task_id": "django__django-12262",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.8,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.3,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "I need to analyze the provided PR description to understand the issue and identify the relevant files to modify. The issue states that custom template tags (specifically `simple_tag` and `inclusion_tag`) raise a `TemplateSyntaxError` when keyword-only arguments with defaults are provided. The examples show that it's not possible to supply any other variable, and that supplying a keyword argument a second time raises the wrong error message. The fix is expected to be in Django's template tag implementation.\n\nFirst, I will explore the codebase to find the relevant files.\n\n```json\n{\n  \"p_solve\": 0.8,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```\nTHOUGHT:\nThe PR description points to issues with `register.simple_tag` and `register.inclusion_tag` related to keyword-only arguments with defaults. I need to find the source code for these decorators in the Django template library. I'll start by looking for files related to template tags or filters within the Django source code.\n\nI will use `find` to locate files that might contain the implementation of `simple_tag` and `inclusion_tag`.\n\n```bash\nfind . -name \"*tag*.py\"\n```\n",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "google/gemini-2.5-flash-lite",
+    "task_id": "django__django-12262",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.8,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.1,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 120.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Okay, I will act as a software engineer agent to address the described bug in Django's template tag system.\n\nHere are my predictions for the upcoming attempt:\n\n```json\n{\n  \"p_solve\": 0.8,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 120,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.5,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```\n\n---\n\nTHOUGHT:\nThe PR description indicates an issue with custom template tags (`simple_tag` and `inclusion_tag`) in Django, specifically when using keyword-only arguments with default values or when passing duplicate keyword arguments. The error messages suggest a problem in how template arguments are parsed and passed to the underlying Python functions. The offending line is reportedly from Django 2.0.\n\nMy first step is to explore the codebase to locate the relevant files, particularly those handling template tag registration and execution. I'll start by listing the contents of the `/testbed/django/template/` directory and then inspect files like `defaulttags.py` and `base.py`.\n\nI will use `ls` to see the directory structure and `cat` to examine the contents of `defaulttags.py` to look for definitions of `simple_tag` and `inclusion_tag` and their argument processing logic.\n\n[Makes multiple bash tool calls: {\"command\": \"ls -la /testbed/django/template/\"}, {\"command\": \"cat /testbed/django/template/defaulttags.py | head -150\"}]",
+    "sample_idx": 2
+  }
+}

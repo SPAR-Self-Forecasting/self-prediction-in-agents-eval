@@ -1,0 +1,19 @@
+{
+  "model": "google/gemini-2.5-flash-lite",
+  "task_id": "django__django-10554",
+  "rollout_idx": 1,
+  "values": {
+    "p_solve": 0.0,
+    "p_first_attempt_correct": 0.0,
+    "avg_tokens_step": 459.7692307692308,
+    "total_expected_steps": 13.0,
+    "explore_edit_ratio": 0.6923076923076923,
+    "mean_action_block_size": 1.1538461538461537,
+    "n_constraint_violations": 0.0,
+    "documentation": 0.0,
+    "defensive_code": 0.0,
+    "express_uncertainty": 1.0
+  },
+  "errored": false,
+  "error": null
+}

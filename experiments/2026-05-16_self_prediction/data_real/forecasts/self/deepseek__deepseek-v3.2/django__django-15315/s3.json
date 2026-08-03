@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "deepseek/deepseek-v3.2",
+    "task_id": "django__django-15315",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.8,
+      "documentation": 0.5,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 100.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.8,\n  \"documentation\": 0.5,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 100,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "deepseek/deepseek-v3.2",
+    "task_id": "django__django-15315",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.1,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 140.0,
+      "total_expected_steps": 30.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\":奧 140,\n  \"total_expected_steps\": 30,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  }
+}

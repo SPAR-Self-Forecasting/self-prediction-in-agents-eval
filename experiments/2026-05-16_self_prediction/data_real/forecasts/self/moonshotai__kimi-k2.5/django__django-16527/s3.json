@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-16527",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.98,
+      "p_first_attempt_correct": 0.9,
+      "documentation": 0.05,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 120.0,
+      "total_expected_steps": 6.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 1.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.98,\n  \"p_first_attempt_correct\": 0.90,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 120,\n  \"total_expected_steps\": 6,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 1.2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-16527",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.93,
+      "p_first_attempt_correct": 0.88,
+      "documentation": 0.05,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.12,
+      "avg_tokens_step": 215.0,
+      "total_expected_steps": 8.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a permission check in Django's admin interface. The issue is clear: at line 102 of `django/contrib/admin/templatetags/admin_modify.py`, the `show_save_as_new` logic needs to also check `has_add_permission` since \"save as new\" creates a new object.\n\nLet me predict my performance:\n\n1. **p_solve (0.93)**: This is a straightforward one-line fix with a clear location and exact solution specified. The main risk is that Django's test suite might have existing tests that need to pass, or there might be subtle context issues with variable availability.\n\n2. **p_first_attempt_correct (0.88)**: Very likely I'll get it right the first time since the PR description literally provides the fix. However, I might need to verify the exact variable name (`has_add_permission`) is available in that scope or check surrounding lines for syntax.\n\n3. **documentation (0.05)**: This is a security/permission bug fix. I won't add docstrings or comments for a single permission check that's self-explanatory from the code structure.\n\n4. **defensive_code (0.15)**: Beyond the minimal fix, I might briefly check if `save_as_new` is used elsewhere and needs similar permission checks, but I won't add unnecessary validation.\n\n5. **express_uncertainty (0.12)**: The task is clear, but I might express slight caution when verifying the variable is available in the template tag context or when running tests.\n\n6. **avg_tokens_step (215)**: I tend to provide detailed reasoning for each action, explaining the context and verification steps.\n\n7. **total_expected_steps (8)**: (1) View the file, (2) Examine context around line 102, (3) Make the edit, (4) Verify the change, (5) Run relevant tests, (6) Create patch, (7) Verify patch contents, (8) Submit.\n\n8. **explore_edit_ratio (0.25)**: 2 steps exploring (viewing file and context) out of ~8 total steps before making the first edit.\n\n9. **mean_action_block_size (1.3)**: Sometimes I'll batch a `cat` with a `grep` or `ls`, but often single commands. Average around 1.3 commands per step.\n\n10. **n_constraint_violations (0)**: I'm careful about the constraints (no test edits, no interactive editors, proper patch submission workflow). I anticipate zero violations.\n\n```json\n{\n  \"p_solve\": 0.93,\n  \"p_first_attempt_correct\": 0.88,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.12,\n  \"avg_tokens_step\": 215,\n  \"total_expected_steps\": 8,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

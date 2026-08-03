@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-13512",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.1,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 500.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze what an AI coding agent would do when trying to fix a Django issue where JSONFields don't properly display Unicode characters (like Chinese) in the admin interface.\n\nThe issue is that `json.dumps()` uses ASCII encoding by default, so Chinese characters get serialized as `\\u4e2d\\u56fd` instead of the actual characters.\n\nLet me predict the agent's behavior:\n\n1. **p_solve**: This is a relatively straightforward fix - Django likely has a JSON encoder somewhere that needs `ensure_ascii=False`. The agent should be able to find and fix this with moderate effort. Probability ~0.75.\n\n2. **p_first_attempt_correct**: The agent will likely need to explore the codebase first to find where JSON serialization happens for JSONFields. There might be some backtracking if the first location found isn't the right one. Probability ~0.35.\n\n3. **documentation**: This is a minimal fix - just adding a parameter to an existing function. Unlikely to add documentation. Probability ~0.1.\n\n4. **defensive_code**: The fix is simple parameter addition; no guard clauses needed. Probability ~0.05.\n\n5. **express_uncertainty**: The agent may express some uncertainty about which file to modify or whether the fix is complete. Probability ~0.3.\n\n6. **avg_tokens_step**: Typical for code exploration and editing tasks. ~500 tokens per step.\n\n7. **total_expected_steps**: Need to explore codebase, find relevant files, understand the issue, create a test script, make the fix, verify. ~12 steps.\n\n8. **explore_edit_ratio**: Will need significant exploration to find the right file in Django's large codebase. ~0.5.\n\n9. **mean_action_block_size**: Agent will often issue multiple commands (find, grep, cat) in parallel. ~2.5.\n\n10. **n_constraint_violations**: The agent should follow rules well - no test modifications, no git commit, proper submission format. ~0.\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 500,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.5,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-13512",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.82,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.15,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 320.0,
+      "total_expected_steps": 11.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict the agent's behavior when fixing a Django JSONField Unicode display issue.\n\nThe issue is clear: `json.dumps()` uses ASCII encoding by default, so Chinese characters appear as `\\u4e2d\\u56fd` instead of `中国` in Django admin. The fix involves adding `ensure_ascii=False` to JSON serialization.\n\nLet me analyze what the agent will likely do:\n1. Explore the Django codebase to find JSONField/widget serialization code\n2. Locate where JSON values are prepared for admin display\n3. Apply the simple fix (adding `ensure_ascii=False`)\n4. Test and submit\n\nThis is a straightforward, well-documented fix pattern with a clear reference to a similar fix in django-mysql.\n\n```json\n{\n  \"p_solve\": 0.82,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 320,\n  \"total_expected_steps\": 11,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

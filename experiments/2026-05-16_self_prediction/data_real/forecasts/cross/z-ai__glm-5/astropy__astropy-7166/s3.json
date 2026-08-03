@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "astropy__astropy-7166",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.2,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 8.0,
+      "explore_edit_ratio": 0.375,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 8,\n  \"explore_edit_ratio\": 0.375,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "astropy__astropy-7166",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.12,
+      "defensive_code": 0.08,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 380.0,
+      "total_expected_steps": 10.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, the agent needs to fix the `InheritDocstrings` metaclass which doesn't work for properties because it uses `inspect.isfunction` which returns `False` for properties. This is a well-defined bug in a well-known project (likely Astropy based on the metaclass name).\n\n**Analysis of predictions:**\n\n1. **p_solve**: This is a straightforward bug - `inspect.isfunction` doesn't recognize properties. The fix is to also check for `property` objects (or use `isinstance(attr, property)` alongside `inspect.isfunction`). High probability of solving since the issue description clearly identifies the root cause.\n\n2. **p_first_attempt_correct**: The agent will likely need to explore first, then make a targeted fix. There's a reasonable chance it gets the fix right on the first edit attempt after understanding the code.\n\n3. **documentation**: Minimal fix - unlikely to add docstrings or type hints for such a small change.\n\n4. **defensive_code**: The core fix is about handling properties, which is the actual fix not defensive coding. Unlikely to add extra validation.\n\n5. **express_uncertainty**: The task is clear and well-defined; the agent shouldn't express much doubt.\n\n6. **avg_tokens_step**: Moderate reasoning with shell commands; typical for SWE-bench tasks.\n\n7. **total_expected_steps**: Explore codebase (2-3), read file (1-2), create repro script (1), edit fix (1), verify (1-2), patch/submit (2-3) ≈ 9-11 steps.\n\n8. **explore_edit_ratio**: Will spend ~3-4 steps exploring before first edit.\n\n9. **mean_action_block_size**: Will issue 1-3 independent commands per step (e.g., multiple find/cat commands).\n\n10. **n_constraint_violations**: Task is simple; unlikely to violate rules (no test editing, no interactive editors, separate patch/submit commands).\n\n```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.12,\n  \"defensive_code\": 0.08,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 380,\n  \"total_expected_steps\": 10,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

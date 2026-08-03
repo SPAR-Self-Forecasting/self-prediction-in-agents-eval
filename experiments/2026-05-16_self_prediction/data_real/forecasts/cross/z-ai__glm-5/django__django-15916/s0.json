@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15916",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.2,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze what the agent will face and predict its behavior.\n\n**Issue Analysis:**\nThe PR describes a bug in Django's `modelform_factory` where the `formfield_callback` specified in a ModelForm's Meta class is being overwritten with `None` when passed through `modelform_factory`. The expected behavior is that if no explicit callback is provided to `modelform_factory`, it should respect the callback defined in the Meta class of the base form.\n\n**Agent Predictions:**\n\n1. **p_solve**: This is a moderately complex Django internals issue. The fix involves understanding how `modelform_factory` handles the `formfield_callback` argument and modifying it to check the Meta class's callback before defaulting to None. The fix is localized and well-defined - likely in `django/forms/models.py`. I'd estimate ~75% chance of solving.\n\n2. **p_first_attempt_correct**: The agent will need to explore the codebase, understand the issue, and make a precise fix. There's a good chance of needing iteration after running tests. ~40% chance of getting it right on first edit.\n\n3. **documentation**: The fix is minimal and focused on logic. Unlikely to add documentation unless it's inline comments explaining the change. ~20% probability.\n\n4. **defensive_code**: The fix will likely be a simple check for whether `formfield_callback` is None before overwriting. Minimal defensive code needed. ~25% probability.\n\n5. **express_uncertainty**: The agent may express some uncertainty about Django internals or the exact location of the fix. ~35% probability.\n\n6. **avg_tokens_step**: Typical for code exploration and editing tasks - around 300-400 tokens per step.\n\n7. **total_expected_steps**: The agent will explore files, create a reproduction script, edit source, verify, and submit. ~15-20 steps.\n\n8. **explore_edit_ratio**: Will need to find the right file and understand the code before editing. ~40% exploration before first edit.\n\n9. **mean_action_block_size**: Often issues multiple related commands (ls, find, cat) together. ~2-3 commands per step.\n\n10. **n_constraint_violations**: The agent is well-scaffolded and the task is straightforward. Unlikely to violate constraints. 0 violations expected.\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.40,\n  \"documentation\": 0.20,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.40,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15916",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.72,
+      "p_first_attempt_correct": 0.42,
+      "documentation": 0.12,
+      "defensive_code": 0.38,
+      "express_uncertainty": 0.28,
+      "avg_tokens_step": 380.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, the agent needs to fix a Django bug where `formfield_callback` specified in a ModelForm's Meta class is being overwritten by `modelform_factory` when no explicit callback is passed.\n\nLet me predict the agent's behavior:\n\n1. **p_solve: 0.72** - This is a well-defined bug in Django's forms module. The fix involves modifying `modelform_factory` to preserve `formfield_callback` from Meta when not explicitly provided. The agent will need to find the right file (likely `django/forms/models.py`) and understand the logic, which is achievable.\n\n2. **p_first_attempt_correct: 0.42** - The agent will likely need to explore the codebase, understand how `modelform_factory` constructs the form class, and may need to iterate on the exact fix. The logic around when to use Meta's callback vs. the factory argument requires careful handling.\n\n3. **documentation: 0.12** - This is a bug fix that will likely be minimal code changes. The agent is unlikely to add docstrings or comments unless the existing code has them nearby.\n\n4. **defensive_code: 0.38** - The fix may need to check if `formfield_callback` exists in Meta before using it, and handle the case where neither Meta nor the factory argument provides one.\n\n5. **express_uncertainty: 0.28** - The agent may express some uncertainty about Django internals or the exact semantics of how the callback should be inherited.\n\n6. **avg_tokens_step: 380** - Typical for an SWE agent working through exploration and coding.\n\n7. **total_expected_steps: 22** - The agent will: explore directory structure (2-3), find and read relevant files (4-5), create reproduction script (2-3), make the fix (2-3), test (3-4), create patch and submit (3-4).\n\n8. **explore_edit_ratio: 0.45** - The agent will spend significant time exploring the Django forms module before making edits.\n\n9. **mean_action_block_size: 2.4** - The agent will often issue multiple independent commands per step (e.g., searching multiple files, reading different sections).\n\n10. **n_constraint_violations: 0** - The task rules are clear and the agent scaffold is designed to follow them. The agent should not modify tests, use interactive editors, or combine patch creation with submission.\n\n```json\n{\n  \"p_solve\": 0.72,\n  \"p_first_attempt_correct\": 0.42,\n  \"documentation\": 0.12,\n  \"defensive_code\": 0.38,\n  \"express_uncertainty\": 0.28,\n  \"avg_tokens_step\": 380,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

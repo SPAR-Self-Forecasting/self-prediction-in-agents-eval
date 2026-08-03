@@ -1,0 +1,33 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "sphinx-doc__sphinx-8638",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.45,
+      "documentation": 0.6,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.5,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 35.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to understand a Sphinx autodoc issue where instance variables incorrectly link to other variables of the same name in the project. Let me analyze the requirements and predict my approach.\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.45,\n  \"documentation\": 0.60,\n  \"defensive_code\": 0.40,\n  \"express_uncertainty\": 0.50,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 35,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "sphinx-doc__sphinx-8638",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "I'll help you fix this issue where instance variables are incorrectly linking to other variables with the same name in Sphinx's autodoc. Let me start by exploring the codebase structure.\n\n```bash\nfind /testbed -type f -name \"*.py\" | grep -E \"(autodoc|reference|link)\" | head -20\n```",
+    "sample_idx": 3
+  }
+}

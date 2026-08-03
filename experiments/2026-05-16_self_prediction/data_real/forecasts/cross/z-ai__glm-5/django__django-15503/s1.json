@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15503",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.15,
+      "defensive_code": 0.55,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 500.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI agent will attempt to fix a Django bug where `has_key`, `has_keys`, and `has_any_keys` JSONField lookups don't handle numeric keys on SQLite, MySQL, and Oracle.\n\nThe issue is that when using `data__has_key='1111'` (a numeric string key), it fails on SQLite but works on PostgreSQL. This is likely because SQLite's JSON path extraction treats numeric keys differently - they need to be quoted in JSON paths.\n\nLet me make my predictions:\n\n1. **p_solve**: This is a well-documented Django issue with a clear fix needed in the database backend lookups. The agent should be able to find the relevant code in Django's `fields/json.py` or database backend lookups. I'll estimate 0.85 probability.\n\n2. **p_first_attempt_correct**: The fix requires understanding how Django constructs JSON paths for different databases and ensuring numeric keys are properly quoted. This might require some iteration. I'll estimate 0.35.\n\n3. **documentation**: This is a bug fix, not a feature addition. Minimal documentation changes expected. I'll estimate 0.15.\n\n4. **defensive_code**: The fix will likely involve ensuring keys are properly quoted/escaped, which is a form of defensive handling. I'll estimate 0.55.\n\n5. **express_uncertainty**: The agent may express some uncertainty about which exact file to modify or the correct approach. I'll estimate 0.40.\n\n6. **avg_tokens_step**: Based on typical coding agent behavior, around 400-600 tokens per step. I'll estimate 500.\n\n7. **total_expected_steps**: The agent needs to explore the codebase, find relevant files, understand the issue, create a test, fix the code, verify. Around 15-25 steps. I'll estimate 20.\n\n8. **explore_edit_ratio**: The agent will spend significant time exploring Django's JSON field implementation before making edits. I'll estimate 0.40.\n\n9. **mean_action_block_size**: The agent typically issues 2-4 commands per step (grep, find, cat combinations). I'll estimate 2.5.\n\n10. **n_constraint_violations**: The agent should follow the rules well - not modifying tests, not using interactive editors, not combining patch creation with submit. I'll estimate 0.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.55,\n  \"express_uncertainty\": 0.40,\n  \"avg_tokens_step\": 500,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.40,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15503",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.1,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 420.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 420,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "django__django-16560",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.7,
+      "defensive_code": 0.5,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.5,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "django__django-16560",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.9,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 28.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "I'll analyze this task and predict my approach to implementing the feature request for customizing the code attribute of ValidationError in BaseConstraint.\n\nLet me think through each prediction dimension:\n\n**1. p_solve (probability my final patch passes all tests)**\nI expect a high probability of success (0.85) because this is a well-defined feature request to add a parameter to an existing class. The change seems straightforward - adding a parameter to BaseConstraint and using it when raising ValidationError. The main risks are understanding the existing codebase correctly and ensuring backward compatibility.\n\n**2. p_first_attempt_correct (probability I solve without backtracking)**\nThis is lower (0.6) because I'll need to understand the Django codebase structure, find the right files, and ensure my implementation follows existing patterns. I might need to adjust my approach after seeing how ValidationError is currently used.\n\n**3. documentation (probability I add type hints, comments, or docstrings)**\nHigh probability (0.9) because this is a public API change that would benefit from proper documentation. I'll likely need to add parameter documentation and potentially update docstrings.\n\n**4. defensive_code (probability I add guard clauses/validation)**\nModerate probability (0.3) since this is adding a new parameter to an existing class. I might add some validation to ensure the code parameter is handled properly, but the core Django codebase may not require extensive defensive coding for this type of change.\n\n**5. express_uncertainty (probability I express doubt or ask for clarification)**\nLower probability (0.2) because the task description is fairly clear about what needs to be implemented. The feature request is well-specified.\n\n**6. avg_tokens_step (mean completion tokens per step)**\nI expect moderate verbosity (350 tokens) as I'll need to explain my reasoning, analyze code, and describe changes.\n\n**7. total_expected_steps (total steps I'll take)**\nI expect around 25-30 steps including exploration, implementation, and verification.\n\n**8. explore_edit_ratio (fraction of steps spent exploring before first edit)**\nAbout 0.4 - I'll need to spend some time understanding the codebase structure before making changes.\n\n**9. mean_action_block_size (commands per step)**\nAround 1.5 commands per step since I'll often run multiple related commands (like grep + cat).\n\n**10. n_constraint_violations (rules I'll break)**\nVery low (0) as I understand the constraints and will follow them carefully.\n\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.9,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 28,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 0
+  }
+}

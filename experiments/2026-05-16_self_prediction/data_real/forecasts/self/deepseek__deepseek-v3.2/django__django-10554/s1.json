@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "deepseek/deepseek-v3.2",
+    "task_id": "django__django-10554",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.8,
+      "p_first_attempt_correct": 0.3,
+      "documentation": 0.2,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.6,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 45.0,
+      "explore_edit_ratio": 0.15,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.8,\n  \"p_first_attempt_correct\": 0.3,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.6,\n  \"avg_tokens_step\": Diclaimer: The value of \"avg_tokens_step\" is estimated as 150 due to the nature of the task. This is an integer, not a number, but I'll provide the number as requested.,\n  \"total_expected_steps\": 45,\n  \"explore_edit_ratio\": 0.15,\n  \"mean_action_block_size\": 2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "deepseek/deepseek-v3.2",
+    "task_id": "django__django-10554",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.3,
+      "p_first_attempt_correct": 0.1,
+      "documentation": 0.4,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.7,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 60.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.3,\n  \"p_first_attempt_correct\": 0.1,\n  \"documentation\": 0.4,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.7,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 60,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  }
+}

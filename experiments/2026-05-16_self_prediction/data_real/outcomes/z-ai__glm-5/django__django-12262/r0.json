@@ -1,0 +1,19 @@
+{
+  "model": "z-ai/glm-5",
+  "task_id": "django__django-12262",
+  "rollout_idx": 0,
+  "values": {
+    "p_solve": 1.0,
+    "p_first_attempt_correct": 1.0,
+    "avg_tokens_step": 241.7027027027027,
+    "total_expected_steps": 37.0,
+    "explore_edit_ratio": 0.2702702702702703,
+    "mean_action_block_size": 1.027027027027027,
+    "n_constraint_violations": 0.0,
+    "documentation": 0.0,
+    "defensive_code": 1.0,
+    "express_uncertainty": 0.0
+  },
+  "errored": false,
+  "error": null
+}

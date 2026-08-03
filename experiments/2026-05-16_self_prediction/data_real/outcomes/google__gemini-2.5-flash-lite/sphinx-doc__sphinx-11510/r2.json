@@ -1,0 +1,19 @@
+{
+  "model": "google/gemini-2.5-flash-lite",
+  "task_id": "sphinx-doc__sphinx-11510",
+  "rollout_idx": 2,
+  "values": {
+    "p_solve": null,
+    "p_first_attempt_correct": null,
+    "documentation": null,
+    "defensive_code": null,
+    "express_uncertainty": null,
+    "avg_tokens_step": null,
+    "total_expected_steps": null,
+    "explore_edit_ratio": null,
+    "mean_action_block_size": null,
+    "n_constraint_violations": null
+  },
+  "errored": true,
+  "error": "Command '['mini-extra', 'swebench', '--subset', 'princeton-nlp/SWE-bench_Verified', '--split', 'test', '--filter', '^sphinx-doc__sphinx-11510$', '--model', 'openrouter/google/gemini-2.5-flash-lite', '-o', '/mnt/c/Users/occhi/Desktop/life/code/self-prediction-capabilities/experiments/2026-05-16_self_prediction/data_real/rollout_work/google__gemini-2.5-flash-lite/rollout_2/sphinx-doc__sphinx-11510', '-c', 'swebench.yaml', '-c', 'agent.step_limit=250', '-c', 'agent.cost_limit=1000000000.0']' timed out after 6000 seconds"
+}

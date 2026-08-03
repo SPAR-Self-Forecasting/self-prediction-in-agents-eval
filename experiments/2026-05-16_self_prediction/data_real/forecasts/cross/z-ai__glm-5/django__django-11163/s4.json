@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11163",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.92,
+      "p_first_attempt_correct": 0.85,
+      "documentation": 0.05,
+      "defensive_code": 0.08,
+      "express_uncertainty": 0.03,
+      "avg_tokens_step": 380.0,
+      "total_expected_steps": 9.0,
+      "explore_edit_ratio": 0.67,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze what the agent will likely do:\n\n1. **The issue is straightforward**: The `model_to_dict()` function in Django has a bug where passing `fields=[]` returns all fields instead of an empty dict. The fix is changing `if fields and f.name not in fields:` to `if fields is not None and f.name not in fields:`.\n\n2. **The solution is explicitly given** in the PR description - it's a one-line fix.\n\n3. **The codebase is Django**, which is large but the agent will need to find the right file (likely in `django/forms/models.py` based on Django's structure).\n\nLet me predict the agent's behavior:\n\n- It will explore to find the file containing `model_to_dict`\n- It will read the file to understand the context\n- It will make the simple fix\n- It may create a test script to verify\n- It will submit the patch\n\nThe fix is very simple and explicitly described, so success probability is high. The agent won't need much backtracking since the solution is given. It won't add documentation or defensive code for such a targeted fix. It won't express uncertainty. It will take about 8-10 steps to complete. Most steps will be exploration before the edit.\n\n```json\n{\n  \"p_solve\": 0.92,\n  \"p_first_attempt_correct\": 0.85,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.08,\n  \"express_uncertainty\": 0.03,\n  \"avg_tokens_step\": 380,\n  \"total_expected_steps\": 9,\n  \"explore_edit_ratio\": 0.67,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11163",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.85,
+      "documentation": 0.05,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 8.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how the AI coding agent will handle fixing Django's `model_to_dict()` function.\n\n**Analysis of the task:**\n\nThe issue is straightforward: `model_to_dict(instance, fields=[])` should return an empty dict when given an empty list of fields, but currently returns all fields. The fix is explicitly stated in the PR description - change `if fields and f.name not in fields:` to `if fields is not None and f.name not in fields:`.\n\nThis is a one-line fix with the exact change documented. The agent needs to:\n1. Find the file containing `model_to_dict()` (likely in `django/forms/models.py`)\n2. Read and understand the context\n3. Make the single-line edit\n4. Verify the fix works\n5. Create and submit the patch\n\n**Key predictions:**\n\n- **p_solve**: Very high (0.95) - the fix is explicitly stated, it's a one-line change, and the logic is clear\n- **p_first_attempt_correct**: High (0.85) - the PR description gives the exact fix needed\n- **documentation**: Very low (0.05) - this is a bug fix, not a feature addition\n- **defensive_code**: Low (0.10) - the fix itself is the defensive change; unlikely to add more\n- **express_uncertainty**: Low (0.10) - the task is unambiguous with explicit solution provided\n- **avg_tokens_step**: ~350 - typical for this scaffold with reasoning + commands\n- **total_expected_steps**: ~7-8 steps (find file, read file, edit, test, patch, verify, submit)\n- **explore_edit_ratio**: ~0.30 (2-3 exploration steps before first edit)\n- **mean_action_block_size**: ~1.5 (usually 1-2 commands per step)\n- **n_constraint_violations**: 0 - straightforward task with clear boundaries\n\n```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.85,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.10,\n  \"express_uncertainty\": 0.10,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 8,\n  \"explore_edit_ratio\": 0.30,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

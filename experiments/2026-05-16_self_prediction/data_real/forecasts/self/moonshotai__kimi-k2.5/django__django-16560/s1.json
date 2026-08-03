@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-16560",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.8,
+      "defensive_code": 0.35,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 400.0,
+      "total_expected_steps": 16.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.8,\n  \"defensive_code\": 0.35,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 400,\n  \"total_expected_steps\": 16,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-16560",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.85,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.6,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to add a `violation_error_code` parameter to Django's `BaseConstraint` class to allow customizing the `code` attribute of `ValidationError`, similar to the existing `violation_error_message` parameter.\n\nLet me predict my behavior on this task:\n\n1. **p_solve (0.90)**: This is a straightforward feature addition following an existing pattern. The `violation_error_message` parameter already exists, so I just need to replicate that pattern for `code`. High confidence I can implement this correctly.\n\n2. **p_first_attempt_correct (0.65)**: While the implementation is simple, I might need a minor adjustment after testing (e.g., finding all the right places to update the parameter or ensuring I handle inheritance correctly).\n\n3. **documentation (0.85)**: Django code typically requires docstring updates for new parameters. I'll likely add documentation for the new parameter to maintain consistency with the codebase standards.\n\n4. **defensive_code (0.25)**: This is a simple parameter addition following an existing pattern. I won't need much defensive coding beyond what's already in place for `violation_error_message`.\n\n5. **express_uncertainty (0.20)**: I might express some initial uncertainty about which specific files contain `BaseConstraint` or whether there are subclasses that also need updating, but this will resolve quickly after exploration.\n\n6. **avg_tokens_step (280)**: My responses typically include reasoning text plus command calls. For a Django codebase task involving reading and modifying Python files, this is a reasonable estimate.\n\n7. **total_expected_steps (12)**: Breakdown: 3 steps exploring the codebase (finding BaseConstraint, understanding current implementation), 2 steps implementing the change, 2 steps creating and running a test script, 3 steps verifying and creating the patch, 1 step submitting. Round to 12.\n\n8. **explore_edit_ratio (0.30)**: I'll spend roughly the first 3-4 steps exploring (finding files, understanding patterns) before making my first file edit.\n\n9. **mean_action_block_size (1.6)**: I'll often issue 1-2 commands per step (e.g., reading a file, or finding + reading), occasionally 3 when searching multiple locations.\n\n10. **n_constraint_violations (0)**: I'm aware of the constraints (no test modifications, no interactive editors, separate patch creation from submission) and will follow them carefully.\n\n```json\n{\n  \"p_solve\": 0.90,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.85,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.30,\n  \"mean_action_block_size\": 1.6,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

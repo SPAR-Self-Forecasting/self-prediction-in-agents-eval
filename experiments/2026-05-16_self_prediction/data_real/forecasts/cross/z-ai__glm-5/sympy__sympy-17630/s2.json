@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sympy__sympy-17630",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.15,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze what the agent will likely do:\n\n1. **The Issue**: A bug in SymPy's BlockMatrix where multiplying matrices containing ZeroMatrix blocks fails on subsequent multiplications because ZeroMatrix gets converted to Zero (a scalar) which lacks the `.cols` attribute.\n\n2. **The Fix**: The agent will need to find where ZeroMatrix becomes Zero during block multiplication and ensure it stays as ZeroMatrix or handle the Zero case properly.\n\n3. **Agent Behavior Predictions**:\n   - The agent will likely explore the codebase first to understand the structure\n   - It will create a reproduction script\n   - It will make targeted edits to fix the issue\n   - The fix is relatively straightforward (likely in blockmatrix.py)\n   - It shouldn't need extensive backtracking since the error message clearly points to the problem\n\nLet me predict the metrics:\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.60,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.30,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.50,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sympy__sympy-17630",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.72,
+      "p_first_attempt_correct": 0.18,
+      "documentation": 0.15,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.38,
+      "avg_tokens_step": 440.0,
+      "total_expected_steps": 16.0,
+      "explore_edit_ratio": 0.38,
+      "mean_action_block_size": 2.1,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, the agent needs to fix a SymPy bug where BlockMatrix multiplication with ZeroMatrix blocks fails after the first multiplication because ZeroMatrix blocks get converted to `Zero` (a scalar) instead of remaining as `ZeroMatrix` objects.\n\nThe key issue is in `blockmatrix.py` where `_blockmul` produces `Zero` objects instead of `ZeroMatrix` objects, and subsequent multiplications fail because `Zero` doesn't have `.cols` attribute.\n\nMy predictions:\n\n- The agent will explore the codebase to understand the blockmatrix implementation\n- It will reproduce the bug with a test script\n- It will need to find where Zero gets substituted for ZeroMatrix (likely in `_blockmul` or related collapse functions)\n- The fix likely involves ensuring zero results in block multiplication are wrapped as ZeroMatrix rather than left as Zero\n- This requires some understanding of SymPy internals, which adds moderate difficulty\n\n```json\n{\n  \"p_solve\": 0.72,\n  \"p_first_attempt_correct\": 0.18,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.38,\n  \"avg_tokens_step\": 440,\n  \"total_expected_steps\": 16,\n  \"explore_edit_ratio\": 0.38,\n  \"mean_action_block_size\": 2.1,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

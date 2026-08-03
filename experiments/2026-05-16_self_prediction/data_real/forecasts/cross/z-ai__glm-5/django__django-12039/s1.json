@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-12039",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.1,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 500.0,
+      "total_expected_steps": 10.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI agent will handle fixing a whitespace issue in Django's CREATE INDEX statement generation. The issue is in `django/db/backends/ddl_references.py` where empty strings in `col_suffixes` cause unwanted trailing whitespace.\n\nLet me analyze and make predictions:\n\n1. **p_solve**: This is a straightforward bug - the issue clearly identifies the file (`django/db/backends/ddl_references.py`), line (~87), and root cause (empty strings in col_suffixes causing trailing whitespace). A competent agent should easily find and fix this. I'll estimate 0.85.\n\n2. **p_first_attempt_correct**: The fix is relatively simple - filter out empty strings when building the column reference. An agent that reads the code carefully should get it right the first time. I'll estimate 0.65.\n\n3. **documentation**: This is a minimal whitespace bug fix. Unlikely to warrant documentation changes. I'll estimate 0.10.\n\n4. **defensive_code**: The fix is straightforward - check if suffix exists and is non-empty before adding. This IS the minimal fix itself, not extra defensive code. I'll estimate 0.15.\n\n5. **express_uncertainty**: The issue is well-specified with clear location and cause. Agent shouldn't need to hedge much. I'll estimate 0.20.\n\n6. **avg_tokens_step**: Typical for this scaffold - agent will explore, read files, make edits. Around 400-600 tokens per step. I'll estimate 500.\n\n7. **total_expected_steps**: Agent needs to: explore structure, find file, read file, create test script, edit, verify, create patch, submit. Maybe 8-12 steps. I'll estimate 10.\n\n8. **explore_edit_ratio**: Agent will spend a few steps exploring before editing - finding the file, reading it, understanding context. Maybe 3-4 of 10 steps. I'll estimate 0.35.\n\n9. **mean_action_block_size**: Agent will typically issue multiple independent commands together (ls, find, cat). I'll estimate 2.0.\n\n10. **n_constraint_violations**: The constraints are clear and typical. Agent should follow them without violations. I'll estimate 0.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.10,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 500,\n  \"total_expected_steps\": 10,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-12039",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.15,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 285.0,
+      "total_expected_steps": 11.0,
+      "explore_edit_ratio": 0.36,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI coding agent will handle fixing whitespace issues in Django's CREATE INDEX statements.\n\nThe issue is clearly specified:\n1. Missing space before DESC in descending indexes: `\"name\"DESC` should be `\"name\" DESC`\n2. Extra space after opclasses without ordering: `text_pattern_ops )` should be `text_pattern_ops)`\n3. The bug location is pinpointed: `django/db/backends/ddl_references.py` around line 87\n\nLet me make my predictions:\n\n```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 285,\n  \"total_expected_steps\": 11,\n  \"explore_edit_ratio\": 0.36,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```\n\n**Reasoning:**\n\n- **p_solve (0.88)**: The issue is well-documented with exact file location and line number. The fix involves handling empty strings in `col_suffixes` - a straightforward conditional change.\n\n- **p_first_attempt_correct (0.55)**: While the fix location is clear, there are edge cases (descending order, opclasses alone, both combined, neither) that might require iteration to get all whitespace correct simultaneously.\n\n- **documentation (0.15)**: Bug fixes in Django's internal DDL code rarely warrant docstring changes unless adding new parameters.\n\n- **defensive_code (0.25)**: Minimal guard clauses needed - just filtering empty strings from suffixes before joining.\n\n- **express_uncertainty (0.35)**: Agent may express uncertainty about whether its fix handles all four combinations (with/without ordering, with/without opclasses).\n\n- **avg_tokens_step (285)**: Typical for SWE-bench tasks involving code exploration and reasoning.\n\n- **total_expected_steps (11)**: Explore (find/read files ~4 steps) → Reproduce (~2 steps) → Edit (~1 step) → Test (~2 steps) → Patch/submit (~2 steps).\n\n- **explore_edit_ratio (0.36)**: About 4 of 11 steps before first edit - finding ddl_references.py, reading Columns class, understanding the col_suffixes logic.\n\n- **mean_action_block_size (1.8)**: Agent will sometimes issue single commands (cat file), sometimes pairs (find + grep, or multiple reads).\n\n- **n_constraint_violations (0)**: The task boundaries are clearly stated and the agent scaffold enforces the submission protocol.",
+    "sample_idx": 1
+  }
+}

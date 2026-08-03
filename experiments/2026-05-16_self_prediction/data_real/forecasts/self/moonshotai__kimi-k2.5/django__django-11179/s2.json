@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11179",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.2,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 175.0,
+      "total_expected_steps": 11.0,
+      "explore_edit_ratio": 0.36,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 175,\n  \"total_expected_steps\": 11,\n  \"explore_edit_ratio\": 0.36,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11179",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.25,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this Django issue about `delete()` not clearing PKs on models without dependencies, I need to predict my performance on this task.\n\nLet me analyze what this involves:\n- The issue points to a specific location: `Django.db.models.deletion:276-281`\n- It's about setting PK to None after delete() for models with no dependencies\n- This is a focused bug fix in the deletion logic\n\nBased on my approach to such tasks:\n\n1. **p_solve (0.85)**: The issue is well-localized with a specific file/line reference. Django's codebase is well-structured, and this seems like a straightforward logic fix.\n\n2. **p_first_attempt_correct (0.70)**: I'll likely need to verify with a test script, but the fix location is clearly indicated. I may need one iteration to verify the exact condition.\n\n3. **documentation (0.25)**: I'll likely add a brief comment explaining the PK reset, but this is a bug fix, not a documentation improvement task.\n\n4. **defensive_code (0.10)**: This is a specific behavior fix; I won't add unnecessary guard clauses beyond the minimal required change.\n\n5. **express_uncertainty (0.20)**: The issue description is clear, but I may express some caution when interpreting the exact condition at line 276-281.\n\n6. **avg_tokens_step (180)**: My responses typically include analysis plus commands, averaging around 180 tokens per step for focused tasks like this.\n\n7. **total_expected_steps (14)**: Exploration (3 steps), understanding (2), reproduction script (2), fix (2), verification (3), patch/submit (2).\n\n8. **explore_edit_ratio (0.35)**: I'll spend about 35% of steps (5 steps) exploring before the first edit to understand the deletion logic and create a reproducer.\n\n9. **mean_action_block_size (1.4)**: I'll often batch related commands (cat + grep, or multiple file reads) but keep it focused.\n\n10. **n_constraint_violations (0)**: I'm careful about following rules - won't modify tests, use interactive editors, or combine submission commands.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.70,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.10,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

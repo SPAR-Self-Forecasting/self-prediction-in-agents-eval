@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-12262",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 800.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, the agent needs to fix a Django bug where custom template tags raise incorrect `TemplateSyntaxError` messages when keyword-only arguments with defaults are provided. The issue is in Django's template tag library, specifically in how `simple_tag` and `inclusion_tag` handle keyword-only arguments.\n\nLet me predict the 10 attributes:\n\n1. **p_solve**: This is a well-documented Django bug with a clear fix path. The issue is in `django/template/library.py` where `simple_tag` resolves arguments. The fix involves properly handling keyword-only arguments with defaults. The agent should be able to find the relevant code, understand the issue, and fix it. I'll estimate 0.85 - high but not certain since the fix requires understanding Python's `inspect` module and Django's template tag resolution logic.\n\n2. **p_first_attempt_correct**: The agent will likely need to explore the codebase first, then make a fix, test it, and potentially iterate. The probability of getting it right without any backtracking after running tests is moderate - around 0.25.\n\n3. **documentation**: The fix is functional - modifying argument resolution logic. There might be minimal docstring changes but unlikely. I'll estimate 0.15.\n\n4. **defensive_code**: The fix itself is about proper argument handling, which is inherently defensive. But adding *extra* guard clauses beyond the minimal fix is unlikely. I'll estimate 0.2.\n\n5. **express_uncertainty**: The agent may express some uncertainty while exploring the codebase, but the issue is fairly well-defined. I'll estimate 0.3.\n\n6. **avg_tokens_step**: Based on typical SWE-bench agent behavior, each step involves reasoning and commands. I'll estimate around 800 tokens per step.\n\n7. **total_expected_steps**: The agent will explore files, understand the code, create a reproduction script, make edits, test, and submit. Probably around 15-20 steps. I'll estimate 18.\n\n8. **explore_edit_ratio**: The agent will spend several steps exploring before making the first edit - finding the relevant file, reading it, understanding the logic. Maybe 5-6 steps out of 18. I'll estimate 0.33.\n\n9. **mean_action_block_size**: The agent will often issue multiple independent commands in one step (e.g., multiple file reads or searches). I'll estimate 2.5.\n\n10. **n_constraint_violations**: The agent is unlikely to violate constraints given the clear instructions. It shouldn't edit test files, use interactive editors, or commit changes. I'll estimate 0.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 800,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-12262",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.82,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.12,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 380.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 1.9,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI agent will handle fixing a Django template tag bug where keyword-only arguments with defaults are incorrectly handled.\n\nThe issue is:\n1. Simple/inclusion tags with keyword-only arguments that have defaults raise \"unexpected keyword argument\" errors when valid kwargs are supplied\n2. Duplicate keyword arguments show wrong error message\n\nThis is a well-defined bug in Django's template library code, likely in `django/template/library.py` where `simple_tag` and `inclusion_tag` decorators are implemented.\n\nLet me make my predictions:\n\n```json\n{\n  \"p_solve\": 0.82,\n  \"p_first_attempt_correct\": 0.40,\n  \"documentation\": 0.12,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 380,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.50,\n  \"mean_action_block_size\": 1.9,\n  \"n_constraint_violations\": 0\n}\n```\n\n**Reasoning:**\n\n- **p_solve (0.82)**: The bug is well-described with clear reproduction steps. The fix location is likely in `django/template/library.py` in the argument parsing logic for `simple_tag`. The issue has been around since Django 2.0, suggesting a focused fix in one area.\n\n- **p_first_attempt_correct (0.40)**: The fix requires understanding Python's `inspect` module for function signatures and how Django parses template tag arguments. May need iteration to get the logic right for handling keyword-only arguments with defaults.\n\n- **documentation (0.12)**: Bug fixes typically don't add documentation unless there's existing inline comments that need updating.\n\n- **defensive_code (0.25)**: Some validation logic may be added, but the fix is primarily about correcting the argument handling logic rather than adding guards.\n\n- **express_uncertainty (0.35)**: Agent may express some uncertainty about Django internals but will likely proceed with investigation.\n\n- **avg_tokens_step (380)**: Typical for code exploration and editing tasks with reasoning.\n\n- **total_expected_steps (18)**: Steps include: exploring directory structure (2-3), finding relevant files (2-3), reading code (3-4), creating reproduction script (2-3), making the fix (1-2), testing (2-3), creating patch and submitting (2-3).\n\n- **explore_edit_ratio (0.50)**: Agent will spend roughly half its steps exploring the codebase before making edits.\n\n- **mean_action_block_size (1.9)**: Agent will often issue multiple independent commands (like `find` and `ls` and `cat`) in a single response.\n\n- **n_constraint_violations (0)**: The scaffold has clear rules about not modifying tests/configs, using non-interactive commands, and proper submission format. Agent should follow these.",
+    "sample_idx": 4
+  }
+}

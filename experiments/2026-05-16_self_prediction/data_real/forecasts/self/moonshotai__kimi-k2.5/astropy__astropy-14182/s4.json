@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "astropy__astropy-14182",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.65,
+      "defensive_code": 0.55,
+      "express_uncertainty": 0.6,
+      "avg_tokens_step": 185.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.38,
+      "mean_action_block_size": 1.6,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.65,\n  \"defensive_code\": 0.55,\n  \"express_uncertainty\": 0.6,\n  \"avg_tokens_step\": 185,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.38,\n  \"mean_action_block_size\": 1.6,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "astropy__astropy-14182",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 165.0,
+      "total_expected_steps": 16.0,
+      "explore_edit_ratio": 0.22,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to add `header_rows` support to the RST (RestructuredText) writer in astropy. The error shows that `RST.__init__()` doesn't accept the `header_rows` keyword argument, while other writers like `fixed_width` do. This is a well-scoped feature addition that involves:\n\n1. Finding the RST writer class (likely in `astropy/io/ascii/rst.py`)\n2. Examining how `fixed_width` implements `header_rows` support\n3. Adding similar support to the RST class\n4. Testing the fix works with the provided example\n\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 165,\n  \"total_expected_steps\": 16,\n  \"explore_edit_ratio\": 0.22,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  }
+}

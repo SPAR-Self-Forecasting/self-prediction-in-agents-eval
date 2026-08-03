@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-16527",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.9,
+      "documentation": 0.1,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 10.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict the agent's behavior when fixing a Django admin permission issue where `show_save_as_new` needs an additional `has_add_permission` check.\n\nLet me analyze the key aspects:\n\n1. **Task difficulty**: This is a straightforward, well-documented fix. The PR description explicitly states the file path (`django/contrib/admin/templatetags/admin_modify.py`), line number (102), and the exact change needed (adding `and has_add_permission`).\n\n2. **Solution clarity**: The fix is explicitly provided in the PR description - just add one condition to an existing boolean expression.\n\n3. **Agent behavior patterns**:\n   - Will explore to find/verify the file\n   - Will read the relevant code\n   - Will make the minimal fix\n   - Will verify with tests\n\n4. **Probabilities**:\n   - **p_solve**: High (~0.95) - the fix is explicit and simple\n   - **p_first_attempt_correct**: High (~0.90) - single line change, well-specified\n   - **documentation**: Low (~0.1) - minimal fix, no need for docs\n   - **defensive_code**: Low (~0.15) - the fix IS adding a guard, but unlikely to add more\n   - **express_uncertainty**: Low (~0.2) - task is clear, minimal ambiguity\n   - **avg_tokens_step**: ~350 - typical for code exploration/editing\n   - **total_expected_steps**: ~8-12 steps for explore→read→edit→verify→submit\n   - **explore_edit_ratio**: ~0.5 - will explore file structure and read before editing\n   - **mean_action_block_size**: ~1.5 - some steps combine independent reads\n   - **n_constraint_violations**: 0 - clear rules, simple task\n\n```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.90,\n  \"documentation\": 0.10,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 10,\n  \"explore_edit_ratio\": 0.50,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-16527",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.75,
+      "documentation": 0.1,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 400.0,
+      "total_expected_steps": 8.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI coding agent will handle fixing a Django admin template tag bug where `show_save_as_new` needs an additional `has_add_permission` check.\n\n**Analysis:**\n\n1. **Task complexity**: This is a straightforward one-line fix - adding `and has_add_permission` to an existing boolean condition in `django/contrib/admin/templatetags/admin_modify.py`.\n\n2. **Clear instructions**: The PR description explicitly states the file path, line number, and exact fix needed.\n\n3. **Workflow predictability**: The agent will likely:\n   - Find and read the target file\n   - Locate line 102 and the `show_save_as_new` context\n   - Add the permission check\n   - Verify the change\n   - Create and submit a patch\n\n4. **Risk factors**: \n   - Agent might explore more than necessary\n   - Might try to create test scripts (though this is a simple permission logic fix)\n   - Unlikely to violate constraints given the straightforward nature\n\n```json\n{\n  \"p_solve\": 0.90,\n  \"p_first_attempt_correct\": 0.75,\n  \"documentation\": 0.10,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 400,\n  \"total_expected_steps\": 8,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

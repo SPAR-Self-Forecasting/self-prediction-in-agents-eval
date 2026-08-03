@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-13512",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.5,
+      "documentation": 0.2,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task and predict what the AI coding agent will do.\n\n## Analysis of the Task\n\nThe issue is about Django admin not displaying Unicode characters (like Chinese) properly in JSONFields. The problem is that `json.dumps()` uses ASCII encoding by default, converting characters like \"中国\" to \"\\u4e2d\\u56fd\".\n\nThe fix mentioned in a related PR (django-mysql) likely involves using `ensure_ascii=False` parameter when serializing JSON.\n\n## Predictions\n\n**p_solve: 0.75** - This is a fairly straightforward fix. The agent needs to find where JSONFields are rendered in Django admin and add `ensure_ascii=False` to the JSON serialization. However, there could be multiple places where this needs to be fixed, and finding the exact location in Django's codebase requires some exploration.\n\n**p_first_attempt_correct: 0.5** - The agent will likely need to explore the codebase to find the right location. It might get the fix right on the first try after exploration, but there's a reasonable chance it will need to test and iterate.\n\n**documentation: 0.2** - This is a simple fix that doesn't require adding documentation. The agent might add a brief comment explaining why `ensure_ascii=False` is used, but it's not typical for this type of bug fix.\n\n**defensive_code: 0.15** - The fix is straightforward - just adding a parameter. There's little need for guard clauses or validation beyond the minimal fix.\n\n**express_uncertainty: 0.4** - The agent may express some uncertainty about finding the right location in Django's codebase, but the fix itself is clear from the PR description.\n\n**avg_tokens_step: 450** - The agent will spend tokens on reasoning, exploration commands, and code analysis. Most steps will involve moderate-length reasoning.\n\n**total_expected_steps: 12** - The agent will need to: explore the codebase structure (2-3 steps), find relevant JSONField code (2-3 steps), create a test script (1-2 steps), implement the fix (1-2 steps), verify the fix (1-2 steps), and submit (2 steps).\n\n**explore_edit_ratio: 0.5** - The agent will spend roughly half its time exploring the codebase before making an edit, as it needs to find where JSON serialization happens for admin display.\n\n**mean_action_block_size: 2.5** - The agent will typically issue multiple commands per step (e.g., finding files and reading them, or running tests).\n\n**n_constraint_violations: 0** - The task instructions are clear, and the agent is unlikely to violate rules like editing test files or using interactive editors.\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.5,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.5,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-13512",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.05,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 300.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI coding agent will handle fixing Django's JSONField Unicode display issue in the admin interface.\n\nThe issue is clear: `json.dumps()` uses ASCII encoding by default, causing Chinese characters to display as escaped sequences (`\\u4e2d\\u56fd`) instead of proper Unicode characters. The fix involves adding `ensure_ascii=False` to the JSON serialization.\n\nLet me make my predictions:\n\n1. **p_solve**: This is a well-documented issue with a known solution pattern. Django's JSONField widget serialization is the target. The fix is straightforward - add `ensure_ascii=False` parameter. However, finding the exact location in Django's codebase requires exploration. I'll estimate ~0.75.\n\n2. **p_first_attempt_correct**: Lower probability here. The agent will need to explore the codebase to find where JSONField rendering/serialization happens, likely in `django/contrib/admin` or form widgets. Multiple potential locations exist. ~0.35.\n\n3. **documentation**: This is a minimal one-parameter fix. Unlikely to add documentation. ~0.05.\n\n4. **defensive_code**: The fix is simply adding `ensure_ascii=False`. No guard clauses needed. ~0.05.\n\n5. **express_uncertainty**: The issue description is clear and references a successful PR. Agent likely won't hedge much. ~0.1.\n\n6. **avg_tokens_step**: Agent will do typical reasoning + commands. ~300 tokens.\n\n7. **total_expected_steps**: Exploration (finding relevant files), reading code, creating test script, editing, verifying, submitting. ~12-15 steps.\n\n8. **explore_edit_ratio**: Will need to find the right file in Django's codebase first. ~0.35.\n\n9. **mean_action_block_size**: Agent typically issues 1-3 commands per step (grep + read, or multiple reads). ~1.5.\n\n10. **n_constraint_violations**: The task has clear boundaries. Agent unlikely to violate them. ~0.\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 300,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

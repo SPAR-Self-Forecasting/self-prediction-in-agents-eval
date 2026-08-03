@@ -1,0 +1,33 @@
+{
+  "no_thinking": {
+    "model": "deepseek/deepseek-v3.2",
+    "task_id": "django__django-15315",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.8,
+      "documentation": 0.1,
+      "defensive_code": 0.0,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 120.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 1.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.8,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.0,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 120,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 1.2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "deepseek/deepseek-v3.2",
+    "task_id": "django__django-15315",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "I need to understand the Django codebase structure and locate the relevant files. Let me start by exploring the current directory and finding the Field class definition.\n\n```bash\nfind . -type f -name \"*.py\" | grep -E \"(field|models)\" | grep -v \"__pycache__\" | grep -v \".pyc\" | head -30\n```",
+    "sample_idx": 0
+  }
+}

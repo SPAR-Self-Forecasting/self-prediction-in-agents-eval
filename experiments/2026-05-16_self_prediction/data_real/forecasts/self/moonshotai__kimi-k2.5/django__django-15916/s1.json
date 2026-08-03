@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15916",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.3,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 275.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.27,
+      "mean_action_block_size": 2.1,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.70,\n  \"documentation\": 0.30,\n  \"defensive_code\": 0.10,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 275,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.27,\n  \"mean_action_block_size\": 2.1,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15916",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.25,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 120.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a Django issue where `modelform_factory` doesn't respect the `formfield_callback` specified in a base form's Meta class.\n\nLet me analyze my predictions:\n\n1. **p_solve (0.85)**: This is a well-defined bug with clear expected behavior. The fix should be straightforward - modifying `modelform_factory` to check the base form's Meta for `formfield_callback` before defaulting to None.\n\n2. **p_first_attempt_correct (0.70)**: While the concept is clear, I may need to explore the codebase first to understand the exact implementation details of `modelform_factory` and how it constructs the new class.\n\n3. **documentation (0.25)**: This is a bug fix for existing behavior. I might add a brief comment explaining the logic but won't add extensive docstrings or type hints.\n\n4. **defensive_code (0.15)**: The fix should be minimal - just ensuring we inherit the `formfield_callback` from the base form's Meta when not explicitly provided. No significant guard clauses needed.\n\n5. **express_uncertainty (0.20)**: I may express some uncertainty initially while exploring the codebase, but once I understand the structure, I should be confident about the fix.\n\n6. **avg_tokens_step (120)**: Typical reasoning steps for this type of task, with some longer initial exploration steps and shorter verification steps.\n\n7. **total_expected_steps (18)**: Estimate: 4 steps exploring/reading, 2 steps creating reproduction script, 2 steps verifying the bug, 3 steps implementing fix, 4 steps verifying fix, 2 steps creating/submitting patch, 1 step buffer.\n\n8. **explore_edit_ratio (0.35)**: I'll spend roughly 35% of steps (about 6 steps) exploring before making the first edit, as I need to understand the codebase structure and locate the relevant files.\n\n9. **mean_action_block_size (1.4)**: I'll often issue single commands, but sometimes 2-3 commands when doing independent searches or reads.\n\n10. **n_constraint_violations (0)**: I will carefully follow the rules - no test modifications, no interactive editors, proper submission workflow.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.70,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 120,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

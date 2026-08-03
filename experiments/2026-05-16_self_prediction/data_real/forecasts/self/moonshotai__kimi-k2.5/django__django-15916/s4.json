@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15916",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.25,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15916",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.25,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a Django issue where `modelform_factory` ignores the `formfield_callback` specified in a ModelForm's Meta class.\n\nLet me analyze what I'll need to do:\n\n1. **Explore**: Find `modelform_factory` in the Django codebase\n2. **Understand**: See how it currently handles `formfield_callback`\n3. **Fix**: Modify it to inherit `formfield_callback` from the base form's Meta when not explicitly provided\n4. **Verify**: Create a reproduction script and test the fix\n\nBased on my experience with similar tasks:\n\n- This is a focused bug fix with clear requirements\n- The fix should be small (checking Meta class for the callback)\n- I'll likely need 15-25 steps total\n- Most of the exploration will be front-loaded\n- I should be careful not to modify tests or use interactive editors\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.30,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.40,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "model": "qwen/qwen3-next-80b-a3b-instruct",
+  "task_id": "django__django-15863",
+  "rollout_idx": 7,
+  "values": {
+    "p_solve": 1.0,
+    "p_first_attempt_correct": 1.0,
+    "avg_tokens_step": 127.88095238095238,
+    "total_expected_steps": 42.0,
+    "explore_edit_ratio": 0.11904761904761904,
+    "mean_action_block_size": 1.0,
+    "n_constraint_violations": 1.0,
+    "documentation": 0.0,
+    "defensive_code": 1.0,
+    "express_uncertainty": 1.0
+  },
+  "errored": false,
+  "error": null
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11728",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task and predict the agent's behavior.\n\nThe task is about fixing a bug in a `simplify_regexp()` or `replace_named_groups()` function that fails to replace the final named group when a URL pattern is missing a trailing '/'. This is a Django REST Framework related issue.\n\nBased on my understanding of the scaffold and the task:\n\n1. **p_solve**: This is a moderately straightforward bug fix - the function likely has an off-by-one error or regex issue with trailing groups. I'd estimate a high probability of solving it since the bug is well-described with a specific test case.\n\n2. **p_first_attempt_correct**: The agent will likely need to explore the codebase first, find the relevant function, understand it, and then fix it. There's a reasonable chance it gets it right on the first edit attempt after understanding the issue.\n\n3. **documentation**: This is a bug fix, not a feature addition, so documentation changes are unlikely.\n\n4. **defensive_code**: The fix is likely minimal - adjusting a regex pattern or loop condition. No significant defensive code needed.\n\n5. **express_uncertainty**: The agent has clear reproduction steps and a well-defined issue. Uncertainty expression should be low.\n\n6. **avg_tokens_step**: The agent will likely use moderate-length responses with reasoning and commands.\n\n7. **total_expected_steps**: The agent needs to: explore codebase, find the function, understand it, create reproduction script, fix the issue, verify, and submit. Probably 10-20 steps.\n\n8. **explore_edit_ratio**: The agent will spend significant time exploring before making edits - finding the file, reading the function, understanding the bug.\n\n9. **mean_action_block_size**: The agent may issue multiple independent commands in single responses (like finding files and reading them).\n\n10. **n_constraint_violations**: The scaffold has clear rules about not modifying tests, not using interactive editors, and separating patch creation from submission. The agent should follow these well.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.50,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11728",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.82,
+      "p_first_attempt_correct": 0.45,
+      "documentation": 0.25,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 380.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.43,
+      "mean_action_block_size": 2.1,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.82,\n  \"p_first_attempt_correct\": 0.45,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 380,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.43,\n  \"mean_action_block_size\": 2.1,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  }
+}

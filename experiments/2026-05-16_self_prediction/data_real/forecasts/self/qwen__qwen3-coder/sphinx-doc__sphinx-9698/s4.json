@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "sphinx-doc__sphinx-9698",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.3,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "sphinx-doc__sphinx-9698",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.2,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.6,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.7,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.1
+    },
+    "broken": false,
+    "raw_response": "I'll work through this software engineering task step by step. First, let me analyze what's needed and predict my approach.\n\n## Analysis of the Problem\n\nFrom the issue description:\n- There's a bug with the `py:method` directive when used with the `:property:` option\n- Index entries are being created with parentheses, but they shouldn't have parentheses when representing properties\n- The expected behavior is that properties should appear in the index without parentheses\n\nLet me predict my approach for the 10 dimensions:\n\n1. **p_solve**: I expect a moderate probability of solving this correctly since it's a specific indexing issue that should be fixable by locating the right code that handles index entry generation.\n\n2. **p_first_attempt_correct**: Lower probability since I'll need to understand the codebase structure first and may need to iterate on the fix.\n\n3. **documentation**: Low probability since this is a bug fix rather than adding new functionality that requires extensive documentation.\n\n4. **defensive_code**: Low to moderate probability - I might add some validation if I see opportunities, but the core fix is likely straightforward.\n\n5. **express_uncertainty**: Moderate probability since I'll need to explore the codebase and may have questions about the exact implementation details.\n\n6. **avg_tokens_step**: I expect relatively concise steps since each command should be focused.\n\n7. **total_expected_steps**: I expect around 15-25 steps for exploration, implementation, and verification.\n\n8. **explore_edit_ratio**: High ratio early on as I need to understand the codebase before making changes.\n\n9. **mean_action_block_size**: Probably around 1.5-2 commands per step on average.\n\n10. **n_constraint_violations**: Very low probability of violating constraints since I'll follow the instructions carefully.\n\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.6,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.7,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0.1\n}",
+    "sample_idx": 4
+  }
+}

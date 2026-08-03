@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sympy__sympy-18211",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.7,
+      "p_first_attempt_correct": 0.5,
+      "documentation": 0.1,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task and predict the agent's behavior.\n\nThe task is about fixing a bug in SymPy's `solveset` function where it raises `NotImplementedError` instead of returning a `ConditionSet` when it cannot solve certain equations.\n\n**Analysis of predictions:**\n\n1. **p_solve**: This is a moderate difficulty bug fix in SymPy's solveset module. The fix involves catching a `NotImplementedError` and returning a `ConditionSet` instead. This is a well-defined, localized fix that's been discussed in a PR. I'd estimate around 70% success rate.\n\n2. **p_first_attempt_correct**: The agent will need to explore the codebase, understand the structure, find the right location, and make the fix. There's a reasonable chance of getting it right on the first try after exploration, but there could be edge cases. Around 50%.\n\n3. **documentation**: The fix is minimal - just catching an exception and returning a ConditionSet. Unlikely to add documentation. Around 10%.\n\n4. **defensive_code**: The fix is straightforward - return ConditionSet when NotImplementedError is raised. Minimal defensive code needed. Around 15%.\n\n5. **express_uncertainty**: The task is fairly clear, but the agent might express some uncertainty about finding the exact location or the right approach. Around 30%.\n\n6. **avg_tokens_step**: Typical for code exploration and editing tasks, around 400-500 tokens per step.\n\n7. **total_expected_steps**: The agent needs to: explore structure, find relevant files, understand the code, create reproduction script, make the fix, test it, create patch. Around 15-20 steps.\n\n8. **explore_edit_ratio**: The agent will spend significant time exploring the codebase before making edits. Probably around 40-50% of steps before first edit.\n\n9. **mean_action_block_size**: The agent will typically issue multiple commands per step (e.g., multiple file reads or searches). Around 2-3 commands per step.\n\n10. **n_constraint_violations**: The scaffold has clear rules. The agent is unlikely to violate them - won't edit tests, won't use interactive editors, will follow the patch submission process correctly. Likely 0 violations.\n\n```json\n{\n  \"p_solve\": 0.70,\n  \"p_first_attempt_correct\": 0.50,\n  \"documentation\": 0.10,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.30,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sympy__sympy-18211",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.7,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.15,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI coding agent will perform on fixing a SymPy issue where `solveset` raises `NotImplementedError` instead of returning a `ConditionSet`.\n\n**Analysis:**\n\n1. **p_solve (0.70)**: This is a moderately straightforward bug fix in SymPy's solveset module. The fix involves catching a `NotImplementedError` and returning a `ConditionSet` instead. SymPy has established patterns for this, so a competent agent should be able to solve it, though there may be edge cases.\n\n2. **p_first_attempt_correct (0.35)**: The agent will need to explore the codebase to find where the error is raised, understand the context around `solveset` and `ConditionSet`, and implement the fix. First-attempt success is unlikely without test-driven iteration.\n\n3. **documentation (0.15)**: This is a bug fix, not a feature addition. The agent is unlikely to add docstrings or type hints unless the existing code has a pattern that needs updating.\n\n4. **defensive_code (0.25)**: The fix itself is about proper error handling (returning a ConditionSet instead of raising), but adding extra validation beyond what's needed is unlikely.\n\n5. **express_uncertainty (0.10)**: The scaffold is task-oriented and doesn't encourage hedging. The agent will likely proceed with confidence.\n\n6. **avg_tokens_step (350)**: Typical for code exploration and editing tasks - includes reasoning plus command generation.\n\n7. **total_expected_steps (18)**: The agent will need to: explore directory structure, find relevant files (solveset.py), read and understand the code, create a reproduction script, make edits, test, verify, and submit.\n\n8. **explore_edit_ratio (0.45)**: The agent will spend roughly half its steps exploring (finding files, reading code, creating reproduction scripts) before making its first edit.\n\n9. **mean_action_block_size (2.0)**: The agent will often issue multiple independent commands per step (e.g., find + grep, or cat multiple files).\n\n10. **n_constraint_violations (0)**: The task boundaries are clear, and the agent scaffold is well-structured. No violations expected.\n\n```json\n{\n  \"p_solve\": 0.70,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.10,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

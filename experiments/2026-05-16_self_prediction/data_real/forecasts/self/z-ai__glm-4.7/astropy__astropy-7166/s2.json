@@ -1,0 +1,33 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "astropy__astropy-7166",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.3,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze the task and understand what I need to do.\n\nThe PR description states that the `InheritDocstrings` metaclass doesn't work for properties because it uses `inspect.isfunction` which returns `False` for properties.\n\nLet me start by exploring the codebase to find the relevant files and understand the issue better.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.5,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "astropy__astropy-7166",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "I'll help you fix the InheritDocstrings metaclass issue with properties. Let me start by exploring the codebase to understand the problem.\n\n{\"command\": \"find /testbed -type f -name '*.py' | head -20\"}\n\n{\"command\": \"grep -r 'InheritDocstrings' /testbed --include='*.py' | head -20\"}\n\n{\"command\": \"ls -la /testbed\"}\n\n{\"command\": \"cat /testbed/README.md 2>/dev/null || cat /testbed/README.rst 2>/dev/null || echo 'No README found'\"}",
+    "sample_idx": 2
+  }
+}

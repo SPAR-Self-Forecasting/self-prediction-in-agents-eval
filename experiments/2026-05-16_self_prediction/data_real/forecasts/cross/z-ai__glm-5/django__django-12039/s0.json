@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-12039",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.75,
+      "documentation": 0.1,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 10.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze the PR description which describes a whitespace issue in Django's CREATE INDEX SQL statements. The issue is in `django/db/backends/ddl_references.py` where `col_suffixes` contains empty strings for ascending order, causing incorrect whitespace.\n\nLet me predict the agent's approach:\n\n1. It will explore the codebase, finding the relevant file\n2. It will understand the bug in `Columns.__str__` method\n3. It will make a minimal fix (filtering out empty strings from col_suffixes)\n4. It will verify with a reproduction script\n5. It will create and submit the patch\n\nThe fix is straightforward - filter empty strings from col_suffixes before joining. This is a well-scoped, single-location bug with clear expected behavior.\n\n```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.75,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 10,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-12039",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.78,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.08,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.18,
+      "avg_tokens_step": 320.0,
+      "total_expected_steps": 13.0,
+      "explore_edit_ratio": 0.42,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, the agent needs to fix a whitespace bug in Django's `django/db/backends/ddl_references.py` where `col_suffixes` contains empty strings (instead of being empty) for ascending order, causing:\n1. Missing space before `DESC` in descending indexes\n2. Trailing space after opclasses when no explicit ordering\n\nThis is a focused, well-described bug with a clear file location mentioned in the PR description. The fix likely involves filtering out empty strings from `col_suffixes` before joining.\n\n```json\n{\n  \"p_solve\": 0.78,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.08,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.18,\n  \"avg_tokens_step\": 320,\n  \"total_expected_steps\": 13,\n  \"explore_edit_ratio\": 0.42,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

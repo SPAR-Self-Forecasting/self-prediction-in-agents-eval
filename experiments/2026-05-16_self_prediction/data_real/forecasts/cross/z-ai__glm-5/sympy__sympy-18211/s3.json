@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sympy__sympy-18211",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.55,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task and predict what the agent will do.\n\nThe task is about fixing a bug in SymPy's `solveset` function where it raises `NotImplementedError` instead of returning a `ConditionSet` when it cannot solve an equation like `n*cos(n) - 3*sin(n) = 0`.\n\nLet me predict the 10 items:\n\n1. **p_solve**: This is a moderate difficulty bug fix. The agent needs to find where `solveset` raises `NotImplementedError` and change it to return a `ConditionSet`. This is a well-defined change in a mature codebase (SymPy). I estimate 0.65 probability of solving.\n\n2. **p_first_attempt_correct**: The fix location is likely in `sympy/solvers/solveset.py`. The agent will need to understand the code structure and find the right place. First attempt success is moderate - maybe 0.35.\n\n3. **documentation**: This is a bug fix, not a feature addition. The agent is unlikely to add documentation.\n\n4. **defensive_code**: The fix is straightforward - replacing a raise with a return statement. Minimal defensive code needed.\n\n5. **express_uncertainty**: The agent will likely express some uncertainty while exploring the codebase, but once it finds the relevant code, it should be confident.\n\n6. **avg_tokens_step**: The agent will use moderate tokens per step - reading files, reasoning, and making edits.\n\n7. **total_expected_steps**: The agent will need to explore, reproduce, fix, and verify. Probably around 12-18 steps.\n\n8. **explore_edit_ratio**: The agent will spend significant time exploring the solveset module before making edits.\n\n9. **mean_action_block_size**: The agent will typically issue 1-3 commands per step (file reading, searching, etc.).\n\n10. **n_constraint_violations**: The instructions are clear about not modifying test files, not using interactive editors, etc. The agent should follow these rules.\n\n```json\n{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.55,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sympy__sympy-18211",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.72,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.15,
+      "defensive_code": 0.18,
+      "express_uncertainty": 0.32,
+      "avg_tokens_step": 285.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.44,
+      "mean_action_block_size": 2.1,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.72,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.18,\n  \"express_uncertainty\": 0.32,\n  \"avg_tokens_step\": 285,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.44,\n  \"mean_action_block_size\": 2.1,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

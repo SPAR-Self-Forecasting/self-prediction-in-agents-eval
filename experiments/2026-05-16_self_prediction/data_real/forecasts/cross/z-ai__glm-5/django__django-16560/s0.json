@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-16560",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.45,
+      "documentation": 0.6,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 550.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.39,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, the agent needs to add a `violation_error_code` parameter to Django's `BaseConstraint` class, similar to how `violation_error_message` already exists. Let me predict the agent's behavior:\n\n```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.45,\n  \"documentation\": 0.6,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 550,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.39,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-16560",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.65,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 420.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI agent will approach implementing a new `violation_error_code` parameter for Django's `BaseConstraint` class.\n\n**Analysis:**\n\n1. **Task complexity**: This is a moderately complex Django contribution requiring:\n   - Finding `BaseConstraint` in the codebase\n   - Understanding the current `validate` method and `ValidationError` raising\n   - Adding a new parameter similar to existing `violation_error_message`\n   - Ensuring proper integration with constraint subclasses\n\n2. **Codebase exploration needed**: The agent will need to locate Django's constraint-related code (likely in `django/db/models/constraints.py` or similar).\n\n3. **Implementation pattern**: The PR description mentions this should mirror the existing `violation_error_message` parameter, providing a clear pattern to follow.\n\n4. **Testing requirements**: The agent will need to verify the fix works, likely creating a simple reproduction script.\n\nLet me provide my predictions:\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.65,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 420,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15863",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.1,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 400.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze what will happen when a coding agent attempts to fix a Django `floatformat` template filter bug where Decimal numbers lose precision due to being converted to float.\n\nLet me predict the 10 requested metrics:\n\n1. **p_solve**: This is a well-defined, well-documented bug with a clear reproduction case and even a PR reference. The fix is straightforward - avoid converting Decimal to float in the floatformat implementation. The agent should be able to find the relevant code, understand the issue, and fix it. Probability: 0.85 (high but not certain - could make edge case errors)\n\n2. **p_first_attempt_correct**: The agent will likely want to reproduce the bug first, then make the fix, then verify. It might need to adjust the fix if initial approach doesn't handle all cases. Probability: 0.35\n\n3. **documentation**: Minimal likelihood - this is a bug fix, not a feature addition. The existing docstring for floatformat is probably already adequate. Probability: 0.1\n\n4. **defensive_code**: The fix itself involves checking if the input is already a Decimal and handling it differently - this could be seen as defensive, but it's really the core fix. Probability: 0.15\n\n5. **express_uncertainty**: The task is fairly clear. Some hedging is possible when exploring the codebase. Probability: 0.2\n\n6. **avg_tokens_step**: Typical for SWE-bench agents doing code exploration and editing - moderate reasoning with commands. Around 400 tokens per step.\n\n7. **total_expected_steps**: Explore codebase (~3 steps), reproduce bug (~2 steps), find and read floatformat code (~3 steps), make fix (~2 steps), verify fix (~2 steps), create patch and submit (~3 steps). Total: ~15 steps.\n\n8. **explore_edit_ratio**: The agent will explore the codebase structure, find the floatformat implementation, reproduce the bug, then edit. Maybe 6-7 steps of exploration before first edit out of ~15 total. Ratio: ~0.4\n\n9. **mean_action_block_size**: The agent will typically issue 1-3 commands per step (e.g., find + cat, or multiple searches). Average around 1.8.\n\n10. **n_constraint_violations**: The agent is unlikely to violate constraints - it won't edit tests, won't use interactive editors, won't git commit, and will follow the submission procedure. 0 violations expected.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 400,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15863",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.42,
+      "documentation": 0.12,
+      "defensive_code": 0.35,
+      "express_uncertainty": 0.22,
+      "avg_tokens_step": 380.0,
+      "total_expected_steps": 9.0,
+      "explore_edit_ratio": 0.38,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, the agent needs to fix Django's `floatformat` template filter which incorrectly converts Decimal numbers to float, losing precision. This is a well-defined bug with a clear location (the `floatformat` filter implementation in Django's template default filters).\n\nThe fix involves ensuring that when the input is already a Decimal, it isn't converted through float (which loses precision). The agent will likely:\n1. Find the `floatformat` implementation in `django/template/defaultfilters.py`\n2. Create a reproduction script showing `Decimal('42.12345678901234567890')` rendered incorrectly\n3. Identify the line where Decimal is cast to float\n4. Fix it to preserve Decimal when input is already Decimal\n5. Verify and submit\n\n```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.42,\n  \"documentation\": 0.12,\n  \"defensive_code\": 0.35,\n  \"express_uncertainty\": 0.22,\n  \"avg_tokens_step\": 380,\n  \"total_expected_steps\": 9,\n  \"explore_edit_ratio\": 0.38,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

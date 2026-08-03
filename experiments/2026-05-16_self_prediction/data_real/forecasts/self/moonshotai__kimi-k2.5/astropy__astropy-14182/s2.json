@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "astropy__astropy-14182",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.72,
+      "documentation": 0.55,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.18,
+      "avg_tokens_step": 175.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.36,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.72,\n  \"documentation\": 0.55,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.18,\n  \"avg_tokens_step\": 175,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.36,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "astropy__astropy-14182",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.65,
+      "defensive_code": 0.45,
+      "express_uncertainty": 0.55,
+      "avg_tokens_step": 820.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.32,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to implement support for `header_rows` parameter in the RestructuredText (RST) table output format in astropy. The issue shows that `ascii.fixed_width` supports this but `ascii.rst` doesn't.\n\nLet me analyze my approach and predict the outcome:\n\n1. **Understanding the task**: I need to find the RST writer class and add `header_rows` support similar to how `fixed_width` implements it.\n\n2. **Expected workflow**: \n   - Explore the codebase structure\n   - Find RST-related files in astropy/io/ascii/\n   - Understand how fixed_width implements header_rows\n   - Modify RST class to accept and use header_rows\n   - Test the fix\n\n3. **Predictions**:\n   - This is a moderate-complexity feature addition\n   - I'll likely need 15-25 steps total\n   - I'll spend initial steps exploring (~5-7 steps)\n   - I might need some iteration after first test\n   - I'm likely to add docstrings/comments for clarity\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.65,\n  \"defensive_code\": 0.45,\n  \"express_uncertainty\": 0.55,\n  \"avg_tokens_step\": 820,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.32,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

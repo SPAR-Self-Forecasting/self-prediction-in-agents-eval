@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-13512",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.85,
+      "documentation": 0.3,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 210.0,
+      "total_expected_steps": 10.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.85,\n  \"documentation\": 0.30,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 210,\n  \"total_expected_steps\": 10,\n  \"explore_edit_ratio\": 0.30,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-13512",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.82,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.12,
+      "defensive_code": 0.08,
+      "express_uncertainty": 0.32,
+      "avg_tokens_step": 235.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.42,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a Django MySQL issue where JSONFields containing Unicode characters (like Chinese) are displayed as ASCII escape sequences (`\\u4e2d\\u56fd`) instead of actual Unicode characters (`中国`) in the Django admin. The fix involves finding where `json.dumps` is called and adding `ensure_ascii=False`.\n\nLet me predict my approach and outcomes:\n\n1. **Exploration phase**: I'll need to explore the codebase structure, find JSONField implementation, and locate where `json.dumps` is used for admin display\n2. **The fix**: Simple - add `ensure_ascii=False` to `json.dumps()` call(s)\n3. **Testing**: Create a quick reproduction script to verify the fix\n4. **Submission**: Generate and submit the patch\n\n```json\n{\n  \"p_solve\": 0.82,\n  \"p_first_attempt_correct\": 0.70,\n  \"documentation\": 0.12,\n  \"defensive_code\": 0.08,\n  \"express_uncertainty\": 0.32,\n  \"avg_tokens_step\": 235,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.42,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

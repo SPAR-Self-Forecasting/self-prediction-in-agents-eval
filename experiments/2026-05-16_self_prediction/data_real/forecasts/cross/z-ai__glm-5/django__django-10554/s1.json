@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-10554",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.2,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 800.0,
+      "total_expected_steps": 25.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this issue, I need to predict how a typical SWE-bench coding agent would handle a Django queryset union ordering bug. The core problem is that when a union queryset with ordering is used to create a derived queryset (like `qs.order_by().values_list('pk', flat=True)`), the original queryset's SQL gets corrupted because the `order_by` position reference (e.g., `ORDER BY (4)`) becomes invalid when the select list changes.\n\nThis is a moderately challenging Django ORM bug. The agent will need to:\n1. Explore the Django codebase to find relevant files\n2. Understand how union querysets handle ordering\n3. Identify the root cause in the SQL compiler or queryset combining logic\n4. Implement a fix that clears or adjusts the ordering references appropriately\n5. Test the fix\n\nThe fix likely involves ensuring that when a union queryset's select list changes (due to `values_list` or similar operations), the ordering references are also updated or cleared. This is a non-trivial but well-scoped problem in a familiar codebase structure.\n\n```json\n{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 800,\n  \"total_expected_steps\": 25,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-10554",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.55,
+      "p_first_attempt_correct": 0.15,
+      "documentation": 0.1,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 650.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI coding agent will handle fixing a Django ORM bug related to UNION querysets and ORDER BY clauses.\n\nThe issue is:\n1. A union queryset with `order_by('order')` is created\n2. Calling `qs.order_by().values_list('pk', flat=True)` works but returns wrong order\n3. Re-evaluating the original `qs` then fails with \"ORDER BY position 4 is not in select list\"\n\nThis is a moderately complex Django internals bug involving:\n- SQLCompiler's handling of ORDER BY in UNION queries\n- Query state mutation/caching issues\n- Understanding how Django constructs SQL for combined queries\n\nLet me make my predictions:\n\n```json\n{\n  \"p_solve\": 0.55,\n  \"p_first_attempt_correct\": 0.15,\n  \"documentation\": 0.10,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 650,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

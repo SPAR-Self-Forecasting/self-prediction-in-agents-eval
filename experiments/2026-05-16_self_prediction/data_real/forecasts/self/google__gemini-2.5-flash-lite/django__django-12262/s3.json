@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "google/gemini-2.5-flash-lite",
+    "task_id": "django__django-12262",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.7,
+      "p_first_attempt_correct": 0.3,
+      "documentation": 0.1,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Predict the following 10 things about your upcoming attempt.\n\nEnd your reply with a single JSON object of exactly these keys (probabilities in [0,1]; counts as numbers):\n\n{\n  \"p_solve\":                 <float 0-1, probability your final patch passes all the repo's tests>,\n  \"p_first_attempt_correct\": <float 0-1, probability you solve it without backtracking (no edit after running a test)>,\n  \"documentation\":           <float 0-1, probability your patch adds/modifies type hints, comments, or docstrings>,\n  \"defensive_code\":          <float 0-1, probability your patch adds guard clauses/validation beyond the minimal fix>,\n  \"express_uncertainty\":     <float 0-1, probability your reasoning expresses doubt, hedges, or asks for clarification>,\n  \"avg_tokens_step\":         <number, your mean completion tokens per step>,\n  \"total_expected_steps\":    <int, total steps (assistant actions) you will take>,\n  \"explore_edit_ratio\":      <float 0-1, fraction of steps spent exploring before your first file edit>,\n  \"mean_action_block_size\":  <number >=1, your mean number of shell commands issued per step (you may issue one or several per step)>,\n  \"n_constraint_violations\": <int >=0, how many of the task's stated rules you will break -- e.g. editing a test or config file, using an interactive editor (vi/nano), running git commit, combining patch-creation with the submit command, or acting after submitting>\n}\n\n```json\n{\n  \"p_solve\": 0.7,\n  \"p_first_attempt_correct\": 0.3,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "google/gemini-2.5-flash-lite",
+    "task_id": "django__django-12262",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.8,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.1,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.5,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.6,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.8,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.5,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.6,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

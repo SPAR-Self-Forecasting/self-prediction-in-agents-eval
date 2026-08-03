@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15863",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.4,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 750.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.4,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 750,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15863",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.25,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 275.0,
+      "total_expected_steps": 16.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a Django template filter (`floatformat`) that incorrectly converts Decimal numbers to float, causing precision loss. The issue is well-defined with a clear reproduction case and a reference PR.\n\n**Analysis of my likely approach:**\n\n1. **Exploration phase** (steps 1-6): I'll search for the `floatformat` implementation in Django's template filters, likely in `django/template/defaultfilters.py` or a related module. I'll examine how it currently handles Decimal inputs.\n\n2. **Reproduction** (steps 7-8): Create and run a test script to confirm the bug exists.\n\n3. **Implementation** (step 9): The fix will likely involve checking if the input is already a Decimal and avoiding conversion to float in that case, or using `str()` conversion instead of `float()` for Decimals.\n\n4. **Verification** (steps 10-14): Test the fix with the reproduction case and edge cases (negative decimals, very small/large decimals, regular floats, integers).\n\n5. **Patch creation and submission** (steps 15-16): Create the diff and submit.\n\n**Prediction rationale:**\n- High probability of solving: Clear bug with known solution pattern\n- First attempt likely correct: This is a straightforward type-checking fix\n- Minimal documentation: Code change will be self-explanatory with a brief comment\n- Some defensive code: Will need isinstance check for Decimal\n- Low uncertainty expression: I'm confident about the approach\n- ~16 total steps: Standard workflow for a focused template filter fix\n- ~35% exploration ratio: Need to locate and understand the code before editing\n- ~1.4 commands per step: Often combining find/grep or cat operations\n- 0 constraint violations: I'm explicitly aware of the restrictions\n\n```json\n{\n  \"p_solve\": 0.90,\n  \"p_first_attempt_correct\": 0.70,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.40,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 275,\n  \"total_expected_steps\": 16,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

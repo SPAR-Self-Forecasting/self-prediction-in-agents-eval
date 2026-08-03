@@ -1,7 +1,11 @@
 
 
-# Real-run output (isolated from the committed mock data)
-data_real/
+# Real-run output: the small cache (tasks.json, forecasts/, outcomes/,
+# cross_predictor.json) is committed for reproducibility. Full agent
+# trajectories (rollouts/, ~2.5 GB) ship as GitHub Release assets instead
+# (see README "Data availability"); rollout_work/ is transient scratch.
+data_real/rollouts/
+data_real/rollout_work/
 
 # Transient run output (pull/launch logs, crash logs)
 logs/*.log

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sphinx-doc__sphinx-11510",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.25,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.5,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 40.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.30,\n  \"express_uncertainty\": 0.50,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 40,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sphinx-doc__sphinx-11510",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.55,
+      "p_first_attempt_correct": 0.2,
+      "documentation": 0.3,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.55,
+      "avg_tokens_step": 420.0,
+      "total_expected_steps": 32.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.1,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict my performance on fixing a Sphinx bug where the `source-read` event doesn't properly modify content for files included via `.. include::`.\n\n**Analysis of the task:**\n- This is a subtle bug in Sphinx's core document processing\n- The issue is that while the `source-read` event fires for included files and the source is modified in the callback, those modifications don't appear in the final output\n- This suggests a problem in how Sphinx handles the flow between event firing and the actual parsing of included content\n- Sphinx uses docutils under the hood, which handles the `.. include::` directive directly - this is likely where the disconnect occurs\n\n**Predictions:**\n\n1. **p_solve (0.55)**: This is a moderately complex issue requiring understanding Sphinx's event system and how it interfaces with docutils' include directive. I have a reasonable chance of solving it, but the interaction between Sphinx events and docutils directives is subtle.\n\n2. **p_first_attempt_correct (0.20)**: The fix likely requires identifying where included file content is processed and ensuring modifications propagate correctly. Given the complexity, my first attempt will probably need refinement after testing.\n\n3. **documentation (0.30)**: I tend to add comments/docstrings when modifying complex code, but this fix might be surgical enough to not require extensive documentation additions.\n\n4. **defensive_code (0.15)**: The fix should be targeted; I won't add extensive validation beyond the minimal required change.\n\n5. **express_uncertainty (0.55)**: Given the complexity of Sphinx's internals and the subtle nature of the include processing, I'll likely express uncertainty about the exact mechanism while investigating.\n\n6. **avg_tokens_step (420)**: My reasoning and commands will average around this many tokens per step.\n\n7. **total_expected_steps (32)**: Exploration (finding relevant files), understanding the flow, implementing fix, and verification will take approximately this many steps.\n\n8. **explore_edit_ratio (0.40)**: I'll spend about 40% of initial steps exploring before making my first edit.\n\n9. **mean_action_block_size (2.1)**: I'll typically issue 1-3 commands per step, averaging around 2.\n\n10. **n_constraint_violations (0)**: I should be able to follow all the rules (no test modifications, no interactive editors, proper submission).\n\n```json\n{\n  \"p_solve\": 0.55,\n  \"p_first_attempt_correct\": 0.20,\n  \"documentation\": 0.30,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.55,\n  \"avg_tokens_step\": 420,\n  \"total_expected_steps\": 32,\n  \"explore_edit_ratio\": 0.40,\n  \"mean_action_block_size\": 2.1,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

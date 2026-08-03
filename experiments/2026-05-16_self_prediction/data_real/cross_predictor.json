@@ -1,0 +1,31 @@
+{
+  "cross_model": "z-ai/glm-5",
+  "ranking": [
+    "z-ai/glm-5",
+    "moonshotai/kimi-k2.5",
+    "z-ai/glm-4.7",
+    "deepseek/deepseek-v3.2",
+    "z-ai/glm-4.5",
+    "qwen/qwen3-coder",
+    "google/gemini-3.1-flash-lite",
+    "qwen/qwen3-next-80b-a3b-instruct",
+    "google/gemini-2.5-flash-lite",
+    "qwen/qwen3-32b",
+    "qwen/qwen3-14b",
+    "qwen/qwen3-8b"
+  ],
+  "solve_rates": {
+    "qwen/qwen3-next-80b-a3b-instruct": 0.15207373271889402,
+    "qwen/qwen3-8b": 0.055793991416309016,
+    "qwen/qwen3-14b": 0.05982905982905983,
+    "qwen/qwen3-32b": 0.09829059829059829,
+    "google/gemini-2.5-flash-lite": 0.13043478260869565,
+    "google/gemini-3.1-flash-lite": 0.21929824561403508,
+    "qwen/qwen3-coder": 0.23857868020304568,
+    "deepseek/deepseek-v3.2": 0.5482456140350878,
+    "z-ai/glm-4.5": 0.4260869565217391,
+    "z-ai/glm-4.7": 0.5689655172413793,
+    "moonshotai/kimi-k2.5": 0.6026200873362445,
+    "z-ai/glm-5": 0.6470588235294118
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "google/gemini-2.5-flash-lite",
+    "task_id": "sphinx-doc__sphinx-11510",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.8,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.1,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "This task requires me to fix a bug in a Sphinx extension where an `source-read` event handler does not correctly modify included files. The provided example shows that the replacement logic works for the main file but not for included files. The bug appears to be related to how Sphinx processes included files and how the `source-read` event is triggered or handled for them.\n\nMy plan is to:\n1. Understand the Sphinx extension's role and how it interacts with Sphinx's build process.\n2. Investigate the `source-read` event and its behavior with included files.\n3. Identify the root cause of why the modification isn't reflected in the final output for included files.\n4. Modify the extension code to ensure that included files are also correctly processed.\n5. Test the fix using the provided reproduction steps.\n\nFirst, I need to understand the project structure and locate the custom extension file (`yocto-vars.py` as mentioned in the PR description).\n\n```json\n{\n  \"p_solve\": 0.8,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "google/gemini-2.5-flash-lite",
+    "task_id": "sphinx-doc__sphinx-11510",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.3,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 11.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.70,\n  \"documentation\": 0.30,\n  \"defensive_code\": 0.10,\n  \"express_uncertainty\": 0.30,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 11,\n  \"explore_edit_ratio\": 0.30,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

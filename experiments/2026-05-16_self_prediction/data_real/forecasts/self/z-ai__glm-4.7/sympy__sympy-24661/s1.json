@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "sympy__sympy-24661",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.2,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix an issue where `parse_expr('1 < 2', evaluate=False)` incorrectly evaluates to `True` instead of returning `Lt(1, 2, evaluate=False)`.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "sympy__sympy-24661",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.8,
+      "p_first_attempt_correct": 0.5,
+      "documentation": 0.3,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 200.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.8,\n  \"p_first_attempt_correct\": 0.5,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 200,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  }
+}

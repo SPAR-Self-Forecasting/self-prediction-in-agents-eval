@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-12262",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.15,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze what the agent will be working on:\n\n**Task Summary**: Fix a Django bug where custom template tags raise `TemplateSyntaxError` incorrectly when keyword-only arguments with defaults are provided. The issue is in how Django's template tag decorator handles keyword arguments.\n\n**Key observations**:\n1. This is a Django core bug fix - the codebase will be Django's source\n2. The PR description mentions \"the same code\" for simple_tags and inclusion_tags, and that a fix is straightforward\n3. The issue is specifically about keyword-only arguments with defaults not being recognized properly\n4. The agent needs to find the template tag decorator code and fix the argument handling\n\nLet me predict the agent's behavior:\n\n1. **p_solve**: This is a well-documented bug with clear reproduction steps. The fix location is hinted at (template tag decorators). The agent should be able to find the relevant code in Django's `django.template.base` or `django.template.library` module. I'll estimate a high probability of solving it.\n\n2. **p_first_attempt_correct**: The fix requires understanding how Django parses template tag arguments. There's a chance of getting the logic slightly wrong on first try (handling edge cases like multiple values for same keyword).\n\n3. **documentation**: The fix is likely minimal - adjusting argument parsing logic. Unlikely to need extensive documentation changes.\n\n4. **defensive_code**: The fix itself adds proper handling/validation, but not extra defensive code beyond what's needed.\n\n5. **express_uncertainty**: The task is well-defined with clear error messages and expected behavior. Minimal uncertainty expected.\n\n6. **avg_tokens_step**: Standard for this type of task - exploring files, reading code, making edits.\n\n7. **total_expected_steps**: Need to explore the codebase, find the relevant file, understand the code, make the fix, test it, create patch.\n\n8. **explore_edit_ratio**: Django's structure is fairly standard. Finding the template library code should take a few steps.\n\n9. **mean_action_block_size**: Typical exploration involves multiple independent lookups per step.\n\n10. **n_constraint_violations**: The agent is well-instructed on what not to do. Should follow rules.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-12262",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.7,
+      "p_first_attempt_correct": 0.3,
+      "documentation": 0.1,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 550.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.55,
+      "mean_action_block_size": 2.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how the agent will handle fixing a Django template tag issue where keyword-only arguments with defaults cause TemplateSyntaxError.\n\nThe issue involves:\n1. Simple/inclusion tags failing when keyword-only arguments with defaults are provided\n2. Wrong error messages when duplicate keyword arguments are passed\n\nLet me analyze what the agent will likely do:\n\n1. **p_solve**: This is a well-documented Django bug with a known fix location (template tag library). The PR description hints the fix exists. The agent should find the relevant code in Django's template tag handling. Probability: 0.70\n\n2. **p_first_attempt_correct**: The agent will likely need to explore the codebase first, find where `simple_tag` and `inclusion_tag` decorators handle argument parsing, understand the bug, and then fix it. Some iteration is likely needed. Probability: 0.30\n\n3. **documentation**: The fix is a bug correction, unlikely to add docstrings or type hints. Probability: 0.10\n\n4. **defensive_code**: The fix itself addresses argument validation - the agent will likely add proper checks for keyword-only args but this is the fix itself, not extra defensive code. Probability: 0.20\n\n5. **express_uncertainty**: The agent may express some uncertainty while exploring the Django codebase structure, but should be reasonably confident once finding the relevant code. Probability: 0.25\n\n6. **avg_tokens_step**: For code exploration and editing tasks, typically 400-700 tokens per step. Estimate: 550\n\n7. **total_expected_steps**: The agent needs to: explore structure, find template tag files, read the code, create reproduction script, identify bug location, edit source, test, create patch, submit. Estimate: 18 steps\n\n8. **explore_edit_ratio**: Django's template tag code is in a specific location. The agent will spend time finding it and understanding the argument parsing logic before editing. Ratio: 0.55\n\n9. **mean_action_block_size**: The agent can combine independent commands (ls, find, grep) in single responses. Estimate: 2.3\n\n10. **n_constraint_violations**: The scaffold rules are clear - no test edits, no interactive editors, separate patch creation from submit. The agent should follow these. Estimate: 0\n\n```json\n{\n  \"p_solve\": 0.70,\n  \"p_first_attempt_correct\": 0.30,\n  \"documentation\": 0.10,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 550,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.55,\n  \"mean_action_block_size\": 2.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

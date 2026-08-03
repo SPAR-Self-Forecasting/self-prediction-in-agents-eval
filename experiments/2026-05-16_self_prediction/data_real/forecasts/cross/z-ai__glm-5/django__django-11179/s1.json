@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11179",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.75,
+      "documentation": 0.1,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict the agent's behavior when fixing a Django bug where `delete()` on model instances without dependencies doesn't clear the primary key (PK).\n\nLet me analyze the key aspects:\n\n1. **Issue clarity**: The PR description is quite specific - points to exact file (`django.db.models.deletion`) and line numbers (276-281, specifically line 280). This is a focused bug fix.\n\n2. **Technical nature**: This is a Django ORM deletion bug. The fix likely involves setting `self.pk = None` or similar after deletion for models without dependencies.\n\n3. **Agent behavior patterns**:\n   - Will likely explore the codebase first to find the exact location\n   - The fix is probably a simple one-liner\n   - Minimal backtracking expected since the issue is well-specified\n   - Won't need defensive code or extensive documentation\n\n4. **Step estimates**:\n   - Exploration: Find the deletion.py file, read the relevant section (~3-5 steps)\n   - Create reproduction script to verify the bug (~2-3 steps)\n   - Make the fix (~1 step)\n   - Verify fix works (~1-2 steps)\n   - Create and submit patch (~2-3 steps)\n   - Total: ~10-15 steps\n\n5. **Confidence in solution**: The issue is well-defined with line numbers, so probability of correct solution is high.\n\n6. **Constraint violations**: The agent should follow all rules - no test modifications, separate patch creation and submission steps.\n\nHere's my prediction:\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.75,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11179",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.45,
+      "documentation": 0.08,
+      "defensive_code": 0.12,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 380.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.43,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.45,\n  \"documentation\": 0.08,\n  \"defensive_code\": 0.12,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 380,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.43,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

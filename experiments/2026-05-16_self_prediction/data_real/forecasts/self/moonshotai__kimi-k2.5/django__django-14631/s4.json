@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-14631",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.92,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.75,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 650.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.92,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.75,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 650,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-14631",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.3,
+      "documentation": 0.4,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.45,
+      "avg_tokens_step": 400.0,
+      "total_expected_steps": 32.0,
+      "explore_edit_ratio": 0.22,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this Django refactoring task, I need to predict how I'll perform when modifying `BaseForm._clean_fields()` and `BaseForm.changed_data` to access values through `BoundField` objects, potentially adding a `_did_change()` method to `BoundField`.\n\nLet me analyze the complexity:\n- This is a well-scoped refactoring in Django's forms system\n- Requires understanding the relationship between `BaseForm`, `BoundField`, and field data access patterns\n- The PR description provides clear guidance on the desired end state\n- Need to ensure existing tests pass (particularly `test_datetime_clean_initial_callable_disabled`)\n- Risk involves changing core form data access patterns without breaking existing functionality\n\n**Predictions:**\n\n1. **p_solve: 0.75** - This is a straightforward refactoring with clear requirements, but touching core form methods carries regression risk.\n\n2. **p_first_attempt_correct: 0.30** - Multiple methods need coordination (`_clean_fields`, `changed_data`, and new `BoundField._did_change()`). I'll likely need iteration to get the BoundField logic exactly right.\n\n3. **documentation: 0.40** - Adding a new `_did_change()` method to `BoundField` should include a docstring explaining its purpose.\n\n4. **defensive_code: 0.15** - Primarily refactoring existing logic paths rather than adding new validation, though I might add minimal guards when moving logic.\n\n5. **express_uncertainty: 0.45** - I'll likely express caution when verifying that `form._clean_fields()` and `form[name].initial` behave identically, and when confirming the BoundField API surface.\n\n6. **avg_tokens_step: 400** - Moderate reasoning complexity for understanding Django forms internals and verifying the refactoring logic.\n\n7. **total_expected_steps: 32** - Exploration (5-6 steps), implementation (8-10 steps), testing and verification (15-18 steps including potential iterations).\n\n8. **explore_edit_ratio: 0.22** - Need to examine `django/forms/forms.py` to understand current implementations before editing (roughly 7 exploration steps out of 32 total).\n\n9. **mean_action_block_size: 1.3** - Usually 1 command per step (reading files, running tests), occasionally 2 (searching + reading).\n\n10. **n_constraint_violations: 0** - I'm aware of the constraints (no test modifications, no interactive editors, proper submission format) and will be careful to follow them.\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.30,\n  \"documentation\": 0.40,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.45,\n  \"avg_tokens_step\": 400,\n  \"total_expected_steps\": 32,\n  \"explore_edit_ratio\": 0.22,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

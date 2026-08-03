@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "pydata__xarray-4356",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 250.0,
+      "total_expected_steps": 11.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze what the agent will likely do when attempting to fix the xarray issue with `sum` and `min_count` for multi-dimensional reductions.\n\nLet me predict the 10 metrics:\n\n1. **p_solve**: This is a relatively straightforward bug fix - the PR description points directly to the issue location and suggests a specific fix. The agent should be able to solve this with high probability (~0.85).\n\n2. **p_first_attempt_correct**: The fix is clearly described in the PR, but the agent will need to understand the code context first. Once it edits, it likely gets it right the first time (~0.65).\n\n3. **documentation**: This is a bug fix, not a feature addition. The agent is unlikely to add documentation (~0.15).\n\n4. **defensive_code**: The fix is minimal - replacing one expression with another. Unlikely to add guard clauses (~0.2).\n\n5. **express_uncertainty**: The PR description says \"I *think* this can be fixed\" which might prompt some hedging, but the agent will likely be confident once it examines the code (~0.3).\n\n6. **avg_tokens_step**: The agent will do a mix of exploration (longer reasoning) and simple commands. Average around 200-300 tokens per step.\n\n7. **total_expected_steps**: The agent will: explore the codebase (3-4 steps), create a reproduction script (1-2 steps), examine the relevant file (1-2 steps), make the fix (1 step), verify (1-2 steps), create patch (1 step), submit (1 step). Total around 10-12 steps.\n\n8. **explore_edit_ratio**: The agent will spend significant time exploring before editing - finding the file, understanding the context (~0.5).\n\n9. **mean_action_block_size**: The agent typically issues 1-2 commands per step, sometimes more for independent searches (~1.5).\n\n10. **n_constraint_violations**: The agent is well-instructed and the task is straightforward. Unlikely to violate rules (0).\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 250,\n  \"total_expected_steps\": 11,\n  \"explore_edit_ratio\": 0.5,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "pydata__xarray-4356",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 10.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict the behavior of an AI coding agent attempting to fix a bug in xarray's `sum` function where `min_count` doesn't work with multiple dimensions.\n\n**Analysis of the task:**\n- The bug is well-described with a specific file location (`xarray/core/nanops.py` around line 35)\n- The PR description even suggests the exact fix: replacing `mask.shape[axis]` with `np.take(a.shape, axis).prod()`\n- This is a relatively straightforward fix to existing code\n\n**Key predictions:**\n\n1. **p_solve (0.90)**: The fix is clearly described in the PR. The agent should be able to locate the file, understand the issue, and apply the suggested change. High success probability.\n\n2. **p_first_attempt_correct (0.65)**: While the fix is suggested, there may be nuances about handling axis as a tuple/list vs single integer, or edge cases that require iteration. The agent might need to adjust after initial testing.\n\n3. **documentation (0.15)**: This is a bug fix, not a new feature. Unlikely to add docstrings or comments for such a minimal change.\n\n4. **defensive_code (0.20)**: The fix is straightforward - just changing how the count is calculated. Minimal need for guard clauses.\n\n5. **express_uncertainty (0.35)**: The agent might express some uncertainty about whether the suggested fix handles all edge cases (e.g., when axis is a tuple).\n\n6. **avg_tokens_step (280)**: Typical reasoning + command generation for a coding agent.\n\n7. **total_expected_steps (10)**: Explore codebase → Read file → Create reproduction script → Apply fix → Test → Verify edge cases → Create patch → Verify patch → Submit.\n\n8. **explore_edit_ratio (0.40)**: About 4 steps exploring (finding file, reading context, understanding the code) before making the first edit.\n\n9. **mean_action_block_size (1.8)**: Agent typically issues 1-3 commands per step (e.g., multiple file reads, or find + read).\n\n10. **n_constraint_violations (0)**: The instructions are clear about not modifying tests, not using interactive editors, and separating patch creation from submission.\n\n```json\n{\n  \"p_solve\": 0.90,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 10,\n  \"explore_edit_ratio\": 0.40,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

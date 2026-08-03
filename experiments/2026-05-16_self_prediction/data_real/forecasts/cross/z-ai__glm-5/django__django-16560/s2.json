@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-16560",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.45,
+      "documentation": 0.6,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI coding agent will handle implementing a feature to allow customizing the `code` attribute of `ValidationError` raised by `BaseConstraint.validate` in Django.\n\nLet me analyze the key aspects:\n\n1. **Task difficulty**: This is a moderate difficulty task. It involves understanding Django's constraint validation system, finding the `BaseConstraint` class, adding a new parameter (`violation_error_code`), and modifying the `validate` method to use it when raising `ValidationError`.\n\n2. **Codebase exploration**: The agent will need to find where `BaseConstraint` is defined (likely in `django/db/models/constraints.py`), understand the existing `violation_error_message` parameter pattern, and implement a similar feature for the error code.\n\n3. **Implementation approach**: The fix is relatively straightforward - add a new `violation_error_code` parameter to `BaseConstraint.__init__`, store it, and use it when catching and re-raising `ValidationError` in the `validate` method.\n\n4. **Testing**: The agent should create a reproduction script and verify the fix works.\n\n5. **Documentation**: Django codebase typically has good documentation practices, so the agent might add docstrings.\n\n6. **Constraint violations**: The task explicitly forbids modifying test files, so the agent shouldn't touch those.\n\nHere's my prediction:\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.45,\n  \"documentation\": 0.6,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-16560",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.55,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 480.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.1,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.55,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 480,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.1,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

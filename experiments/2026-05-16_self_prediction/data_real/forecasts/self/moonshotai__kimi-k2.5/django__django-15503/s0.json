@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15503",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.2,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15503",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.05,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.6,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 24.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 2.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this Django JSONField issue, I need to predict how I'll handle this task. The bug involves `has_key`, `has_keys`, and `has_any_keys` lookups failing for numeric string keys (like '1111') on SQLite, MySQL, and Oracle because these databases interpret unquoted numeric paths as array indices rather than object keys.\n\n**Analysis of my approach:**\n- I'll need to explore Django's JSONField lookup implementation across multiple database backends\n- The fix likely involves ensuring JSON path keys are properly quoted (e.g., `$.\"1111\"` instead of `$.1111`)\n- This requires understanding Django's database backend abstraction for JSON operations\n- I'll probably spend significant time exploring before making the first edit, as Django's lookup system is complex\n\n**Prediction rationale:**\n- **p_solve (0.75):** I'm reasonably confident I can solve this - it's a targeted fix involving SQL generation for JSON paths, though supporting three backends adds complexity.\n- **p_first_attempt_correct (0.25):** Database backend fixes often require iteration. I might get the logic right but need adjustments for syntax differences across SQLite/MySQL/Oracle.\n- **documentation (0.05):** I'll focus on minimal code changes; unlikely to add docstrings unless the code is particularly unclear.\n- **defensive_code (0.15):** The fix should be surgical - likely just adjusting how JSON paths are quoted. Minimal guard clauses expected.\n- **express_uncertainty (0.6):** I'll likely express uncertainty while navigating Django's complex lookup registration system and database-specific implementations.\n- **avg_tokens_step (280):** Django issues require careful reasoning about ORM internals and SQL generation.\n- **total_expected_steps (24):** Expect: 8-10 steps exploring, 4-5 steps reproducing, 3-4 steps fixing, 4-5 steps testing/verifying, 2 steps submitting.\n- **explore_edit_ratio (0.35):** I'll spend roughly 35% of steps (8-9 steps) exploring the codebase before the first edit.\n- **mean_action_block_size (2.3):** I typically issue 2-3 parallel commands when exploring (finding files, grepping, reading).\n- **n_constraint_violations (0):** I should be able to avoid editing tests or using prohibited commands.\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.6,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 24,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 2.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

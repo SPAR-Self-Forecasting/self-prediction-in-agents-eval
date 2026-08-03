@@ -1,0 +1,19 @@
+{
+  "model": "deepseek/deepseek-v3.2",
+  "task_id": "django__django-11728",
+  "rollout_idx": 0,
+  "values": {
+    "p_solve": 0.0,
+    "p_first_attempt_correct": 0.0,
+    "avg_tokens_step": 319.7525773195876,
+    "total_expected_steps": 97.0,
+    "explore_edit_ratio": 0.6494845360824743,
+    "mean_action_block_size": 1.0,
+    "n_constraint_violations": 0.0,
+    "documentation": 1.0,
+    "defensive_code": 1.0,
+    "express_uncertainty": 1.0
+  },
+  "errored": false,
+  "error": null
+}

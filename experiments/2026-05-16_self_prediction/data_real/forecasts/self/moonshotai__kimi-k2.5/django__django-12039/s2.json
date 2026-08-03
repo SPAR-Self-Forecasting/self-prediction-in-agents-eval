@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-12039",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.25,
+      "defensive_code": 0.35,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 550.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.21,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.35,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 550,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.21,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-12039",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.05,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a whitespace issue in Django's CREATE INDEX statement generation. The problem is in `django/db/backends/ddl_references.py` where the `Columns` class doesn't properly handle spaces between column names and their suffixes (like `DESC` or opclasses).\n\n**My predicted approach:**\n1. Explore the codebase structure and find the relevant file\n2. Understand how `col_suffixes` is being processed\n3. Create a reproduction script to verify the bug\n4. Fix the whitespace handling (likely need to add a space before non-empty suffixes and remove trailing spaces)\n5. Verify the fix works\n\n**Predictions:**\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "no_thinking": {
+    "model": "deepseek/deepseek-v3.2",
+    "task_id": "astropy__astropy-14182",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.5,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\":对一个文件进行更改，然后创建补丁文件并提交。",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "deepseek/deepseek-v3.2",
+    "task_id": "astropy__astropy-14182",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "I'll analyze the task and predict my approach.\n\nLooking at the PR description, the issue is that `astropy.table.write()` with `format=\"ascii.rst\"` fails when `header_rows` parameter is provided because the `RST` writer class doesn't accept the `header_rows` keyword argument. The `ascii.fixed_width` format already supports this parameter. The fix should involve modifying the RST writer to accept and handle `header_rows`.\n\nMy predictions:\n\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.3,\n  \"documentation\": 0.6,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.8,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": antibias\n}",
+    "sample_idx": 4
+  }
+}

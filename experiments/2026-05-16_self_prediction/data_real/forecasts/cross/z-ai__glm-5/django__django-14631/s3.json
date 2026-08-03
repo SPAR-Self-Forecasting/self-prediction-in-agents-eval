@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-14631",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.4,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.55,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze what the agent will attempt to do:\n\n1. **Task Analysis**: The PR description asks for refactoring Django's BaseForm to access values through BoundField objects in `_clean_fields()` and `changed_data`. It also suggests adding a `did_change()` method to BoundField.\n\n2. **Difficulty**: This is a moderately complex refactoring task involving Django's form internals. The agent needs to understand BoundField, form data handling, and maintain backward compatibility.\n\n3. **Agent Behavior Predictions**:\n- The agent will likely explore the codebase to understand the current implementation\n- It will need to find the relevant files (likely in django/forms/)\n- It will create a test script to verify the issue\n- It will make edits to implement the changes\n- It will run tests to verify\n\nLet me make specific predictions:\n\n- **p_solve**: 0.65 - This is a non-trivial refactoring task. The agent needs to correctly understand BoundField internals and implement changes without breaking existing functionality. There's a reasonable chance it succeeds.\n\n- **p_first_attempt_correct**: 0.25 - Refactoring form internals is tricky. The agent will likely need to iterate after seeing test failures or unexpected behavior.\n\n- **documentation**: 0.4 - The PR description mentions adding a new method `did_change()` which would need documentation. The agent might add docstrings.\n\n- **defensive_code**: 0.3 - The agent might add some validation, but this is primarily a refactoring task.\n\n- **express_uncertainty**: 0.55 - The task involves understanding Django internals which is complex. The agent will likely express some uncertainty.\n\n- **avg_tokens_step**: 450 - The agent will need to reason about code structure and provide detailed explanations.\n\n- **total_expected_steps**: 18 - Exploration of codebase, understanding BoundField, creating test script, implementing changes, verifying, creating patch.\n\n- **explore_edit_ratio**: 0.45 - The agent will spend significant time exploring the codebase before making edits.\n\n- **mean_action_block_size**: 2.2 - The agent will often issue multiple independent commands together (e.g., finding files, reading multiple files).\n\n- **n_constraint_violations**: 0 - The agent is unlikely to violate the stated rules given the clear instructions.\n\n```json\n{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.4,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.55,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-14631",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.15,
+      "documentation": 0.1,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 600.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, the agent needs to refactor Django's BaseForm class to:\n1. Access values through BoundField objects in `_clean_fields()` and `changed_data`\n2. Move per-field logic of `changed_data()` to a BoundField method like `did_change()`\n\nThis is a moderately complex refactoring task in a well-structured codebase. Let me predict the agent's behavior:\n\n1. **p_solve**: The task is well-defined but requires understanding Django's form internals. The agent should be able to find the relevant code and make the refactoring. I'd estimate ~75% success rate.\n\n2. **p_first_attempt_correct**: Very unlikely - the agent needs to explore the codebase first to understand the current implementation. Maybe ~15%.\n\n3. **documentation**: This is internal refactoring, unlikely to add docstrings. ~10%.\n\n4. **defensive_code**: The task is about restructuring existing code, not adding validation. ~5%.\n\n5. **express_uncertainty**: The agent will likely express some uncertainty while navigating Django's codebase. ~40%.\n\n6. **avg_tokens_step**: Agent will be reading files and reasoning about code structure. ~600 tokens.\n\n7. **total_expected_steps**: Finding files, understanding code, making edits, testing. ~20 steps.\n\n8. **explore_edit_ratio**: Significant exploration needed before editing. ~50%.\n\n9. **mean_action_block_size**: Agent will typically issue 1-2 commands per step. ~1.5.\n\n10. **n_constraint_violations**: The instructions are clear and the agent should follow them. ~0.\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.15,\n  \"documentation\": 0.10,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.40,\n  \"avg_tokens_step\": 600,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.50,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

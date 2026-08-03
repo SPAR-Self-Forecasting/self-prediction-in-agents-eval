@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11163",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.92,
+      "p_first_attempt_correct": 0.88,
+      "documentation": 0.05,
+      "defensive_code": 0.03,
+      "express_uncertainty": 0.08,
+      "avg_tokens_step": 185.0,
+      "total_expected_steps": 7.0,
+      "explore_edit_ratio": 0.43,
+      "mean_action_block_size": 1.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.92,\n  \"p_first_attempt_correct\": 0.88,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.03,\n  \"express_uncertainty\": 0.08,\n  \"avg_tokens_step\": 185,\n  \"total_expected_steps\": 7,\n  \"explore_edit_ratio\": 0.43,\n  \"mean_action_block_size\": 1.2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11163",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.9,
+      "documentation": 0.05,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.05,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a Django bug in `model_to_dict()` where passing an empty list for `fields` returns all fields instead of an empty dict.\n\nLet me make my predictions:\n\n**Analysis:**\n- This is a straightforward, clearly-identified bug with a specific one-line fix\n- The issue is in a condition checking `if fields` which should be `if fields is not None`\n- Empty list `[]` is falsy in Python, so `if fields` skips the filtering when an empty list is passed\n- The fix is minimal and surgical\n\n**Predictions:**\n1. **p_solve: 0.95** - Very confident I can fix this; the solution is explicitly given in the PR description\n2. **p_first_attempt_correct: 0.90** - Should get it right the first time; might need one verification cycle\n3. **documentation: 0.05** - Unlikely to add docs; this is a bug fix, not a feature\n4. **defensive_code: 0.05** - The fix is exactly the minimal change specified; no extra guards needed\n5. **express_uncertainty: 0.05** - The issue is crystal clear\n6. **avg_tokens_step: 180** - I tend to be concise with reasoning\n7. **total_expected_steps: 12** - Find file (2), reproduce (2), fix (2), verify (3), submit (3)\n8. **explore_edit_ratio: 0.25** - About 3 steps exploring before first edit\n9. **mean_action_block_size: 1.8** - Often batch related commands (find+grep, cat+verify)\n10. **n_constraint_violations: 0** - I should be able to follow all rules; main risks are accidentally editing test files or combining submit with other commands\n\n```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.90,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.05,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

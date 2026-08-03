@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "pydata__xarray-4356",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 400.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze what the agent will do to fix a bug in xarray's `sum` function where `min_count` doesn't work with multiple dimensions.\n\nLet me predict the 10 metrics:\n\n1. **p_solve**: This is a straightforward bug fix - the PR description explicitly identifies the problem location and suggests a fix. The agent should be able to solve this with high probability (~0.85).\n\n2. **p_first_attempt_correct**: The fix is suggested in the PR, but the agent needs to verify it works. There's a reasonable chance it gets it right on first try (~0.6).\n\n3. **documentation**: This is a bug fix, not a feature addition. Unlikely to add documentation (~0.15).\n\n4. **defensive_code**: The fix is straightforward - replacing one expression with another. Unlikely to add extra validation (~0.2).\n\n5. **express_uncertainty**: The PR description suggests a fix with \"I *think* this can be fixed\" - the agent may express some uncertainty while testing (~0.4).\n\n6. **avg_tokens_step**: The agent will likely have moderate-sized responses with reasoning and commands (~400 tokens).\n\n7. **total_expected_steps**: The agent will explore the codebase, find the file, create a test script, make the fix, verify, and submit. Around 12-15 steps.\n\n8. **explore_edit_ratio**: Will need to find the file, read it, understand context before editing (~0.4).\n\n9. **mean_action_block_size**: Agent tends to issue multiple independent commands together (~2.5).\n\n10. **n_constraint_violations**: The scaffold has clear rules. The agent should follow them well (0 violations).\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 400,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "pydata__xarray-4356",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.72,
+      "documentation": 0.18,
+      "defensive_code": 0.22,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 285.0,
+      "total_expected_steps": 11.0,
+      "explore_edit_ratio": 0.36,
+      "mean_action_block_size": 1.9,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict the AI agent's behavior when fixing an xarray issue where `sum` with `min_count` fails when reducing over multiple dimensions.\n\nThe issue is clearly identified in `xarray/core/nanops.py` line 35, and the PR even suggests a specific fix: replacing `mask.shape[axis]` with `np.take(a.shape, axis).prod()`. This is a relatively straightforward fix.\n\nLet me make my predictions:\n\n```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.72,\n  \"documentation\": 0.18,\n  \"defensive_code\": 0.22,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 285,\n  \"total_expected_steps\": 11,\n  \"explore_edit_ratio\": 0.36,\n  \"mean_action_block_size\": 1.9,\n  \"n_constraint_violations\": 0\n}\n```\n\n**Reasoning:**\n\n- **p_solve (0.88)**: The fix is well-specified in the PR description with exact line location and suggested replacement. High likelihood of success.\n\n- **p_first_attempt_correct (0.72)**: The solution is suggested but the agent may need to verify it handles edge cases correctly (e.g., when axis is a tuple vs int, or when there are no NaN values).\n\n- **documentation (0.18)**: This is a bug fix in internal nanops module. Minimal documentation changes expected.\n\n- **defensive_code (0.22)**: The fix is a direct replacement; agent unlikely to add significant guards beyond what's needed.\n\n- **express_uncertainty (0.35)**: Agent may hedge about whether the suggested fix handles all edge cases, particularly around axis parameter handling.\n\n- **avg_tokens_step (285)**: Moderate token usage for reasoning about the fix and verifying correctness.\n\n- **total_expected_steps (11)**: Steps include: explore codebase, find file, read nanops.py, create reproduction script, run it, edit file, test fix, test edge cases, create patch, verify patch, submit.\n\n- **explore_edit_ratio (0.36)**: About 4 steps of exploration (finding file, reading code, understanding context, creating test script) before the edit.\n\n- **mean_action_block_size (1.9)**: Agent will often combine related commands (e.g., ls and find, or reading multiple related sections).\n\n- **n_constraint_violations (0)**: Clear instructions about not modifying tests/configs, separate patch creation and submission steps. Agent should follow these correctly.",
+    "sample_idx": 3
+  }
+}

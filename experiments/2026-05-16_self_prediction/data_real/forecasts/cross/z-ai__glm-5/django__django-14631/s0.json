@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-14631",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.4,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 600.0,
+      "total_expected_steps": 25.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task and predict what the agent will do.\n\nThe PR description asks for refactoring Django's `BaseForm._clean_fields()` and `changed_data` to access values via `BoundField` objects instead of directly. This involves:\n1. Modifying `BaseForm._clean_fields()` to use BoundField\n2. Adding a `_did_change()` method to BoundField\n3. Refactoring `changed_data` to use the new method\n\nThis is a moderate complexity refactoring task in Django's forms module. The agent will need to:\n1. Find the relevant files (likely `django/forms/forms.py` and `django/forms/boundfield.py`)\n2. Understand the current implementation\n3. Make the refactoring changes\n4. Test that existing tests still pass\n\nPredictions:\n- **p_solve**: 0.75 - This is a well-defined refactoring task with clear requirements. The agent should be able to find the relevant code and make the changes, but there are edge cases and the codebase is complex.\n- **p_first_attempt_correct**: 0.35 - The agent will likely need to iterate after seeing test failures or understanding the code better.\n- **documentation**: 0.40 - The agent might add a docstring for the new `_did_change()` method.\n- **defensive_code**: 0.25 - The refactoring is straightforward; minimal guard clauses needed.\n- **express_uncertainty**: 0.30 - The agent may express some uncertainty about Django internals.\n- **avg_tokens_step**: ~600 - Moderate reasoning per step.\n- **total_expected_steps**: ~25 - Need to explore, understand, edit, and verify.\n- **explore_edit_ratio**: 0.35 - Need to explore the codebase before editing.\n- **mean_action_block_size**: 2.0 - Often runs multiple commands per step.\n- **n_constraint_violations**: 0 - The instructions are clear about not modifying tests.\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.40,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.30,\n  \"avg_tokens_step\": 600,\n  \"total_expected_steps\": 25,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-14631",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.55,
+      "p_first_attempt_correct": 0.12,
+      "documentation": 0.35,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.45,
+      "avg_tokens_step": 850.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.38,
+      "mean_action_block_size": 2.3,
+      "n_constraint_violations": 1.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this PR description, the task involves refactoring Django's `BaseForm._clean_fields()` and `BaseForm.changed_data` to access values through `BoundField` objects, and moving per-field logic of `changed_data()` into a `BoundField._did_change()` method. This is a moderately complex refactoring task in a well-established codebase.\n\nKey observations:\n1. The task requires understanding Django's forms architecture (BaseForm, BoundField)\n2. It involves refactoring existing methods to use a different access pattern\n3. The desired outcome is clearly specified in the PR description\n4. The agent will need to explore the codebase, understand the current implementation, make changes, and verify\n5. This is a refactoring for consistency, not a bug fix - which may make test verification trickier\n\n```json\n{\n  \"p_solve\": 0.55,\n  \"p_first_attempt_correct\": 0.12,\n  \"documentation\": 0.35,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.45,\n  \"avg_tokens_step\": 850,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.38,\n  \"mean_action_block_size\": 2.3,\n  \"n_constraint_violations\": 1\n}\n```",
+    "sample_idx": 0
+  }
+}

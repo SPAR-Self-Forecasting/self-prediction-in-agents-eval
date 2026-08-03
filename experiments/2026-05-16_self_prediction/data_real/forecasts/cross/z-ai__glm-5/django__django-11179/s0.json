@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11179",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.92,
+      "p_first_attempt_correct": 0.8,
+      "documentation": 0.05,
+      "defensive_code": 0.03,
+      "express_uncertainty": 0.08,
+      "avg_tokens_step": 300.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, the agent needs to fix a bug in Django's model deletion code where `delete()` on instances of models without dependencies doesn't clear their primary keys. The PR description points to `django/db/models/deletion.py` around lines 276-281.\n\nHere are my predictions:\n\n1. **p_solve**: This is a straightforward bug - setting `pk = None` for models without dependencies, mirroring what already happens for models with dependencies. The fix is a one-line addition. Very high probability of solving.\n\n2. **p_first_attempt_correct**: The agent will likely explore the file first, understand the existing code pattern (where models WITH dependencies get their PKs cleared), and then make the analogous fix for models WITHOUT dependencies. High chance of getting it right the first time.\n\n3. **documentation**: The fix is a single line adding PK clearing for a missing case. No docstrings or type hints needed.\n\n4. **defensive_code**: The code already has the pattern for models with dependencies; the fix is just applying the same pattern. No extra guards needed.\n\n5. **express_uncertainty**: The issue is clearly described with file/line references. The fix is obvious once the code is examined.\n\n6. **avg_tokens_step**: The agent will have some longer reasoning steps (analyzing code) and some shorter ones (running commands). Average around 300.\n\n7. **total_expected_steps**: Explore code (~3-4 steps), create reproduction script (~2-3 steps), edit fix (~1 step), verify (~2-3 steps), create/verify/submit patch (~3 steps) ≈ 12-15 steps.\n\n8. **explore_edit_ratio**: The agent will spend about 6-8 steps exploring before making its first edit.\n\n9. **mean_action_block_size**: The agent will often issue 2-3 independent commands (like reading multiple files or searching different patterns). Average around 2.\n\n10. **n_constraint_violations**: The task is simple enough that the agent is unlikely to violate rules like editing tests or using interactive editors.\n\n```json\n{\n  \"p_solve\": 0.92,\n  \"p_first_attempt_correct\": 0.80,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.03,\n  \"express_uncertainty\": 0.08,\n  \"avg_tokens_step\": 300,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.50,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11179",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.42,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI agent will handle fixing a Django bug where `delete()` on model instances without dependencies doesn't clear primary keys.\n\n**Analysis of the task:**\n- The issue is well-specified: `delete()` should set PK to `None` after deletion\n- The location is pinpointed: `django.db.models.deletion` lines 276-281\n- This appears to be a straightforward one-line or small fix\n- The agent will need to explore, understand context, make a targeted fix\n\n**My predictions:**\n\n1. **p_solve: 0.90** - The fix is straightforward (setting PK to None), location is specified, and Django's codebase is well-structured for navigation.\n\n2. **p_first_attempt_correct: 0.70** - After exploring the deletion.py file and understanding the context, the fix should be clear. There's a reasonable chance the agent gets it right without needing to backtrack.\n\n3. **documentation: 0.15** - This is a minimal bug fix. The agent might add a brief comment explaining why PK is cleared, but unlikely to add docstrings or type hints.\n\n4. **defensive_code: 0.20** - The fix is minimal (setting a field to None). There's a small chance the agent adds a guard like checking if the instance exists first.\n\n5. **express_uncertainty: 0.30** - The agent may express some uncertainty about whether the fix should apply to all cases or just models without dependencies, or about edge cases.\n\n6. **avg_tokens_step: 350** - Typical reasoning plus command output for this type of task.\n\n7. **total_expected_steps: 12** - The agent will: explore structure (2-3), find and read deletion.py (2-3), understand context (1-2), create test script (1-2), make fix (1), verify (1-2), create patch and submit (2).\n\n8. **explore_edit_ratio: 0.42** - About 5 steps exploring before the first edit (finding file, reading relevant code, understanding the deletion flow).\n\n9. **mean_action_block_size: 1.8** - The agent will typically issue 1-3 commands per step (e.g., `find` + `cat`, or multiple `grep` commands).\n\n10. **n_constraint_violations: 0** - The task constraints are clear and the agent is well-scaffolded. It shouldn't modify tests, use interactive editors, or combine patch creation with submit.\n\n```json\n{\n  \"p_solve\": 0.90,\n  \"p_first_attempt_correct\": 0.70,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.30,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.42,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

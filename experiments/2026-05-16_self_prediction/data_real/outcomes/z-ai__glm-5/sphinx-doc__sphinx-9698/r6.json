@@ -1,0 +1,19 @@
+{
+  "model": "z-ai/glm-5",
+  "task_id": "sphinx-doc__sphinx-9698",
+  "rollout_idx": 6,
+  "values": {
+    "p_solve": 1.0,
+    "p_first_attempt_correct": 1.0,
+    "avg_tokens_step": 81.70967741935483,
+    "total_expected_steps": 31.0,
+    "explore_edit_ratio": 0.41935483870967744,
+    "mean_action_block_size": 1.032258064516129,
+    "n_constraint_violations": 0.0,
+    "documentation": 1.0,
+    "defensive_code": 0.0,
+    "express_uncertainty": 0.0
+  },
+  "errored": false,
+  "error": null
+}

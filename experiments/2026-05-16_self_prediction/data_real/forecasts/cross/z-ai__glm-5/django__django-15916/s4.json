@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15916",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.25,
+      "defensive_code": 0.35,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task and predict how the AI agent will approach it.\n\nThe issue is about Django's `modelform_factory` function not properly respecting the `formfield_callback` specified in a ModelForm's Meta class. When a form with a Meta class containing `formfield_callback` is passed to `modelform_factory`, the callback gets overwritten with `None` instead of being preserved.\n\nThis is a well-defined bug in Django's forms module. The agent will need to:\n1. Find the `modelform_factory` function in Django's source\n2. Understand how it handles the `formfield_callback` argument\n3. Fix it to respect the Meta class's `formfield_callback` when not explicitly provided\n\nLet me make my predictions:\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.35,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.5,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```\n\nReasoning:\n- **p_solve (0.75)**: This is a moderately complex bug in Django's modelform_factory. The fix requires understanding the metaclass mechanics and properly handling inheritance of formfield_callback from Meta. It's solvable but requires careful analysis.\n- **p_first_attempt_correct (0.55)**: The fix location is clear once found, but the exact implementation might need iteration to handle edge cases properly.\n- **documentation (0.25)**: Minimal documentation changes expected - maybe a brief comment explaining the fallback logic.\n- **defensive_code (0.35)**: Some defensive code may be added to check if formfield_callback exists in Meta before using it.\n- **express_uncertainty (0.15)**: The task is well-defined with a clear expected behavior; agent likely won't hedge much.\n- **avg_tokens_step (450)**: Moderate token usage per step - reading files, analyzing code, writing fixes.\n- **total_expected_steps (18)**: Finding files (~3), reading/understanding code (~4), creating test script (~3), implementing fix (~3), verifying (~3), creating patch (~2).\n- **explore_edit_ratio (0.5)**: About half the steps will be exploration before the first edit.\n- **mean_action_block_size (2.2)**: Agent will typically issue 2-3 commands per response (find + read, or multiple reads).\n- **n_constraint_violations (0)**: The agent is unlikely to violate constraints given clear instructions about not modifying tests and proper submission format.",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15916",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.25,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 400.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.40,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 400,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

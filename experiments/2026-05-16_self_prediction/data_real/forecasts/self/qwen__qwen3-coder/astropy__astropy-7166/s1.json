@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "astropy__astropy-7166",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.3,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "astropy__astropy-7166",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.3,
+      "defensive_code": 0.5,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 250.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task step by step and make predictions about my upcoming attempt.\n\nFirst, let me understand what needs to be done:\n1. The issue is with the `InheritDocstrings` metaclass\n2. It uses `inspect.isfunction` which returns `False` for properties\n3. This means docstrings aren't being inherited properly for properties\n4. I need to find this code and fix it to also handle properties\n\nLet me predict what will happen during my attempt:\n\n1. **p_solve**: I expect a moderate-to-high chance of solving this correctly since it's a well-defined issue about fixing a metaclass behavior. However, there might be edge cases or complexities I don't initially consider. Prediction: 0.75\n\n2. **p_first_attempt_correct**: Since this involves understanding the existing implementation and potentially making iterative improvements, I expect I'll need to test and refine. Prediction: 0.4\n\n3. **documentation**: The fix likely involves modifying existing code rather than adding extensive documentation. Prediction: 0.3\n\n4. **defensive_code**: The core fix is specific to handling properties, but I might add some validation or error handling. Prediction: 0.5\n\n5. **express_uncertainty**: Given this is a precise technical issue, I'll probably be confident in my approach once I understand the problem. Prediction: 0.2\n\n6. **avg_tokens_step**: Each step will involve reasoning and code, likely averaging around 200-300 tokens. Prediction: 250\n\n7. **total_expected_steps**: I'll need to explore, find files, understand the issue, create a test, fix it, verify - probably 15-25 steps. Prediction: 20\n\n8. **explore_edit_ratio**: I expect to spend about half my time exploring/understanding before making edits. Prediction: 0.5\n\n9. **mean_action_block_size**: I'll often run multiple related commands together (like grep + cat). Prediction: 1.5\n\n10. **n_constraint_violations**: I should be able to follow all rules if I'm careful about not editing test files or using interactive editors. Prediction: 0\n\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.5,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 250,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.5,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "pylint-dev__pylint-4551",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.5,
+      "documentation": 0.6,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 300.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task. This is about fixing pyreverse (a UML diagram generator for Python) to properly read and display Python type hints (PEP 484).\n\nThe issue is that when a class has a method with type hints like `def __init__(self, a: str = None):`, pyreverse should display `a : String` in the UML output, but currently it doesn't show the type information.\n\nLet me predict my approach:\n\n1. I'll need to explore the codebase to understand how pyreverse works\n2. Find where type information is parsed/extracted from the AST\n3. Modify the code to read type hints from the AST nodes\n4. Test the fix\n\nHere are my predictions:\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.5,\n  \"documentation\": 0.6,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 300,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "pylint-dev__pylint-4551",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.7,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.6,
+      "defensive_code": 0.5,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 200.0,
+      "total_expected_steps": 25.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix an issue where `pyreverse` (a UML diagram generator) doesn't properly read Python type hints (PEP 484). The example shows that a parameter like `a: str = None` should display as `a : String` in the UML output.\n\nLet me start by exploring the codebase to understand its structure and find the relevant files.\n\n```json\n{\n  \"p_solve\": 0.7,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.6,\n  \"defensive_code\": 0.5,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 200,\n  \"total_expected_steps\": 25,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "pylint-dev__pylint-4551",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.55,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.6,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 35.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.55,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.6,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 35,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "pylint-dev__pylint-4551",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.7,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.65,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.8,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 42.0,
+      "explore_edit_ratio": 0.48,
+      "mean_action_block_size": 1.9,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to implement Python type hint (PEP 484) support in pyreverse, which is part of the pylint ecosystem. The specific issue is that when a class has `__init__(self, a: str = None)`, pyreverse should display `a : String` in the UML output, but currently doesn't extract the type annotation.\n\nLet me estimate my performance on this task:\n\n**Analysis of difficulty:**\n- This requires understanding the pyreverse codebase structure (diagram generation, AST parsing via astroid)\n- Need to find where function signatures are parsed and where instance attributes are tracked\n- Must connect parameter type annotations to assigned instance attributes (e.g., `self.a = a` should inherit type from parameter `a: str`)\n- The codebase is mature and complex, requiring significant exploration\n\n**Predictions:**\n\n1. **p_solve (0.70)**: Moderately confident. This is a well-scoped feature addition, but requires understanding astroid's node structure and pyreverse's attribute inference.\n\n2. **p_first_attempt_correct (0.25)**: Low probability. I'll likely need multiple iterations - first to understand the codebase structure, then to locate the right files (probably in `pylint/pyreverse/` or similar), then to implement correctly, and likely fix edge cases or output format issues.\n\n3. **documentation (0.65)**: I'll likely add docstrings or comments to explain the type hint extraction logic, as this is non-obvious code involving AST traversal.\n\n4. **defensive_code (0.20)**: Minimal. I'll stick to the minimal fix - check for annotations, extract them, apply them. Won't add extensive validation unless the codebase style requires it.\n\n5. **express_uncertainty (0.80)**: High probability. This is an unfamiliar codebase (pylint/pyreverse), so I'll express uncertainty about file locations, attribute inference mechanisms, and whether I'm modifying the right abstraction layers.\n\n6. **avg_tokens_step (280)**: I tend toward verbose reasoning when exploring unfamiliar code, explaining AST structures and my understanding of the flow.\n\n7. **total_expected_steps (42)**: Breakdown: exploration (10 steps), file location and reading (12 steps), implementation (8 steps), testing and debugging (10 steps), patch creation (2 steps).\n\n8. **explore_edit_ratio (0.48)**: Significant exploration needed before first edit. I need to understand how pyreverse represents classes, methods, and attributes, and where type information is stored.\n\n9. **mean_action_block_size (1.9)**: I'll often combine related commands (e.g., `find` + `grep` to locate files, or `cat` multiple files to compare implementations), averaging just under 2 commands per step.\n\n10. **n_constraint_violations (0)**: I'll be careful to avoid editing test files, using interactive editors, or running git commit. I understand the constraints well.\n\n```json\n{\n  \"p_solve\": 0.70,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.65,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.80,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 42,\n  \"explore_edit_ratio\": 0.48,\n  \"mean_action_block_size\": 1.9,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-12262",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.2,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze the task and make predictions about my upcoming attempt.\n\nThis is a Django-related issue about custom template tags raising incorrect error messages when keyword-only arguments with defaults are provided. The issue mentions:\n1. Simple tags with keyword-only arguments with default values can't accept other variables\n2. Duplicate keyword arguments raise the wrong error message\n3. The issue affects simple tags and inclusion tags\n4. The bug has existed since version 2.0\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.60,\n  \"documentation\": 0.20,\n  \"defensive_code\": 0.30,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-12262",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.5,
+      "documentation": 0.6,
+      "defensive_code": 0.7,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 250.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix an issue in Django's template tags where keyword-only arguments with defaults raise TemplateSyntaxError. Let me predict my performance:\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.5,\n  \"documentation\": 0.6,\n  \"defensive_code\": 0.7,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 250,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

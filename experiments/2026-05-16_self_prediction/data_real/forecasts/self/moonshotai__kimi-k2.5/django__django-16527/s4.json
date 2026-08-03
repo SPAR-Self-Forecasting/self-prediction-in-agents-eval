@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-16527",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.9,
+      "documentation": 0.05,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 10.0,
+      "explore_edit_ratio": 0.2,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.90,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.10,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 10,\n  \"explore_edit_ratio\": 0.20,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-16527",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.85,
+      "documentation": 0.1,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.05,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 6.0,
+      "explore_edit_ratio": 0.17,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a permission check in Django's admin modify template tag. The issue is clear: `show_save_as_new` should require `has_add_permission` since saving as new creates a new object, but currently only checks `has_change_permission`.\n\nLet me predict my performance:\n\n**p_solve (0.95):** This is a straightforward one-line fix in a well-known location (`django/contrib/admin/templatetags/admin_modify.py` around line 102). The exact change needed is explicitly stated in the PR description. Very high confidence I'll solve it correctly.\n\n**p_first_attempt_correct (0.85):** While the fix is simple, I need to verify the exact line and context. I might need to adjust the exact line number or syntax slightly after viewing the file, so there's a small chance of a correction.\n\n**documentation (0.10):** This is a permission logic fix, not a documentation task. I might add a brief comment explaining why add_permission is required, but probably won't.\n\n**defensive_code (0.05):** The minimal fix IS adding the permission check. I won't add validation beyond this single condition since the issue specifically requests this one check.\n\n**express_uncertainty (0.05):** The PR description is explicit about what needs to be changed. I should be confident in the approach.\n\n**avg_tokens_step (280):** I tend to provide detailed reasoning for each action, including context about what I'm examining and why.\n\n**total_expected_steps (6):** 1) Locate/view the file, 2) View the specific context around line 102, 3) Make the edit, 4) Verify the change, 5) Create the patch, 6) Submit.\n\n**explore_edit_ratio (0.17):** 1 step exploring (viewing the file) out of 6 total steps = ~0.17.\n\n**mean_action_block_size (1.3):** Usually 1 command per step, occasionally 2 when doing independent lookups.\n\n**n_constraint_violations (0):** I'm aware of the critical constraints (separate patch creation from submit, no interactive editors, don't modify tests, no commits). I'll be careful to follow them.\n\n```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.85,\n  \"documentation\": 0.10,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.05,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 6,\n  \"explore_edit_ratio\": 0.17,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

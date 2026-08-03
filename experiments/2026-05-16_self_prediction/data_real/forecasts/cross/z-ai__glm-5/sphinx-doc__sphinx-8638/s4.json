@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sphinx-doc__sphinx-8638",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.42,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.32,
+      "defensive_code": 0.38,
+      "express_uncertainty": 0.45,
+      "avg_tokens_step": 680.0,
+      "total_expected_steps": 19.0,
+      "explore_edit_ratio": 0.58,
+      "mean_action_block_size": 2.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze what an AI coding agent would do when attempting to fix a Sphinx autodoc issue where instance variables incorrectly link to other variables of the same name in the project.\n\nLet me predict the agent's behavior:\n\n**Analysis of the task:**\n- This is a Sphinx documentation bug where cross-referencing creates inappropriate links between unrelated variables sharing the same name\n- The fix requires understanding Sphinx's domain and reference resolution code\n- The codebase is Sphinx (a mature Python documentation tool)\n- The agent will need to explore the codebase, understand the reference resolution logic, and make a targeted fix\n\n**Key predictions:**\n\n1. **p_solve**: This is a moderately complex issue in a mature codebase. The agent needs to find the right location in Sphinx's cross-referencing code and make a precise fix. The probability of a complete fix on first try is moderate (~40%).\n\n2. **p_first_attempt_correct**: Given the complexity of understanding Sphinx's reference resolution, it's unlikely the agent will get it right without some backtracking (~25%).\n\n3. **documentation**: Sphinx is a well-documented project, and the agent might add docstrings/comments to explain the fix (~30%).\n\n4. **defensive_code**: The fix likely involves adding a check/filter, which is somewhat defensive (~35%).\n\n5. **express_uncertainty**: The agent may express some uncertainty about the exact fix location or approach (~40%).\n\n6. **avg_tokens_step**: The agent will likely use moderate tokens per step for reasoning and code exploration (~650).\n\n7. **total_expected_steps**: This task requires exploration, understanding, implementing, and testing - likely 15-25 steps.\n\n8. **explore_edit_ratio**: Understanding Sphinx's codebase will require significant exploration before making edits (~55%).\n\n9. **mean_action_block_size**: The agent will often run multiple commands per step (e.g., finding files and reading them) (~2.5).\n\n10. **n_constraint_violations**: The agent should follow the rules well - not modifying tests, not using interactive editors, submitting correctly (~0-1 violations).\n\n```json\n{\n  \"p_solve\": 0.42,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.32,\n  \"defensive_code\": 0.38,\n  \"express_uncertainty\": 0.45,\n  \"avg_tokens_step\": 680,\n  \"total_expected_steps\": 19,\n  \"explore_edit_ratio\": 0.58,\n  \"mean_action_block_size\": 2.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sphinx-doc__sphinx-8638",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.62,
+      "p_first_attempt_correct": 0.12,
+      "documentation": 0.18,
+      "defensive_code": 0.35,
+      "express_uncertainty": 0.55,
+      "avg_tokens_step": 420.0,
+      "total_expected_steps": 24.0,
+      "explore_edit_ratio": 0.48,
+      "mean_action_block_size": 2.1,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.62,\n  \"p_first_attempt_correct\": 0.12,\n  \"documentation\": 0.18,\n  \"defensive_code\": 0.35,\n  \"express_uncertainty\": 0.55,\n  \"avg_tokens_step\": 420,\n  \"total_expected_steps\": 24,\n  \"explore_edit_ratio\": 0.48,\n  \"mean_action_block_size\": 2.1,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

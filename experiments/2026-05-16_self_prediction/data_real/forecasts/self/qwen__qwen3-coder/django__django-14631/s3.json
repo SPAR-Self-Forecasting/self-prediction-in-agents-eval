@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "django__django-14631",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.7,
+      "defensive_code": 0.5,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 120.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.5,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 120,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "django__django-14631",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.7,
+      "p_first_attempt_correct": 0.3,
+      "documentation": 0.8,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.6,
+      "avg_tokens_step": 250.0,
+      "total_expected_steps": 40.0,
+      "explore_edit_ratio": 0.6,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "I'll analyze this task and predict my approach to implementing the changes described in the PR.\n\nLet me think through each prediction dimension:\n\n1. **Probability of solving (p_solve)**: This seems like a moderately complex refactoring task. The issue involves modifying BaseForm's _clean_fields() and changed_data methods to access values via BoundField objects, and potentially moving logic into a BoundField method. Given the detailed description and the need to maintain consistency, I estimate around 70% chance of success.\n\n2. **First attempt correctness (p_first_attempt_correct)**: Given the complexity of understanding the existing codebase and making sure the refactoring doesn't break existing functionality, I expect I'll need to explore and test multiple times. I'll likely need to backtrack when I find issues with my initial implementation. Probability around 30%.\n\n3. **Documentation (documentation)**: The task involves refactoring for consistency and cleaner code, so I'll likely add comments explaining the changes and why they improve the codebase. I expect to add some documentation, so around 80%.\n\n4. **Defensive code (defensive_code)**: Since this is a refactoring for consistency rather than fixing a bug, and the description doesn't mention adding validation, I'm less likely to add defensive code beyond what's necessary for the refactor. Around 40%.\n\n5. **Express uncertainty (express_uncertainty)**: The task description is quite detailed, and I'll need to carefully analyze the existing code to understand the current implementation. I expect to express some uncertainty while exploring the codebase. Around 60%.\n\n6. **Average tokens per step (avg_tokens_step)**: I'll need to write detailed explanations of my reasoning and analysis, plus commands. Given the complexity, I expect around 200-300 tokens per step on average. Let's estimate 250.\n\n7. **Total expected steps (total_expected_steps)**: I'll need to explore the codebase, understand the current implementation, create test cases, make changes, and verify the fix. This will likely take 30-50 steps. Let's estimate 40 steps.\n\n8. **Explore to edit ratio (explore_edit_ratio)**: I'll need to spend significant time understanding the codebase before making changes. I expect to spend about 60% of my time exploring before the first edit.\n\n9. **Mean action block size (mean_action_block_size)**: I'll typically run 1-3 commands per step (like grep to find files, then cat to read them). Let's estimate 1.5 commands per step.\n\n10. **Constraint violations (n_constraint_violations)**: The task has clear rules about not modifying test files, not using interactive editors, etc. I'll be careful to follow these rules, so I expect 0 violations.\n\n{\n  \"p_solve\": 0.7,\n  \"p_first_attempt_correct\": 0.3,\n  \"documentation\": 0.8,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.6,\n  \"avg_tokens_step\": 250,\n  \"total_expected_steps\": 40,\n  \"explore_edit_ratio\": 0.6,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11179",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.72,
+      "documentation": 0.15,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 195.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.36,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.72,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.30,\n  \"avg_tokens_step\": 195,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.36,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11179",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.2,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.6,
+      "avg_tokens_step": 260.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a Django bug where `delete()` doesn't clear the primary key (set it to `None`) on model instances that have no dependencies. The PR description points to `Django.db.models.deletion:276-281` as the location.\n\nLet me predict my performance on this task:\n\n1. **p_solve (0.85)**: This is a well-localized bug with a specific file and line range mentioned. Django's deletion logic is mature but this seems like a straightforward missing attribute assignment. However, there's some risk if the line numbers don't match or if there are edge cases with multi-table inheritance or composite keys.\n\n2. **p_first_attempt_correct (0.60)**: I'm methodical and will likely explore first before editing. I might need to verify the fix with a reproduction script before finalizing, and could discover nuances that require adjusting the initial fix.\n\n3. **documentation (0.20)**: This is a minimal behavioral bug fix. I might add a brief comment explaining why we clear the PK, but it's unlikely to need extensive documentation.\n\n4. **defensive_code (0.15)**: The fix should be simple (likely just setting `instance.pk = None`). I won't add extensive guard clauses unless I discover edge cases during exploration.\n\n5. **express_uncertainty (0.60)**: I tend to hedge when exploring unfamiliar codebases (\"this appears to be...\", \"likely located at...\"). I'll be uncertain until I verify the exact line numbers match the PR description.\n\n6. **avg_tokens_step (260)**: Typical responses include reasoning plus 1-3 bash commands. This averages around 200-300 tokens per step.\n\n7. **total_expected_steps (15)**: Breakdown: 3-4 steps exploring/locating code, 2 steps creating reproduction script, 2 steps implementing fix, 3-4 steps testing/verifying, 3 steps creating and submitting patch.\n\n8. **explore_edit_ratio (0.35)**: I'll spend roughly the first 35% of steps (about 5 steps) exploring before making my first edit - finding the deletion module, reading the relevant code, and understanding the context.\n\n9. **mean_action_block_size (1.8)**: I typically issue 1-3 bash commands per step (averaging around 2), often combining independent searches or file reads.\n\n10. **n_constraint_violations (0)**: I'm aware of the constraints (no test modifications, no interactive editors, separate patch creation from submission, etc.) and expect to follow all rules carefully.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.60,\n  \"documentation\": 0.20,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.60,\n  \"avg_tokens_step\": 260,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

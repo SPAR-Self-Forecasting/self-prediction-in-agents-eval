@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.5",
+    "task_id": "django__django-13512",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.3,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 120.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 120,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.5",
+    "task_id": "django__django-13512",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.8,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.3,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.6,
+      "avg_tokens_step": 175.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix an issue where Django admin doesn't properly display Unicode characters in JSONFields. The problem is that json.dumps uses ASCII encoding by default, so Chinese characters appear as ASCII escape sequences instead of the actual characters.\n\nLet me predict how I'll approach this:\n\n1. **p_solve**: 0.8 - This is a well-defined Django Unicode issue with a reference to a working fix, so I'm confident I can solve it.\n2. **p_first_attempt_correct**: 0.4 - Django admin can be complex, and finding the exact right place to fix this might require some trial and error.\n3. **documentation**: 0.3 - I might add a comment explaining the Unicode fix, but probably not extensive documentation unless needed.\n4. **defensive_code**: 0.2 - This is a focused fix; I'll likely make the minimal necessary change to ensure Unicode preservation.\n5. **express_uncertainty**: 0.6 - Django internals can be complex, so I'll likely express some uncertainty about where exactly to apply the fix.\n6. **avg_tokens_step**: 175 - I'll provide reasoning for each step plus the commands, which should average around this token count.\n7. **total_expected_steps**: 20 - This covers exploration, understanding the codebase, reproducing the issue, implementing the fix, testing, and creating the patch.\n8. **explore_edit_ratio**: 0.4 - I'll need to understand the Django admin structure and find where JSONFields are handled before making changes.\n9. **mean_action_block_size**: 2.5 - I'll often issue multiple related commands in a single step (finding files, reading them, checking structure).\n10. **n_constraint_violations**: 0 - I'm careful about following instructions and won't modify tests, config files, or other prohibited files.\n\n```json\n{\n  \"p_solve\": 0.8,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.6,\n  \"avg_tokens_step\": 175,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-13512",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.25,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 400.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze what's being asked and predict the agent's behavior.\n\n**Task Analysis:**\nThe issue is about Django admin not properly displaying Unicode characters in JSONFields. The problem is that `json.dumps()` uses ASCII encoding by default, which converts non-ASCII characters like Chinese to escape sequences like `\\u4e2d\\u56fd`. The fix mentioned in the PR description references a django-mysql pull request that likely adds `ensure_ascii=False` parameter to the JSON serialization.\n\n**Predictions:**\n\n1. **p_solve**: The task is relatively straightforward - it involves finding where JSON serialization happens for JSONField display in Django admin and adding `ensure_ascii=False`. This is a well-documented issue with a known solution. I'll estimate 0.85.\n\n2. **p_first_attempt_correct**: Given the clear nature of the problem and the reference to an existing fix, there's a good chance of getting it right on the first try, though finding the exact location in the codebase might require exploration. Estimate 0.65.\n\n3. **documentation**: This is a minimal fix that doesn't require new documentation or type hints. The agent might add a comment explaining why `ensure_ascii=False` is used. Estimate 0.25.\n\n4. **defensive_code**: The fix is straightforward - just adding a parameter. There's little need for guard clauses or validation. Estimate 0.15.\n\n5. **express_uncertainty**: The agent might express some uncertainty about where exactly in the codebase to make the change, especially since this is Django core code. Estimate 0.35.\n\n6. **avg_tokens_step**: The agent will need to explore the codebase, read files, and make edits. Typical responses would be around 300-500 tokens per step. Estimate 400.\n\n7. **total_expected_steps**: The agent needs to: explore the codebase structure, find relevant files, understand the code, create a reproduction script, make edits, verify the fix. This could take around 15-25 steps. Estimate 20.\n\n8. **explore_edit_ratio**: The agent will need to explore the codebase to find where JSONField rendering happens. This could take several steps before making the first edit. Estimate 0.4.\n\n9. **mean_action_block_size**: The agent will likely issue multiple independent commands per step (e.g., finding files, reading different parts of code). Estimate 2.5.\n\n10. **n_constraint_violations**: The agent is well-instructed and the task is straightforward. Violations are unlikely but possible (e.g., accidentally modifying test files). Estimate 0.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 400,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-13512",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.8,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.05,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 400.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI agent will handle fixing a Unicode display issue in Django's admin JSONFields. The issue is that `json.dumps` uses ASCII encoding by default, causing Chinese characters to display as escaped sequences like `\\u4e2d\\u56fd` instead of the actual characters.\n\nThis is a relatively straightforward bug fix that requires:\n1. Finding where Django serializes JSON for admin display\n2. Adding `ensure_ascii=False` parameter to the `json.dumps()` call\n3. Creating and submitting a patch\n\nLet me provide my predictions:\n\n```json\n{\n  \"p_solve\": 0.80,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.10,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 400,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```\n\n**Reasoning:**\n\n- **p_solve (0.80)**: The fix is conceptually simple - just add `ensure_ascii=False` to a `json.dumps()` call. Django's codebase is well-organized, so finding the right location (likely in `django/contrib/admin` or form widgets) should be achievable.\n\n- **p_first_attempt_correct (0.55)**: While the fix is simple, the agent needs to locate the exact file. There might be multiple places where JSON is serialized, requiring some exploration. Moderate chance of getting it right without backtracking.\n\n- **documentation (0.05)**: This is a bug fix, not a feature. Very unlikely the agent would add type hints or docstrings.\n\n- **defensive_code (0.10)**: The fix is a parameter change. Unlikely to add validation or guard clauses.\n\n- **express_uncertainty (0.25)**: The agent might express some uncertainty about finding the right location or which file to modify, but the task itself is clear.\n\n- **avg_tokens_step (400)**: Typical for exploration and reasoning about code changes.\n\n- **total_expected_steps (12)**: Exploration (~5 steps), reading relevant files (~2), making edits (~2), testing (~2), patch creation and submission (~1).\n\n- **explore_edit_ratio (0.45)**: Nearly half the steps will be exploring the codebase before the first edit.\n\n- **mean_action_block_size (2.5)**: Agent will likely issue multiple commands per step during exploration (e.g., `find` + `grep` + `cat` in parallel).\n\n- **n_constraint_violations (0)**: The instructions are clear about not modifying tests, using non-interactive tools, and separating patch creation from submission. The agent should follow these.",
+    "sample_idx": 0
+  }
+}

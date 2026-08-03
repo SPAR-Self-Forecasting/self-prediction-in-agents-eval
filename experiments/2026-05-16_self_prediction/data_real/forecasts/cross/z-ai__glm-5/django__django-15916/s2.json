@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15916",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.45,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze what the agent will likely do:\n\n1. **The Issue**: Django's `modelform_factory` doesn't properly inherit `formfield_callback` from the Meta class of the base form. When creating a form via `modelform_factory`, the callback specified in Meta gets overwritten with `None`.\n\n2. **Difficulty Assessment**: This is a moderately complex Django internals bug requiring:\n   - Finding the `modelform_factory` function\n   - Understanding how it handles `formfield_callback`\n   - Making a minimal fix that respects Meta's `formfield_callback`\n\n3. **Predictions**:\n   - **p_solve**: High probability (0.75) - The issue is well-described with a clear expected behavior\n   - **p_first_attempt_correct**: Moderate (0.45) - May need to understand the code flow first\n   - **documentation**: Low (0.15) - Minimal doc changes expected for a bug fix\n   - **defensive_code**: Low (0.20) - Bug fix should be minimal\n   - **express_uncertainty**: Low (0.25) - Clear issue description\n   - **avg_tokens_step**: ~450 tokens - Typical for code exploration\n   - **total_expected_steps**: ~12-15 steps for exploration, fix, testing, submission\n   - **explore_edit_ratio**: ~0.5 - Need to find and understand modelform_factory first\n   - **mean_action_block_size**: ~2-3 commands per step\n   - **n_constraint_violations**: 0 - Clear instructions, straightforward task\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.45,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.50,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15916",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.78,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.08,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 420.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.39,
+      "mean_action_block_size": 2.1,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.78,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.08,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 420,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.39,\n  \"mean_action_block_size\": 2.1,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

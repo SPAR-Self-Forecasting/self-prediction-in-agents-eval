@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.5",
+    "task_id": "django__django-12262",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.8,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.3,
+      "defensive_code": 0.6,
+      "express_uncertainty": 0.7,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at the task description, I need to analyze a Django template tag issue where keyword-only arguments with defaults are not being handled correctly. Let me predict how this will go:\n\n1. **p_solve**: 0.8 - This seems like a well-defined bug in Django's template tag parsing logic. The issue description is clear and mentions the fix is already known, so it should be solvable.\n\n2. **p_first_attempt_correct**: 0.4 - Template tag parsing can be tricky, and I'll likely need to understand the current implementation first. I'll probably need to iterate a few times to get the logic right.\n\n3. **documentation**: 0.3 - This is likely a bug fix in existing code, so I'll probably focus on just fixing the logic rather than adding extensive documentation.\n\n4. **defensive_code**: 0.6 - Since this involves argument parsing and validation, I'll likely need to add some defensive checks to handle edge cases properly.\n\n5. **express_uncertainty**: 0.7 - I'll need to explore the codebase to understand how template tags work, so I'll likely express some uncertainty about the exact location and nature of the bug initially.\n\n6. **avg_tokens_step**: 150 - I'll need to explain my reasoning clearly and issue multiple commands per step, so this seems reasonable.\n\n7. **total_expected_steps**: 20 - I'll need to explore the codebase, find the relevant files, understand the current implementation, create a reproduction script, fix the issue, and verify the fix.\n\n8. **explore_edit_ratio**: 0.4 - I'll need to spend significant time exploring to understand Django's template tag system before I can make the fix.\n\n9. **mean_action_block_size**: 2.5 - I'll often need to run multiple related commands together (like finding files and then reading them).\n\n10. **n_constraint_violations**: 0 - I'm careful about following instructions and won't modify test files or configuration files as instructed.\n\n```json\n{\n  \"p_solve\": 0.8,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.6,\n  \"express_uncertainty\": 0.7,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.5",
+    "task_id": "django__django-12262",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.7,
+      "defensive_code": 0.6,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 120.0,
+      "total_expected_steps": 45.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.6,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 120,\n  \"total_expected_steps\": 45,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-12039",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.1,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task and make predictions about how the AI coding agent will approach it.\n\nThe issue is about whitespace in Django's CREATE INDEX SQL statements. Specifically:\n1. Missing space between column name and DESC when using descending order\n2. Extra trailing space when using opclasses without explicit ordering\n\nThe fix needs to be in `django/db/backends/ddl_references.py` around line 87, where `col_suffixes` handling needs to account for empty strings vs truly empty lists.\n\nHere are my predictions:\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-12039",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.08,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 420.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 2.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict the behavior of an AI coding agent working on a Django whitespace bug in CREATE INDEX statements.\n\nThe issue is clearly defined:\n1. Missing whitespace before DESC in index statements\n2. Extra whitespace after opclasses when no explicit ordering\n3. Points to specific file: `django/db/backends/ddl_references.py` around line 87\n4. The problem is with how `col_suffixes` containing empty strings is handled\n\nThis is a relatively contained, well-specified bug fix with clear guidance on where the problem lies.\n\n```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.08,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 420,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 2.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

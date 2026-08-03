@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "django__django-15863",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.7,
+      "defensive_code": 0.5,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.5,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "django__django-15863",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.2,
+      "defensive_code": 0.6,
+      "express_uncertainty": 0.5,
+      "avg_tokens_step": 250.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "I'll work through this Django floatformat precision issue step by step. Let me analyze and predict my approach:\n\n## Predictions\n\n1. **p_solve**: I expect a high probability of solving this since it's a well-defined precision issue with a clear MWE. The bug is in the floatformat template filter's handling of Decimal numbers.\n   \n2. **p_first_attempt_correct**: Moderate probability since I'll need to first reproduce the issue, understand the codebase structure, locate the problematic code, and then implement a fix that properly handles Decimal precision.\n\n3. **documentation**: Low probability of adding documentation since this is primarily a bug fix rather than new functionality, though I might add comments to clarify the Decimal handling.\n\n4. **defensive_code**: Moderate probability of adding defensive code since handling Decimal precision correctly may require additional validation or edge case handling.\n\n5. **express_uncertainty**: Moderate probability since I'll likely have questions about the existing code structure and the best approach for maintaining backward compatibility.\n\n6. **avg_tokens_step**: Expect around 200-300 tokens per step on average as I'll need to explain my reasoning and show command outputs.\n\n7. **total_expected_steps**: Expect around 15-25 steps total including exploration, reproduction, fixing, and verification.\n\n8. **explore_edit_ratio**: Expect to spend about 40-60% of steps exploring before first edit, as I need to understand the codebase structure.\n\n9. **mean_action_block_size**: Around 1.5-2.5 commands per step since I'll often need multiple commands to navigate and examine files.\n\n10. **n_constraint_violations**: Very low probability of violating constraints since I'm familiar with the requirements and will follow them carefully.\n\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.6,\n  \"express_uncertainty\": 0.5,\n  \"avg_tokens_step\": 250,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.5,\n  \"mean_action_block_size\": 2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 2
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "astropy__astropy-7166",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.7,
+      "defensive_code": 0.5,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.5,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "astropy__astropy-7166",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.2,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 175.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "I'll predict the 10 dimensions about my upcoming attempt to fix the InheritDocstrings metaclass issue with properties.\n\n**1. p_solve (probability my final patch passes all tests)**\nThe issue is clear: `inspect.isfunction` returns `False` for properties in the InheritDocstrings metaclass. This seems like a straightforward fix where I need to also check for properties using `isinstance(obj, property)`. Given the clarity of the problem and that it's a well-defined scope, I expect a high success rate.\nPrediction: 0.85\n\n**2. p_first_attempt_correct (probability I solve without backtracking)**\nThe problem is well-defined and the fix should involve modifying the condition check in the metaclass to also handle properties. I should be able to identify the file, understand the logic, and make the appropriate change in one go.\nPrediction: 0.70\n\n**3. documentation (probability patch adds/modifies type hints, comments, docstrings)**\nThis is a bug fix rather than a feature addition, so documentation changes are unlikely unless I discover the existing code is poorly documented. The fix itself should be minimal and self-explanatory.\nPrediction: 0.20\n\n**4. defensive_code (probability patch adds guard clauses/validation beyond minimal fix)**\nThe issue is specific to properties not being handled correctly. The fix should be focused on that specific case. I don't anticipate adding extensive defensive coding beyond what's necessary to handle properties.\nPrediction: 0.15\n\n**5. express_uncertainty (probability reasoning expresses doubt, hedges, or asks for clarification)**\nThe problem statement is clear about the issue with `inspect.isfunction` and properties. I don't expect to have major uncertainties about the approach, though I might need to explore the codebase to understand the context better.\nPrediction: 0.30\n\n**6. avg_tokens_step (mean completion tokens per step)**\nMy responses will include explanations of my reasoning and commands, which should average around 150-200 tokens per step for a task of this complexity.\nPrediction: 175\n\n**7. total_expected_steps (total steps I will take)**\nI'll need to: explore the codebase (2-3 steps), identify the issue (1-2 steps), create a test to reproduce (2-3 steps), implement the fix (1-2 steps), verify the fix (1-2 steps), and submit the patch (1-2 steps).\nPrediction: 12\n\n**8. explore_edit_ratio (fraction of steps spent exploring before first file edit)**\nBefore editing, I'll need to understand the codebase structure, locate relevant files, and examine the implementation. This should take about half my steps.\nPrediction: 0.50\n\n**9. mean_action_block_size (mean number of shell commands per step)**\nMost of my steps will involve single commands like `ls`, `grep`, `cat`, or editing with `sed`/`awk`. Occasionally I might chain 2-3 related commands.\nPrediction: 1.3\n\n**10. n_constraint_violations (number of stated rules I'll break)**\nI'll be careful to follow all constraints: only modify source code files, avoid interactive editors, don't modify tests/config files, and follow the submission process correctly.\nPrediction: 0\n\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.70,\n  \"documentation\": 0.20,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.30,\n  \"avg_tokens_step\": 175,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.50,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  }
+}

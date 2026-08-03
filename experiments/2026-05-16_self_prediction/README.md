@@ -221,46 +221,56 @@ diagrams.
 
 ---
 
-## Running the FULL real eval on a cloud pod
+## How the full real eval was actually run
 
 A real run needs **Linux + Docker** (the SWE-bench eval is Unix-only and spawns a
-container per task). It is CPU/RAM/disk-bound — **no GPU**. [`run_on_pod.sh`](run_on_pod.sh)
-does the whole thing in one command: installs deps, checks Docker, builds the
-venv, pulls the eval images, and launches the full 12-model × 30-task run. It is
-**idempotent and resumable** — re-run it to continue after any interruption.
+container per task). It is CPU/RAM/disk-bound — **no GPU**.
 
-**1. Pick a machine.** A CPU box, ~16–32 vCPU / 32–64 GB RAM / ~100 GB disk, no
-GPU. (RunPod CPU pod, or any Ubuntu VM with Docker. Note: RunPod *pods* must
-allow Docker — the script tells you immediately if the host can't run it.)
+The full 12-model × 30-task × 8-rollout run that produced the committed results
+was executed on a laptop's **WSL2 Ubuntu** via
+[`run_full_laptop.sh`](run_full_laptop.sh) (a cloud-pod path was planned early
+on — an earlier revision of this README referenced a `run_on_pod.sh` that was
+never written; RunPod CPU pods turned out not to support Docker-in-Docker, so
+the run moved to WSL2). The script is **resumable**: the per-(model, task,
+rollout) cache in `data_real/` means re-running it continues after any
+interruption instead of re-spending API calls.
 
-**2. Get the code onto the pod**, either:
-- `git clone <your-private-repo-url>` (push this repo to a private remote first), or
-- copy it from your laptop: `rsync -az --exclude .venv --exclude data_real ./ root@<pod>:~/spc/`
+To reproduce on any Ubuntu box with Docker:
 
-**3. Provide the secrets:**
-- `export OPENROUTER_API_KEY=sk-or-...` (required; or copy your local `.env` into
-  the repo root on the pod — the script reads it).
-- `export GITHUB_TOKEN=github_pat_...` (recommended). With it set, the script
-  **auto-saves the output to `main` every ~10 minutes and once at the end** —
-  both `data_real/` (the rollouts/forecasts you paid OpenRouter for, which make a
-  re-run resumable) and `results_real/` (the scores). A crash or accidental pod
-  delete then can't lose the work. Needs a fine-grained token with **Contents:
-  Read and write** on this repo. Without it the output lives only on the pod.
+1. Create a venv and install this package plus the eval deps (see repo
+   `pyproject.toml`), and pull the SWE-bench eval images
+   ([`logs/pull_images.sh`](logs/pull_images.sh)).
+2. Provide `OPENROUTER_API_KEY` (env var or `.env` at the repo root).
+3. Adapt the two hard-coded paths at the top of
+   [`run_full_laptop.sh`](run_full_laptop.sh) (`REPO`, `PY`) and launch it
+   inside `tmux`. Progress and resumability live in `data_real/`; final scores
+   land in the results dir.
 
-**4. Launch it** (inside `tmux` so it survives disconnects):
-```bash
-tmux new -s eval
-bash experiments/2026-05-16_self_prediction/run_on_pod.sh
-```
-Detach with `Ctrl-b d`; re-attach with `tmux attach -t eval`.
+Cost note: the OpenRouter spend (agent + forecast calls) is the dominant bill —
+order of hundreds of dollars for all 12 models. `run.py` accepts `--models` /
+`--n-tasks` / `--step-limit` for a cheaper partial run.
 
-**5. When `results_real/run_summary.json` appears, it's done.** If you set
-`GITHUB_TOKEN`, the results are already on `main` (`git pull` to get them); then
-**delete the pod** so it stops billing. (No token? `scp`/`rsync` `results_real/`
-back first.) Attach a **network volume** so the data survives a pod delete even
-mid-run.
+## Data availability
 
-Two cost notes: the **machine** is cheap (~$0.5–1/hr; whole run ~$30–60), and the
-**OpenRouter** spend (the agent + forecast calls) is the larger bill — order of
-hundreds of dollars for all 12 models. Trim with `MODELS=` / `NTASKS=` /
-`STEP_LIMIT=` env vars (see the script header) for a cheaper partial run.
+Everything needed to validate the results without re-spending on API calls:
+
+- **Committed in-repo** (`data_real/`):
+  - [`tasks.json`](data_real/tasks.json) — the exact 30 SWE-bench Verified
+    instances used (instance id, repo, base commit, difficulty, problem
+    statement).
+  - `forecasts/` — every self- and cross-forecast, per model × task × rollout.
+  - `outcomes/` — the graded outcome of every rollout.
+  - [`cross_predictor.json`](data_real/cross_predictor.json) — cross-forecast
+    predictor assignment.
+- **GitHub Release assets** (too large for git — ~2.5 GB raw): the full
+  per-task rollout cache `data_real/rollouts/` — 2,880 agent trajectories
+  (12 models × 30 tasks × 8 rollouts), packaged as one `rollouts_<model>.tar.gz`
+  per model. Download from the repo's **Releases** page and unpack into place:
+
+  ```bash
+  cd experiments/2026-05-16_self_prediction
+  tar -xzf rollouts_<model>.tar.gz   # recreates data_real/rollouts/<model>/...
+  ```
+
+`data_real/rollout_work/` (per-rollout scratch working directories) is transient
+and not distributed; nothing downstream reads it.

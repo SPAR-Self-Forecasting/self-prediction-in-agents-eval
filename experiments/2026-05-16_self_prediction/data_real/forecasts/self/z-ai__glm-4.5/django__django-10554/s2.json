@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.5",
+    "task_id": "django__django-10554",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.7,
+      "p_first_attempt_correct": 0.3,
+      "documentation": 0.8,
+      "defensive_code": 0.6,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 120.0,
+      "total_expected_steps": 35.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze a Django issue where union querysets with ordering break when using derived querysets. Let me predict how I'll approach this:\n\n1. **p_solve**: 0.7 - This is a complex Django ORM issue involving querysets and SQL generation. It's likely in the queryset or SQL compiler code. I have a good chance of finding and fixing it, but Django's ORM is complex.\n\n2. **p_first_attempt_correct**: 0.3 - This is a subtle bug that likely involves understanding how Django's queryset chaining and SQL generation works. I'll probably need to iterate to understand the exact issue.\n\n3. **documentation**: 0.8 - Django has good code documentation practices. When fixing ORM issues, I typically add comments explaining the fix and may add type hints if appropriate.\n\n4. **defensive_code**: 0.6 - For ORM fixes, I often need to add validation or guard clauses to handle edge cases, especially with complex queryset operations.\n\n5. **express_uncertainty**: 0.4 - I'll likely express some uncertainty when exploring the codebase to understand the queryset and SQL compiler logic.\n\n6. **avg_tokens_step**: 120 - I'll need to provide detailed reasoning when analyzing the Django ORM code and explaining my findings.\n\n7. **total_expected_steps**: 35 - This will require: exploring the codebase, reproducing the issue, finding the root cause in the queryset/SQL compiler code, implementing a fix, testing it, and creating the patch.\n\n8. **explore_edit_ratio**: 0.4 - I'll need to spend significant time exploring Django's queryset and SQL compiler code to understand how union operations work before making changes.\n\n9. **mean_action_block_size**: 2.5 - I'll often run multiple related commands together (e.g., finding files, reading them, checking the structure).\n\n10. **n_constraint_violations**: 0 - I'm careful about following the rules and won't modify test files or combine patch creation with submission.\n\n{\n  \"p_solve\": 0.7,\n  \"p_first_attempt_correct\": 0.3,\n  \"documentation\": 0.8,\n  \"defensive_code\": 0.6,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 120,\n  \"total_expected_steps\": 35,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.5",
+    "task_id": "django__django-10554",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.7,
+      "p_first_attempt_correct": 0.3,
+      "documentation": 0.8,
+      "defensive_code": 0.6,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 120.0,
+      "total_expected_steps": 25.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.7,\n  \"p_first_attempt_correct\": 0.3,\n  \"documentation\": 0.8,\n  \"defensive_code\": 0.6,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 120,\n  \"total_expected_steps\": 25,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 2
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-14631",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.7,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task step by step.\n\nThe PR description is asking for changes to Django's BaseForm class to:\n1. Make `_clean_fields()` access values through BoundField objects\n2. Make `changed_data` access values through BoundField objects\n3. Move the per-field logic of `changed_data()` into a new method `_did_change()` in the BoundField class\n\nThis is a refactoring task focused on code consistency and reducing code paths.\n\nLet me make my predictions:\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-14631",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "I'll analyze this task step by step. First, let me explore the codebase to understand the structure and find the relevant files for BaseForm and BoundField.\n\n```bash\nfind /testbed -type f -name \"*.py\" | grep -E \"(form|bound)\" | head -30\n```",
+    "sample_idx": 2
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-12039",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.15,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 185.0,
+      "total_expected_steps": 11.0,
+      "explore_edit_ratio": 0.36,
+      "mean_action_block_size": 1.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.10,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 185,\n  \"total_expected_steps\": 11,\n  \"explore_edit_ratio\": 0.36,\n  \"mean_action_block_size\": 1.2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-12039",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.25,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.22,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a whitespace issue in Django's CREATE INDEX statement generation. The issue is in `django/db/backends/ddl_references.py` where column suffixes (like `DESC` or `text_pattern_ops`) are being joined without proper spacing.\n\nLet me analyze my expected approach and outcomes:\n\n1. **Understanding the issue**: The bug is that when `col_suffixes` contains empty strings for ascending order, they still add unwanted whitespace, and when suffixes are non-empty (like `DESC`), they don't have leading space.\n\n2. **Expected workflow**:\n   - Explore the repository structure (1-2 steps)\n   - Read the relevant file `django/db/backends/ddl_references.py` (1 step)\n   - Create a reproduction script (2-3 steps)\n   - Fix the formatting logic (1-2 steps)\n   - Verify the fix works (2-3 steps)\n\n3. **Predictions**:\n   - This is a straightforward string formatting fix, so I'm fairly confident\n   - I'll likely need one iteration to understand the exact data structure\n   - Won't add extensive docs/type hints (minimal fix)\n   - No defensive code needed (it's a formatting issue)\n   - Might express slight uncertainty when examining the col_suffixes behavior\n   - Will issue mostly single commands, occasionally 2-3 for independent operations\n\n```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.22,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

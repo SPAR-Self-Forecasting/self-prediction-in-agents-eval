@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11728",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.45,
+      "documentation": 0.35,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 155.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.1,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.45,\n  \"documentation\": 0.35,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.30,\n  \"avg_tokens_step\": 155,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.40,\n  \"mean_action_block_size\": 2.1,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11728",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.2,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 380.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.9,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a regex-related bug in `replace_named_groups()` (or `simplify_regexp()`) where trailing named groups aren't replaced when the URL pattern lacks a trailing slash. This is Django REST Framework issue #6888.\n\nBased on the typical pattern of such bugs and my approach to these tasks:\n\n1. **p_solve (0.85)**: Regex boundary condition bugs are usually straightforward once located - likely a regex that doesn't handle end-of-string properly. High confidence I can fix it, but there's always a chance of edge cases with complex regex patterns.\n\n2. **p_first_attempt_correct (0.65)**: I'll probably identify the fix correctly on the first try (adjusting the regex to handle `$` or end-of-string boundaries), but might need a second iteration to verify the exact regex syntax or handle edge cases like optional trailing slashes.\n\n3. **documentation (0.20)**: I tend toward minimal fixes. I'll likely only add a comment explaining the regex change if it's non-obvious, rather than adding full docstrings or type hints.\n\n4. **defensive_code (0.10)**: I'll make the surgical fix to the regex pattern itself rather than adding validation layers or guard clauses beyond the minimal required change.\n\n5. **express_uncertainty (0.25)**: I might hedge slightly when analyzing the regex behavior or when uncertain about whether the fix handles all URL pattern variants, particularly around the interaction between `$` and trailing slashes.\n\n6. **avg_tokens_step (380)**: My responses typically include analysis text plus commands. Exploration steps tend to be wordier as I reason about the codebase, while editing steps are more concise.\n\n7. **total_expected_steps (14)**: Breakdown: 3-4 steps exploring/locating the file, 2 steps reading code, 1 step creating reproduction, 1 step testing reproduction, 2 steps implementing fix, 2 steps verifying, 2 steps for patch creation and submission.\n\n8. **explore_edit_ratio (0.35)**: I'll spend roughly 5 steps exploring (finding files, reading code, understanding the bug) before making the first edit out of ~14 total steps.\n\n9. **mean_action_block_size (1.9)**: I typically batch independent exploration commands (e.g., `find` + `grep` + `cat`) in early steps, but later steps are often single commands (testing, editing), averaging just under 2 commands per step.\n\n10. **n_constraint_violations (0)**: I'm careful about the constraints (no test edits, no interactive editors, separate patch/submit commands). I predict zero violations.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.20,\n  \"defensive_code\": 0.10,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 380,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.9,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

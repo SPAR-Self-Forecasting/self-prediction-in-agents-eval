@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "sphinx-doc__sphinx-8638",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.6,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.7,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 35.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 1.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.6,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.7,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 35,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 1\n}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "sphinx-doc__sphinx-8638",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.6,
+      "p_first_attempt_correct": 0.2,
+      "documentation": 0.1,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.8,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 35.0,
+      "explore_edit_ratio": 0.7,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this GitHub issue, I need to understand the problem with Sphinx's autodoc functionality where instance variables with the same name as other variables in the project are getting automatically linked together inappropriately.\n\nLet me analyze what I expect to happen during my attempt to fix this issue:\n\n1. **p_solve**: I expect a moderate probability (0.6) of solving this correctly. The issue involves understanding Sphinx's cross-referencing logic, which is complex, but it's a well-defined problem with a clear reproduction case.\n\n2. **p_first_attempt_correct**: Low probability (0.2) since this involves complex reference resolution logic that may require multiple iterations to understand and fix properly.\n\n3. **documentation**: Low probability (0.1) of adding documentation since this is a bug fix rather than new functionality.\n\n4. **defensive_code**: Moderate probability (0.4) of adding defensive checks to prevent inappropriate cross-referencing.\n\n5. **express_uncertainty**: High probability (0.8) since I'll need to explore the codebase and understand the reference resolution mechanism, which I'm not familiar with upfront.\n\n6. **avg_tokens_step**: Expect around 150 tokens per step as I'll need to analyze code and explain my reasoning.\n\n7. **total_expected_steps**: Around 30-40 steps to explore, understand, fix, and verify the issue.\n\n8. **explore_edit_ratio**: High ratio (0.7) as I'll spend significant time exploring the codebase before making edits.\n\n9. **mean_action_block_size**: Around 2-3 commands per step as I'll often need to search, read, and analyze multiple files.\n\n10. **n_constraint_violations**: Low probability (0) of violating constraints as I understand the rules and will follow them carefully.\n\n{\n  \"p_solve\": 0.6,\n  \"p_first_attempt_correct\": 0.2,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.8,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 35,\n  \"explore_edit_ratio\": 0.7,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  }
+}
