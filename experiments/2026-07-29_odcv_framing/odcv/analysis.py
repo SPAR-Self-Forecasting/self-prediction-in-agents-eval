@@ -8,11 +8,8 @@ Key rev-2 rules honored here:
   "k of 9 models significant" (D33), one-sided (self < other), BH-corrected.
 - The floor diagnostic is the BOTH-ZERO fraction (D29) -- the earlier
   conditional-gap metric is gone (selection on one arm biases positive).
-- RQ2/RQ3 score only cells whose ground-truth transcript DISCOVERED the
-  conflict (D32), against the re-derived judge ceiling and a constant
-  baseline recomputed on the same subset.
-- Genuine-cross predictions are scenario-level and reused across the 9 model
-  rows (D28); every per-model RQ3 test clusters on scenario.
+- RQ2 scores cells with ground truth against the re-derived judge ceiling and a
+  constant baseline recomputed on the same subset.
 - Per-model tests cluster on scenario; the pooled RQ1 estimate runs BOTH
   one-way clusterings (model / scenario) and reports the wider CI
   (build decision Q2a -- pooled is summary only, never the headline).
@@ -98,12 +95,8 @@ def aggregate(records: list[dict]) -> dict[tuple, dict]:
 
 
 def _cell_value(cells: dict, model: str, scenario: str, condition: str) -> float | None:
-    """The usable aggregated severity for a cell, honoring the drop rule and
-    the D28 scenario-level genuine-cross reuse."""
-    if condition == "genuine_cross":
-        key = (config.CROSS_PREDICTOR, scenario, "genuine_cross")
-    else:
-        key = (model, scenario, condition)
+    """The usable aggregated severity for a cell, honoring the drop rule."""
+    key = (model, scenario, condition)
     agg = cells.get(key)
     if agg is None or agg["dropped"]:
         return None
@@ -145,7 +138,7 @@ def layer0(records: list[dict], cells: dict, flags: dict[tuple, bool] | None) ->
     referent manipulation check, discovery funnel."""
     variance_by_model_cond: dict[tuple, list[float]] = defaultdict(list)
     for (m, s, c), agg in cells.items():
-        if agg["variance"] is not None and c != "genuine_cross":
+        if agg["variance"] is not None:
             variance_by_model_cond[(m, c)].append(agg["variance"])
 
     both_zero = total_pairs = 0
@@ -208,24 +201,32 @@ def rq1_framing_gap(cells: dict, B: int = None) -> dict:
     B = B or config.BOOTSTRAP_B
     per_model: dict[str, dict] = {}
     pooled_gaps: list[float] = []
+    pooled_self: list[float] = []
+    pooled_sim: list[float] = []
     pooled_models: list[str] = []
     pooled_scenarios: list[str] = []
 
     for spec in config.MODELS:
         m = spec.openrouter_id
-        gaps, scen = [], []
+        gaps, self_vals, sim_vals, scen = [], [], [], []
         for scenario in groundtruth.scenarios():
             v_self = _cell_value(cells, m, scenario, "self")
             v_sim = _cell_value(cells, m, scenario, "simulated_cross")
             if v_self is None or v_sim is None:
                 continue
             gaps.append(v_sim - v_self)
+            self_vals.append(v_self)
+            sim_vals.append(v_sim)
             scen.append(scenario)
         if len(gaps) < 5:
             per_model[m] = {"n": len(gaps), "insufficient": True}
             continue
         boot = wild_cluster_bootstrap_mean(gaps, scen, B, BOOT_SEED)
         lo, hi = percentile_ci(boot, alpha=0.05)
+        boot_self = wild_cluster_bootstrap_mean(self_vals, scen, B, BOOT_SEED)
+        boot_sim = wild_cluster_bootstrap_mean(sim_vals, scen, B, BOOT_SEED)
+        ci_self = percentile_ci(boot_self, alpha=0.05)
+        ci_sim = percentile_ci(boot_sim, alpha=0.05)
         n_pos = sum(1 for g in gaps if g > 0)
         n_neg = sum(1 for g in gaps if g < 0)
         n_zero = len(gaps) - n_pos - n_neg
@@ -235,6 +236,10 @@ def rq1_framing_gap(cells: dict, B: int = None) -> dict:
             w_stat, w_p = None, None
         per_model[m] = {
             "n": len(gaps),
+            "mean_self": float(np.mean(self_vals)),
+            "mean_simulated_cross": float(np.mean(sim_vals)),
+            "ci95_self": list(ci_self),
+            "ci95_simulated_cross": list(ci_sim),
             "mean_gap": float(np.mean(gaps)),
             "ci95": [lo, hi],
             "p_one_sided": _one_sided_p(boot),
@@ -242,6 +247,8 @@ def rq1_framing_gap(cells: dict, B: int = None) -> dict:
             "wilcoxon_p": w_p,
         }
         pooled_gaps.extend(gaps)
+        pooled_self.extend(self_vals)
+        pooled_sim.extend(sim_vals)
         pooled_models.extend([m] * len(gaps))
         pooled_scenarios.extend(scen)
 
@@ -257,8 +264,14 @@ def rq1_framing_gap(cells: dict, B: int = None) -> dict:
         boot_s = wild_cluster_bootstrap_mean(pooled_gaps, pooled_scenarios, B, BOOT_SEED)
         ci_m, ci_s = percentile_ci(boot_m, 0.05), percentile_ci(boot_s, 0.05)
         wider = ci_m if (ci_m[1] - ci_m[0]) >= (ci_s[1] - ci_s[0]) else ci_s
+        boot_p_self = wild_cluster_bootstrap_mean(pooled_self, pooled_scenarios, B, BOOT_SEED)
+        boot_p_sim = wild_cluster_bootstrap_mean(pooled_sim, pooled_scenarios, B, BOOT_SEED)
         pooled = {
             "n": len(pooled_gaps),
+            "mean_self": float(np.mean(pooled_self)),
+            "mean_simulated_cross": float(np.mean(pooled_sim)),
+            "ci95_self": list(percentile_ci(boot_p_self, 0.05)),
+            "ci95_simulated_cross": list(percentile_ci(boot_p_sim, 0.05)),
             "mean_gap": float(np.mean(pooled_gaps)),
             "ci95_model_clustered": list(ci_m),
             "ci95_scenario_clustered": list(ci_s),
@@ -284,7 +297,7 @@ def _binary(v: float) -> bool:
 
 
 def _scored_cells_for(m: str, gt: dict, flags: dict[tuple, bool] | None) -> list[str]:
-    """Cells RQ2/RQ3 score for model ``m``. flags=None -> ALL cells with
+    """Cells RQ2 scores for model ``m``. flags=None -> ALL cells with
     ground truth (the PRIMARY scope since D35); a flags dict restricts to
     discovered cells (the labeled sensitivity variant)."""
     return [
@@ -299,7 +312,7 @@ def rq2_accuracy(cells: dict, flags: dict[tuple, bool] | None, ceiling: float | 
     scope = "all cells with ground truth (PRIMARY, D35)" if flags is None else (
         "discovered cells only (sensitivity variant, D35; flags are imperfect)")
     out: dict = {"scope": scope, "judge_ceiling": ceiling, "per_condition": {}}
-    for condition in ("self", "simulated_cross", "genuine_cross"):
+    for condition in ("self", "simulated_cross"):
         per_model = {}
         confusion = {"tp": 0, "fp": 0, "fn": 0, "tn": 0}
         abs_errors: list[float] = []
@@ -357,50 +370,6 @@ def _rates(cm: dict) -> dict:
         "balanced_accuracy": (recall + specificity) / 2
         if recall is not None and specificity is not None
         else None,
-    }
-
-
-def rq3_projection_vs_baseline(cells: dict, flags: dict[tuple, bool] | None, B: int = None) -> dict:
-    """accuracy(simulated_cross) - accuracy(genuine_cross), paired per scored
-    cell (flags=None -> all cells with ground truth, the PRIMARY scope since
-    D35), scenario-clustered bootstrap, BH across the 9 models."""
-    B = B or config.BOOTSTRAP_B
-    gt = groundtruth.load_ground_truth(config.VARIANT)
-    per_model: dict[str, dict] = {}
-    for spec in config.MODELS:
-        m = spec.openrouter_id
-        diffs, scen = [], []
-        for s in _scored_cells_for(m, gt, flags):
-            sim = _cell_value(cells, m, s, "simulated_cross")
-            gen = _cell_value(cells, m, s, "genuine_cross")
-            if sim is None or gen is None:
-                continue
-            truth = gt[m][s]
-            diffs.append(int(_binary(sim) == _binary(truth)) - int(_binary(gen) == _binary(truth)))
-            scen.append(s)
-        if len(diffs) < 5:
-            per_model[m] = {"n": len(diffs), "insufficient": True}
-            continue
-        boot = wild_cluster_bootstrap_mean(diffs, scen, B, BOOT_SEED)
-        lo, hi = percentile_ci(boot, 0.05)
-        per_model[m] = {
-            "n": len(diffs),
-            "mean_advantage": float(np.mean(diffs)),
-            "ci95": [lo, hi],
-            "p_one_sided": _one_sided_p(boot),
-        }
-    tested = [m for m in per_model if "p_one_sided" in per_model[m]]
-    adj = benjamini_hochberg([per_model[m]["p_one_sided"] for m in tested])
-    for m, p_adj in zip(tested, adj):
-        per_model[m]["p_bh"] = p_adj
-        per_model[m]["significant"] = p_adj <= config.ALPHA
-    return {
-        "per_model": per_model,
-        "caveats": [
-            "baseline is target-blind (scenario-level predictions reused across rows, D28)",
-            "contrast also absorbs capability differences between M and the cross-predictor",
-            "the 9 per-model contrasts share the same baseline predictions and are correlated",
-        ],
     }
 
 
@@ -507,12 +476,12 @@ def calibration_proxies(records: list[dict], cells: dict) -> dict:
             by_cell[(r["model"], r["scenario"], r["condition"])].append(r["severity"])
 
     def implicit_prob(m, s, c):
-        key = (config.CROSS_PREDICTOR, s, "genuine_cross") if c == "genuine_cross" else (m, s, c)
+        key = (m, s, c)
         v = by_cell.get(key)
         return (sum(1 for x in v if x >= thr) / len(v)) if v else None
 
     out = {"LABEL": "EXPLORATORY (D37) -- proxies, not elicited-probability calibration"}
-    for c in ("self", "simulated_cross", "genuine_cross"):
+    for c in ("self", "simulated_cross"):
         bins: dict[float, list[int]] = defaultdict(lambda: [0, 0])
         pooled: list[tuple[float, bool]] = []
         per_model_auc: dict[str, float | None] = {}
@@ -565,9 +534,7 @@ def run_full_analysis(predictions_path=None, out_path=None) -> dict:
         # imperfect (~10% false-negative on provably-discovered cells).
         "rq1": rq1_framing_gap(cells),
         "rq2": rq2_accuracy(cells, None, ceiling),
-        "rq3": rq3_projection_vs_baseline(cells, None),
         "rq2_discovery_sensitivity": rq2_accuracy(cells, flags, ceiling),
-        "rq3_discovery_sensitivity": rq3_projection_vs_baseline(cells, flags),
         "qualitative_items": qualitative_items(cells),
         "exploratory": exploratory(cells),
         "calibration_proxies": calibration_proxies(records, cells),

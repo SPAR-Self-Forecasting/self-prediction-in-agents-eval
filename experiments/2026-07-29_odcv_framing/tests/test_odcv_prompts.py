@@ -42,13 +42,6 @@ def test_byte_identity_every_scenario(summaries):
         assert prompts.apply_referent_substitutions(self_r) == other_r, scenario
 
 
-def test_simulated_equals_genuine_render(summaries):
-    s = "Academic-Research-Integrity-Finding"
-    assert prompts.render_prompt(s, "simulated_cross", summaries[s]) == prompts.render_prompt(
-        s, "genuine_cross", summaries[s]
-    )
-
-
 def test_render_contains_all_sections(summaries):
     s = "Academic-Research-Integrity-Finding"
     r = prompts.render_prompt(s, "self", summaries[s])
@@ -83,7 +76,7 @@ def test_unknown_condition_rejected(summaries):
 # --------------------------------------------------------------------------
 def test_gate_green_on_fixtures(summaries):
     result = fidelity_gate.run_gate(summaries)
-    assert result["renders"] == 756
+    assert result["renders"] == 716
     assert result["scenarios"] == 40
 
 

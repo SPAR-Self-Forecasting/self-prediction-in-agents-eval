@@ -2,7 +2,7 @@
 
 Three layers:
   1. the math (PAV, CORP identity + non-negativity, binned identity-with-residual);
-  2. event assembly (mirrors metrics._dim_losses gating; cell-equal weighting);
+  2. event assembly (mirrors metrics._dim_self_losses gating; cell-equal weighting);
   3. the report invariant: decomposed brier == the pipeline's per-dim mean loss.
 """
 
@@ -189,7 +189,7 @@ def test_binned_forecast_exactly_one_is_kept():
 # 2. Event assembly -- a small hand-built ScoringData exercising every gate
 # --------------------------------------------------------------------------
 DIMS = (Dimension("p_solve", "binary"), Dimension("avg_tokens_step", "continuous"))
-M_SELF, M_CROSS = "m/self", "m/cross"
+M = "m/self"
 TASKS = ["t0", "t1", "t2", "t3"]
 
 
@@ -213,33 +213,29 @@ def tiny_data() -> metrics.ScoringData:
     """4 tasks: t0 normal, t1 fails retention (<5 valid), t2 broken self
     forecast, t3 normal with two self samples (aggregation check)."""
     outcomes = {
-        M_SELF: {
-            "t0": _outcome_cell(M_SELF, "t0", [1, 0, 1, 0, 1, 0, 1, 0]),
-            "t1": _outcome_cell(M_SELF, "t1", [1] * 8, missing_from=4),  # 4 valid < 5
-            "t2": _outcome_cell(M_SELF, "t2", [1] * 8),
-            "t3": _outcome_cell(M_SELF, "t3", [1, 1, 1, 1, 1, 1, 0, 0], missing_from=6),  # 6 valid
+        M: {
+            "t0": _outcome_cell(M, "t0", [1, 0, 1, 0, 1, 0, 1, 0]),
+            "t1": _outcome_cell(M, "t1", [1] * 8, missing_from=4),  # 4 valid < 5
+            "t2": _outcome_cell(M, "t2", [1] * 8),
+            "t3": _outcome_cell(M, "t3", [1, 1, 1, 1, 1, 1, 0, 0], missing_from=6),  # 6 valid
         },
-        M_CROSS: {t: _outcome_cell(M_CROSS, t, [1] * 8) for t in TASKS},
     }
-    self_fc = {M_SELF: {
-        "t0": {c: [_fc(M_SELF, "t0", c, "self", 0.6)] for c in config.CONDITIONS},
-        "t1": {c: [_fc(M_SELF, "t1", c, "self", 0.6)] for c in config.CONDITIONS},
-        "t2": {c: [_fc(M_SELF, "t2", c, "self", 0.6, broken=True)] for c in config.CONDITIONS},
-        "t3": {c: [_fc(M_SELF, "t3", c, "self", 0.4),
-                   _fc(M_SELF, "t3", c, "self", 0.8)] for c in config.CONDITIONS},
+    self_fc = {M: {
+        "t0": {c: [_fc(M, "t0", c, "self", 0.6)] for c in config.CONDITIONS},
+        "t1": {c: [_fc(M, "t1", c, "self", 0.6)] for c in config.CONDITIONS},
+        "t2": {c: [_fc(M, "t2", c, "self", 0.6, broken=True)] for c in config.CONDITIONS},
+        "t3": {c: [_fc(M, "t3", c, "self", 0.4),
+                   _fc(M, "t3", c, "self", 0.8)] for c in config.CONDITIONS},
     }}
-    cross_fc = {t: {c: [_fc(M_CROSS, t, c, "anonymous", 0.5)] for c in config.CONDITIONS}
-                for t in TASKS}
     return metrics.ScoringData(
-        dimensions=DIMS, models=[M_SELF, M_CROSS], families={"F": [M_SELF, M_CROSS]},
-        tasks=TASKS, cross_model=M_CROSS, outcomes=outcomes,
-        self_forecasts=self_fc, cross_forecasts=cross_fc,
+        dimensions=DIMS, models=[M], families={"F": [M]},
+        tasks=TASKS, outcomes=outcomes, self_forecasts=self_fc,
     )
 
 
 def test_events_apply_retention_and_broken_forecast_gates(tiny_data):
     dim = DIMS[0]
-    f, o, w, n_cells = murphy.binary_events(tiny_data, M_SELF, dim, "no_thinking", "self")
+    f, o, w, n_cells = murphy.binary_events(tiny_data, M, dim, "no_thinking")
     # t1 dropped (retention), t2 dropped (broken self forecast) -> t0 + t3.
     assert n_cells == 2
     assert len(f) == 8 + 6  # t0: 8 valid rollouts, t3: 6 valid rollouts
@@ -247,7 +243,7 @@ def test_events_apply_retention_and_broken_forecast_gates(tiny_data):
 
 def test_events_weighting_makes_cells_equal(tiny_data):
     dim = DIMS[0]
-    f, o, w, n_cells = murphy.binary_events(tiny_data, M_SELF, dim, "no_thinking", "self")
+    f, o, w, n_cells = murphy.binary_events(tiny_data, M, dim, "no_thinking")
     assert np.sum(w) == pytest.approx(n_cells)  # each cell contributes weight 1
     uniq = np.unique(w)
     assert len(uniq) == 2
@@ -256,55 +252,33 @@ def test_events_weighting_makes_cells_equal(tiny_data):
 
 def test_events_forecast_is_mean_over_samples(tiny_data):
     dim = DIMS[0]
-    f, o, w, _ = murphy.binary_events(tiny_data, M_SELF, dim, "no_thinking", "self")
+    f, o, w, _ = murphy.binary_events(tiny_data, M, dim, "no_thinking")
     # t3's two samples (0.4, 0.8) aggregate to 0.6 (Option A mean).
     t3_forecasts = f[-6:]
     assert np.allclose(t3_forecasts, 0.6)
 
 
-def test_events_same_cells_for_self_and_cross(tiny_data):
-    dim = DIMS[0]
-    fs, os_, ws, ns = murphy.binary_events(tiny_data, M_SELF, dim, "no_thinking", "self")
-    fc, oc, wc, nc = murphy.binary_events(tiny_data, M_SELF, dim, "no_thinking", "cross")
-    assert ns == nc
-    assert np.array_equal(os_, oc)   # identical outcomes...
-    assert np.array_equal(ws, wc)    # ...and weights; only the forecast differs
-    assert np.allclose(fc, 0.5)
-
-
 def test_events_brier_matches_metrics_mean_loss(tiny_data):
     """The invariant: cell-equal weighting reproduces the pipeline's per-dim loss."""
     dim = DIMS[0]
-    for kind, key in (("self", "mean_loss_self_per_dim"), ("cross", "mean_loss_cross_per_dim")):
-        f, o, w, _ = murphy.binary_events(tiny_data, M_SELF, dim, "no_thinking", kind)
-        c = murphy.corp_decomposition(f, o, w)
-        expected = metrics.model_scores(tiny_data, M_SELF, "no_thinking")[key]["p_solve"]
-        assert c["brier"] == pytest.approx(expected, abs=1e-12)
-
-
-def test_events_rejects_unknown_kind(tiny_data):
-    with pytest.raises(ValueError, match="kind"):
-        murphy.binary_events(tiny_data, M_SELF, DIMS[0], "no_thinking", "other")
+    f, o, w, _ = murphy.binary_events(tiny_data, M, dim, "no_thinking")
+    c = murphy.corp_decomposition(f, o, w)
+    expected = metrics.model_scores(tiny_data, M, "no_thinking")["mean_loss_per_dim"]["p_solve"]
+    assert c["brier"] == pytest.approx(expected, abs=1e-12)
 
 
 # --------------------------------------------------------------------------
 # 3. Report structure + invariants on a fuller synthetic ScoringData
 # --------------------------------------------------------------------------
-def test_report_structure_and_uncertainty_agreement(tiny_data):
+def test_report_structure_and_corp_identity(tiny_data):
     report = murphy.murphy_report(tiny_data, n_bins=5)
-    assert report["cross_model"] == M_CROSS
-    assert report["models"] == [M_SELF]
+    assert report["models"] == [M]
     for cond in config.CONDITIONS:
         block = report["conditions"][cond]["p_solve"]
-        entry = block["per_model"][M_SELF]
-        # self and cross decompose over identical events -> identical UNC/base rate.
-        assert entry["self"]["uncertainty"] == pytest.approx(entry["cross"]["uncertainty"], abs=1e-12)
-        assert entry["self"]["base_rate"] == pytest.approx(entry["cross"]["base_rate"], abs=1e-12)
-        # CORP identity survives the report plumbing.
-        for kind in ("self", "cross"):
-            comp = entry[kind]
-            assert comp["brier"] == pytest.approx(
-                comp["reliability"] - comp["resolution"] + comp["uncertainty"], abs=1e-12)
+        entry = block["per_model"][M]
+        comp = entry
+        assert comp["brier"] == pytest.approx(
+            comp["reliability"] - comp["resolution"] + comp["uncertainty"], abs=1e-12)
         assert block["mean_across_models"]["n_models"] == 1
         assert "caveat" in block["pooled"]
 

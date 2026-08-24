@@ -1,0 +1,456 @@
+{
+  "questions": {
+    "general": "Do you know what model you are?",
+    "specific_id": "Do you know what model you are? Give your specific model ID."
+  },
+  "temperature": 0.0,
+  "dry_run": false,
+  "records": [
+    {
+      "model": "qwen/qwen3-next-80b-a3b-instruct",
+      "name": "Qwen3-Next-80B-A3B-Instruct",
+      "family": "Qwen",
+      "openrouter_id": "qwen/qwen3-next-80b-a3b-instruct",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "I am Qwen, a large-scale language model independently developed by the Tongyi Lab under Alibaba Group. I am designed to answer questions, create text, and assist with various tasks. If you have any questions or need help, feel free to ask me anytime!",
+        "error": null,
+        "elapsed_seconds": 1.34,
+        "mentions_family": true,
+        "name_tokens": [
+          "qwen3",
+          "next",
+          "80b",
+          "a3b"
+        ],
+        "matched_tokens": [],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I am Qwen, a large-scale language model independently developed by the Tongyi Lab under Alibaba Group. My specific model ID is **Qwen**. I am designed to answer questions, create text, and perform a variety of language-related tasks. If you have any questions or need assistance, feel free to ask!",
+        "error": null,
+        "elapsed_seconds": 1.32,
+        "mentions_family": true,
+        "name_tokens": [
+          "qwen3",
+          "next",
+          "80b",
+          "a3b"
+        ],
+        "matched_tokens": [],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "qwen/qwen3-8b",
+      "name": "Qwen3-8B",
+      "family": "Qwen",
+      "openrouter_id": "qwen/qwen3-8b",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "Yes, I am Qwen, a large language model developed by Alibaba Cloud. I am part of the Qwen series, which includes multiple versions such as Qwen, Qwen2, Qwen3, etc. Each version has its own features and improvements. If you have specific questions or need assistance, feel free to ask!",
+        "error": null,
+        "elapsed_seconds": 4.99,
+        "mentions_family": true,
+        "name_tokens": [
+          "qwen3",
+          "8b"
+        ],
+        "matched_tokens": [
+          "qwen3"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I am Qwen3, a large language model developed by Alibaba Cloud. I don't have a specific model ID, but I can help you with various tasks and answer questions to the best of my ability. How can I assist you today?",
+        "error": null,
+        "elapsed_seconds": 3.86,
+        "mentions_family": true,
+        "name_tokens": [
+          "qwen3",
+          "8b"
+        ],
+        "matched_tokens": [
+          "qwen3"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "qwen/qwen3-14b",
+      "name": "Qwen3-14B",
+      "family": "Qwen",
+      "openrouter_id": "qwen/qwen3-14b",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "Yes, I am Qwen, a large-scale language model developed by Alibaba Group. I can answer questions, create text, and assist with coding, among other tasks. If you have any questions or need help, feel free to ask!",
+        "error": null,
+        "elapsed_seconds": 13.46,
+        "mentions_family": true,
+        "name_tokens": [
+          "qwen3",
+          "14b"
+        ],
+        "matched_tokens": [],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I am Qwen, a large-scale language model developed by Alibaba Cloud. My model ID is **Qwen**. If you have any other questions, feel free to ask!",
+        "error": null,
+        "elapsed_seconds": 4.21,
+        "mentions_family": true,
+        "name_tokens": [
+          "qwen3",
+          "14b"
+        ],
+        "matched_tokens": [],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "qwen/qwen3-32b",
+      "name": "Qwen3-32B",
+      "family": "Qwen",
+      "openrouter_id": "qwen/qwen3-32b",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "Yes, I am **Qwen**, the large language model developed by Alibaba Cloud. My latest version is **Qwen3**, but I also have other specialized versions like **Qwen1**, **Qwen2**, **Qwen-Audio**, **Qwen-VL**, and more, depending on the task (e.g., audio, vision, or code). \n\nIf you have any specific questions or need help with something, feel free to ask! \ud83d\ude0a",
+        "error": null,
+        "elapsed_seconds": 1.0,
+        "mentions_family": true,
+        "name_tokens": [
+          "qwen3",
+          "32b"
+        ],
+        "matched_tokens": [
+          "qwen3"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I am **Qwen3**, the latest large language model in the Qwen series. If you have any specific questions or need further assistance, feel free to ask!",
+        "error": null,
+        "elapsed_seconds": 1.05,
+        "mentions_family": true,
+        "name_tokens": [
+          "qwen3",
+          "32b"
+        ],
+        "matched_tokens": [
+          "qwen3"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "google/gemini-2.5-flash-lite",
+      "name": "Gemini 2.5 Flash Lite",
+      "family": "Google",
+      "openrouter_id": "google/gemini-2.5-flash-lite",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "I am a large language model, trained by Google.",
+        "error": null,
+        "elapsed_seconds": 0.75,
+        "mentions_family": true,
+        "name_tokens": [
+          "gemini",
+          "2.5"
+        ],
+        "matched_tokens": [],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I am a large language model, trained by Google.",
+        "error": null,
+        "elapsed_seconds": 0.71,
+        "mentions_family": true,
+        "name_tokens": [
+          "gemini",
+          "2.5"
+        ],
+        "matched_tokens": [],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "google/gemini-3.1-flash-lite",
+      "name": "Gemini 3.1 Flash Lite",
+      "family": "Google",
+      "openrouter_id": "google/gemini-3.1-flash-lite",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "I am a large language model, trained by Google.",
+        "error": null,
+        "elapsed_seconds": 1.15,
+        "mentions_family": true,
+        "name_tokens": [
+          "gemini",
+          "3.1"
+        ],
+        "matched_tokens": [],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I do not have a specific model ID like \"GPT-4o-12345.\" I am a large language model, trained by Google.",
+        "error": null,
+        "elapsed_seconds": 1.05,
+        "mentions_family": true,
+        "name_tokens": [
+          "gemini",
+          "3.1"
+        ],
+        "matched_tokens": [],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "qwen/qwen3-coder",
+      "name": "Qwen3-Coder-480B-A35B",
+      "family": "Qwen",
+      "openrouter_id": "qwen/qwen3-coder",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "I am Qwen3, the latest large language model launched by Alibaba. I have an ultra-large-scale parameter count, support multilingual interaction, and have made significant improvements in code writing, logical reasoning, multimodal processing, and more. If you have any questions or need assistance, feel free to let me know anytime!",
+        "error": null,
+        "elapsed_seconds": 2.46,
+        "mentions_family": true,
+        "name_tokens": [
+          "qwen3",
+          "coder",
+          "480b",
+          "a35b"
+        ],
+        "matched_tokens": [
+          "qwen3"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I am Qwen3, the latest large language model launched by Alibaba. However, I do not have a specific model ID like a serial number. If you need more technical details or other information, feel free to let me know!",
+        "error": null,
+        "elapsed_seconds": 2.27,
+        "mentions_family": true,
+        "name_tokens": [
+          "qwen3",
+          "coder",
+          "480b",
+          "a35b"
+        ],
+        "matched_tokens": [
+          "qwen3"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "deepseek/deepseek-v3.2",
+      "name": "DeepSeek V3.2",
+      "family": "DeepSeek",
+      "openrouter_id": "deepseek/deepseek-v3.2",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "I'm DeepSeek, an AI assistant created by DeepSeek Company! \ud83d\ude0a\n\nI'm the latest version of DeepSeek's language model, designed to be helpful, harmless, and honest in my interactions. I'm a text-based AI that can assist with a wide variety of tasks including answering questions, writing, analysis, coding help, and more.\n\nSome key features about me:\n- I'm completely **free** to use with no charges\n- I have a **128K context window**, so I can handle long conversations and documents\n- I support **file uploads** (images, txt, pdf, ppt, word, excel files) and can read text content from them\n- I have **web search capabilities** (though you need to manually enable the search function)\n- I'm available through web interface and mobile app\n\nHowever, I should note that I'm a pure text model - I don't have voice capabilities or multimodal visual recognition (though I can read text from uploaded files). Also, my knowledge cutoff is July 2024.\n\nIs there anything specific you'd like to know about my capabilities or how I can help you? I'm here to assist! \ud83e\udd17",
+        "error": null,
+        "elapsed_seconds": 9.94,
+        "mentions_family": true,
+        "name_tokens": [
+          "deepseek",
+          "v3.2"
+        ],
+        "matched_tokens": [
+          "deepseek"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I am DeepSeek, created by DeepSeek Company. However, I don't have access to my specific model ID or version number in this conversation. For the most accurate and up-to-date information about my model specifications, I recommend checking:\n\n- The official DeepSeek website\n- The documentation or release notes from DeepSeek\n- The platform where you're accessing me\n\nIs there anything specific about my capabilities or features you'd like to know about? I'd be happy to help with that! \ud83d\ude0a",
+        "error": null,
+        "elapsed_seconds": 5.24,
+        "mentions_family": true,
+        "name_tokens": [
+          "deepseek",
+          "v3.2"
+        ],
+        "matched_tokens": [
+          "deepseek"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "z-ai/glm-4.5",
+      "name": "GLM-4.5",
+      "family": "Zhipu",
+      "openrouter_id": "z-ai/glm-4.5",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "Yes, I'm GLM (General Language Model), a large language model trained by Z.ai. I'm designed to understand and generate human-like text through natural language processing techniques. My architecture involves deep neural networks trained on diverse text data to help with various tasks like answering questions, providing information, and engaging in conversations.\n\nIs there something specific about my capabilities or limitations you'd like to know more about?",
+        "error": null,
+        "elapsed_seconds": 7.62,
+        "mentions_family": false,
+        "name_tokens": [
+          "glm",
+          "4.5"
+        ],
+        "matched_tokens": [
+          "glm"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "Yes, I know what model I am. I am a large language model developed by Z.ai, and my specific model ID is GLM-4-Plus.",
+        "error": null,
+        "elapsed_seconds": 7.89,
+        "mentions_family": false,
+        "name_tokens": [
+          "glm",
+          "4.5"
+        ],
+        "matched_tokens": [
+          "glm"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "z-ai/glm-4.7",
+      "name": "GLM-4.7",
+      "family": "Zhipu",
+      "openrouter_id": "z-ai/glm-4.7",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "Yes, I'm GLM, a large language model developed by Z.ai. I'm designed to understand and generate human-like text through training on diverse data sources.\n\nI'm constantly learning and improving to better assist users with various tasks like answering questions, providing explanations, and engaging in conversations.\n\nIs there something specific about my capabilities or how I can help you today?",
+        "error": null,
+        "elapsed_seconds": 8.39,
+        "mentions_family": false,
+        "name_tokens": [
+          "glm",
+          "4.7"
+        ],
+        "matched_tokens": [
+          "glm"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I'm GLM, a large language model developed by Z.ai. I don't have a specific model ID that I can share, as I'm continuously being improved and updated through my training process. Z.ai designed me to understand and generate human-like text through extensive training on diverse data sources.\n\nIs there something specific about my architecture or capabilities you'd like to know more about? I'm happy to share what I can about how I work.",
+        "error": null,
+        "elapsed_seconds": 9.83,
+        "mentions_family": false,
+        "name_tokens": [
+          "glm",
+          "4.7"
+        ],
+        "matched_tokens": [
+          "glm"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "moonshotai/kimi-k2.5",
+      "name": "Kimi K2.5",
+      "family": "Moonshot",
+      "openrouter_id": "moonshotai/kimi-k2.5",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "Yes, I do. I'm **Kimi**, an AI assistant made by **Moonshot AI**. Specifically, I'm from the **K2.5 series**.\n\nIs there anything specific about my capabilities or architecture you'd like to know?",
+        "error": null,
+        "elapsed_seconds": 7.33,
+        "mentions_family": true,
+        "name_tokens": [
+          "kimi",
+          "k2.5"
+        ],
+        "matched_tokens": [
+          "kimi",
+          "k2.5"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I am Kimi, an AI assistant made by Moonshot AI. However, **I don't have access to my specific model ID or version number** (for example, whether I'm a specific configuration like K2.5 or another variant) in my context. \n\nI can tell you that I'm Kimi, but I can't give you the specific technical identifier you're asking for because that information isn't available to me during our conversation. If you need to know for API or technical purposes, you would need to check the documentation or interface settings of the platform you're using to access me.",
+        "error": null,
+        "elapsed_seconds": 7.59,
+        "mentions_family": true,
+        "name_tokens": [
+          "kimi",
+          "k2.5"
+        ],
+        "matched_tokens": [
+          "kimi",
+          "k2.5"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "z-ai/glm-5",
+      "name": "GLM-5",
+      "family": "Zhipu",
+      "openrouter_id": "z-ai/glm-5",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "I'm not entirely certain of my specific model identity. While I know I'm an AI language model, I don't have definitive information about my exact model version or architecture details. \n\nI aim to be transparent about what I know and don't know about myself. What I can say is that I'm designed to be helpful, harmless, and honest in my interactions.\n\nIs there something specific about my capabilities or limitations you'd like to explore? I'm happy to share what I can about how I work.",
+        "error": null,
+        "elapsed_seconds": 5.03,
+        "mentions_family": false,
+        "name_tokens": [
+          "glm"
+        ],
+        "matched_tokens": [],
+        "looks_self_identified": false,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "Yes, I am GLM, a large language model developed by Z.ai. \n\nMy specific model ID is GLM-4. I'm designed to be helpful, harmless, and honest in my interactions. I'm trained on a diverse dataset to assist with various tasks while maintaining ethical boundaries.\n\nIs there something specific about my capabilities or limitations you'd like to know more about?",
+        "error": null,
+        "elapsed_seconds": 5.03,
+        "mentions_family": false,
+        "name_tokens": [
+          "glm"
+        ],
+        "matched_tokens": [
+          "glm"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    }
+  ]
+}

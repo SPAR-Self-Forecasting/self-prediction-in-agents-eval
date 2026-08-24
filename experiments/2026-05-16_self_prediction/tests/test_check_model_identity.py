@@ -97,24 +97,39 @@ def test_unknown_model_id_is_rejected_before_any_call(capsys):
         cmi.main(["--models", "not/a-model", "--dry-run"])
 
 
-def test_main_writes_every_model_and_the_question(tmp_path):
+def test_main_writes_every_model_and_both_questions(tmp_path):
     out = tmp_path / "identity.json"
     assert cmi.main(["--dry-run", "--out", str(out)]) == 0
     payload = json.loads(out.read_text(encoding="utf-8"))
-    assert payload["question"] == cmi.load_identity_question()
+    general, specific, openrouter = cmi.load_identity_questions()
+    assert payload["questions"]["general"] == general
+    assert payload["questions"]["specific_id"] == specific
+    assert payload["questions"]["openrouter_slug"] == openrouter
     assert payload["dry_run"] is True
     assert len(payload["records"]) == len(config.MODELS)
     assert {r["model"] for r in payload["records"]} == set(config.MODEL_IDS)
+    assert "general" in payload["records"][0] and "specific_id" in payload["records"][0]
+    assert "openrouter_slug" in payload["records"][0]
 
 
 def test_report_flags_errors_separately_from_non_answers():
+    def _block(reply, error=None, identified=False):
+        return {
+            "question": "q", "reply": reply, "error": error,
+            "looks_self_identified": identified, "matched_tokens": ["c"] if identified else [],
+        }
+
     records = [
-        {"model": "a/b", "name": "A", "error": "LLMError: boom"},
-        {"model": "c/d", "name": "C", "error": None, "reply": "I am C",
-         "looks_self_identified": True, "matched_tokens": ["c"]},
-        {"model": "e/f", "name": "E", "error": None, "reply": "no idea",
-         "looks_self_identified": False, "matched_tokens": []},
+        {"model": "a/b", "name": "A",
+         "general": _block(None, "LLMError: boom"), "specific_id": _block("ok", identified=True),
+         "openrouter_slug": _block("openai/a/b")},
+        {"model": "c/d", "name": "C",
+         "general": _block("I am C", identified=True), "specific_id": _block("I am C", identified=True),
+         "openrouter_slug": _block("c/d", identified=True)},
+        {"model": "e/f", "name": "E",
+         "general": _block("no idea"), "specific_id": _block("no idea"),
+         "openrouter_slug": _block("no idea")},
     ]
     report = cmi.format_report(records)
     assert "[ERR ]" in report and "[yes ]" in report and "[?   ]" in report
-    assert "1 errored" in report
+    assert "1 models errored" in report

@@ -1,0 +1,125 @@
+OpenRouter Top 50 Models (by weekly token usage)
+Generated: 2026-08-03 21:52 UTC
+Source: https://openrouter.ai/api/v1/models?sort=most-popular
+Rankings page: https://openrouter.ai/rankings
+Sorted by: provider cluster (OpenAI → Anthropic → Google → …); within each provider by original popularity rank
+
+  #  OpenRouter ID                                         Name                                         Ctx   In $/1M   Out $/1M
+----------------------------------------------------------------------------------------------------------------------------------
+  1.  openai/gpt-5.6-luna                                   OpenAI: GPT-5.6 Luna                       1050k  $   0.10  $    0.60
+  2.  openai/gpt-oss-120b                                   OpenAI: gpt-oss-120b                        131k  $   0.04  $    0.17
+  3.  openai/gpt-5.6-terra                                  OpenAI: GPT-5.6 Terra                      1050k  $   1.00  $    6.00
+  4.  openai/gpt-5.6-sol                                    OpenAI: GPT-5.6 Sol                        1050k  $   5.00  $   30.00
+  5.  openai/gpt-5.6-luna-pro                               OpenAI: GPT-5.6 Luna Pro                   1050k  $   0.10  $    0.60
+  6.  openai/gpt-5.4                                        OpenAI: GPT-5.4                            1050k  $   2.50  $   15.00
+  7.  openai/gpt-4o-mini                                    OpenAI: GPT-4o-mini                         128k  $   0.15  $    0.60
+  8.  openai/gpt-5.5                                        OpenAI: GPT-5.5                            1050k  $   5.00  $   30.00
+  9.  openai/gpt-5.4-nano                                   OpenAI: GPT-5.4 Nano                        400k  $   0.20  $    1.25
+ 10.  openai/gpt-5-mini                                     OpenAI: GPT-5 Mini                          400k  $   0.25  $    2.00
+
+ 11.  anthropic/claude-sonnet-5                             Anthropic: Claude Sonnet 5                 1000k  $   2.00  $   10.00
+ 12.  anthropic/claude-opus-5                               Claude Opus 5                              1000k  $   5.00  $   25.00
+ 13.  anthropic/claude-sonnet-4.6                           Anthropic: Claude Sonnet 4.6               1000k  $   3.00  $   15.00
+ 14.  anthropic/claude-opus-4.8                             Anthropic: Claude Opus 4.8                 1000k  $   5.00  $   25.00
+ 15.  anthropic/claude-haiku-4.5                            Anthropic: Claude Haiku 4.5                 200k  $   1.00  $    5.00
+ 16.  anthropic/claude-fable-5                              Anthropic: Claude Fable 5                  1000k  $  10.00  $   50.00
+ 17.  anthropic/claude-opus-4.7                             Anthropic: Claude Opus 4.7                 1000k  $   5.00  $   25.00
+ 18.  anthropic/claude-opus-4.6                             Anthropic: Claude Opus 4.6                 1000k  $   5.00  $   25.00
+
+ 19.  google/gemini-3-flash-preview                         Google: Gemini 3 Flash Preview             1049k  $   0.50  $    3.00
+ 20.  google/gemini-2.5-flash-lite                          Google: Gemini 2.5 Flash Lite              1049k  $   0.10  $    0.40
+ 21.  google/gemini-3.1-flash-lite                          Google: Gemini 3.1 Flash Lite              1049k  $   0.25  $    1.50
+ 22.  google/gemini-2.5-flash                               Google: Gemini 2.5 Flash                   1049k  $   0.30  $    2.50
+ 23.  google/gemini-3.6-flash                               Google: Gemini 3.6 Flash                   1049k  $   1.50  $    7.50
+ 24.  google/gemma-4-31b-it                                 Google: Gemma 4 31B                         262k  $   0.10  $    0.34
+ 25.  google/gemma-4-26b-a4b-it                             Google: Gemma 4 26B A4B                     262k  $   0.07  $    0.34
+ 26.  google/gemini-3.5-flash                               Google: Gemini 3.5 Flash                   1049k  $   1.50  $    9.00
+ 27.  google/gemini-3.1-pro-preview                         Google: Gemini 3.1 Pro Preview             1049k  $   2.00  $   12.00
+ 28.  google/gemini-3.5-flash-lite                          Google: Gemini 3.5 Flash Lite              1049k  $   0.30  $    2.50
+
+ 29.  deepseek/deepseek-v4-flash                            DeepSeek: DeepSeek V4 Flash 0423           1049k  $   0.14  $    0.28
+ 30.  deepseek/deepseek-v4-pro                              DeepSeek: DeepSeek V4 Pro                  1049k  $   0.43  $    0.87
+ 31.  deepseek/deepseek-v4-flash-0731                       DeepSeek: DeepSeek V4 Flash 0731           1049k  $   0.09  $    0.18
+ 32.  deepseek/deepseek-v3.2                                DeepSeek: DeepSeek V3.2                     164k  $   0.27  $    0.40
+
+ 33.  moonshotai/kimi-k3                                    MoonshotAI: Kimi K3                        1049k  $   3.00  $   15.00
+ 34.  moonshotai/kimi-k2.5                                  MoonshotAI: Kimi K2.5                       262k  $   0.57  $    2.85
+
+ 35.  x-ai/grok-4.5                                         xAI: Grok 4.5                               500k  $   2.00  $    6.00
+
+ 36.  nvidia/nemotron-3-ultra-550b-a55b:free                NVIDIA: Nemotron 3 Ultra (free)            1000k  $   0.00  $    0.00
+ 37.  nvidia/nemotron-3-super-120b-a12b:free                NVIDIA: Nemotron 3 Super (free)             262k  $   0.00  $    0.00
+
+ 38.  minimax/minimax-m3                                    MiniMax: MiniMax M3                        1049k  $   0.30  $    1.20
+ 39.  minimax/minimax-m2.7                                  MiniMax: MiniMax M2.7                       205k  $   0.25  $    1.00
+
+ 40.  xiaomi/mimo-v2.5                                      Xiaomi: MiMo-V2.5                          1050k  $   0.14  $    0.28
+ 41.  xiaomi/mimo-v2.5-pro                                  Xiaomi: MiMo-V2.5-Pro                      1050k  $   0.43  $    0.87
+
+ 42.  z-ai/glm-5.2                                          Z.ai: GLM 5.2                              1049k  $   0.63  $    1.98
+
+ 43.  tencent/hy3                                           Tencent: Hy3                                262k  $   0.13  $    0.53
+
+ 44.  stepfun/step-3.7-flash                                StepFun: Step 3.7 Flash                     262k  $   0.20  $    1.15
+
+ 45.  inclusionai/ling-3.0-flash:free                       Ling-3.0-flash (free)                       262k  $   0.00  $    0.00
+ 46.  inclusionai/ling-2.6-flash                            inclusionAI: Ling-2.6-flash                 262k  $   0.01  $    0.03
+
+ 47.  poolside/laguna-s-2.1:free                            Poolside: Laguna S 2.1 (free)               262k  $   0.00  $    0.00
+ 48.  poolside/laguna-xs-2.1:free                           Poolside: Laguna XS 2.1 (free)              262k  $   0.00  $    0.00
+
+ 49.  cohere/north-mini-code:free                           Cohere: North Mini Code (free)              256k  $   0.00  $    0.00
+
+ 50.  mistralai/mistral-nemo                                Mistral: Mistral Nemo                       131k  $   0.02  $    0.03
+
+IDs only (for copy-paste, same provider-cluster order):
+openai/gpt-5.6-luna
+openai/gpt-oss-120b
+openai/gpt-5.6-terra
+openai/gpt-5.6-sol
+openai/gpt-5.6-luna-pro
+openai/gpt-5.4
+openai/gpt-4o-mini
+openai/gpt-5.5
+openai/gpt-5.4-nano
+openai/gpt-5-mini
+anthropic/claude-sonnet-5
+anthropic/claude-opus-5
+anthropic/claude-sonnet-4.6
+anthropic/claude-opus-4.8
+anthropic/claude-haiku-4.5
+anthropic/claude-fable-5
+anthropic/claude-opus-4.7
+anthropic/claude-opus-4.6
+google/gemini-3-flash-preview
+google/gemini-2.5-flash-lite
+google/gemini-3.1-flash-lite
+google/gemini-2.5-flash
+google/gemini-3.6-flash
+google/gemma-4-31b-it
+google/gemma-4-26b-a4b-it
+google/gemini-3.5-flash
+google/gemini-3.1-pro-preview
+google/gemini-3.5-flash-lite
+deepseek/deepseek-v4-flash
+deepseek/deepseek-v4-pro
+deepseek/deepseek-v4-flash-0731
+deepseek/deepseek-v3.2
+moonshotai/kimi-k3
+moonshotai/kimi-k2.5
+x-ai/grok-4.5
+nvidia/nemotron-3-ultra-550b-a55b:free
+nvidia/nemotron-3-super-120b-a12b:free
+minimax/minimax-m3
+minimax/minimax-m2.7
+xiaomi/mimo-v2.5
+xiaomi/mimo-v2.5-pro
+z-ai/glm-5.2
+tencent/hy3
+stepfun/step-3.7-flash
+inclusionai/ling-3.0-flash:free
+inclusionai/ling-2.6-flash
+poolside/laguna-s-2.1:free
+poolside/laguna-xs-2.1:free
+cohere/north-mini-code:free
+mistralai/mistral-nemo

@@ -1,4 +1,4 @@
-"""Integration test for run.py -- the mocked dry-run executes all 9 stages."""
+"""Integration test for run.py -- the mocked dry-run executes all 8 stages."""
 
 import dataclasses
 import json
@@ -11,7 +11,7 @@ from run import QUICK_MODELS, RunConfig
 
 def _quick_config(tmp_path, render_figures: bool = False) -> RunConfig:
     """Figures off by default: most tests re-run the pipeline repeatedly and
-    only the dedicated end-to-end test needs stage 9's matplotlib work."""
+    only the dedicated end-to-end test needs stage 8's matplotlib work."""
     return RunConfig(
         data_dir=tmp_path / "data",
         results_dir=tmp_path / "results",
@@ -33,7 +33,7 @@ def test_mock_client_dispatches_by_prompt():
     assert llm.call_count == 3
 
 
-@pytest.mark.parametrize("kind", ["self", "anonymous", "cross_named", "self_primed"])
+@pytest.mark.parametrize("kind", ["self", "self_primed"])
 def test_mock_client_recognises_the_real_forecast_prompts(kind):
     """Fed a hand-written marker instead of a real prompt, this test once passed
     while the mock's forecast branch was dead -- every dry-run forecast fell
@@ -45,16 +45,11 @@ def test_mock_client_recognises_the_real_forecast_prompts(kind):
 
     task = mock_tasks()[0]
     spec = config.model_by_id("qwen/qwen3-8b")
-    target = config.model_by_id("z-ai/glm-5")
     if kind == "self":
         prompt = forecasting.build_self_prompt(task, spec, "no_thinking")
-    elif kind == "self_primed":
+    else:
         prompt = forecasting.build_primed_self_messages(
             task, spec, "no_thinking", "I am Qwen3-8B.")[-1]["content"]
-    elif kind == "anonymous":
-        prompt = forecasting.build_cross_prompt(task, spec, "no_thinking")
-    else:
-        prompt = forecasting.build_cross_prompt(task, spec, "no_thinking", target=target)
 
     llm = run.MockLLMClient()
     assert "p_solve" in llm.complete("m", prompt).content
@@ -91,44 +86,40 @@ def test_dry_run_forecasts_never_need_the_fallback(tmp_path):
 # --------------------------------------------------------------------------
 # End-to-end dry-run
 # --------------------------------------------------------------------------
-def test_dry_run_executes_all_nine_stages(tmp_path):
+def test_dry_run_executes_all_eight_stages(tmp_path):
     summary = run.run(_quick_config(tmp_path, render_figures=True))
 
-    # all artifacts written
-    for name in ("tasks.json", "cross_predictor.json"):
-        assert (tmp_path / "data" / name).exists()
+    # all artifacts written (no cross-predictor designation in self-only pipeline)
+    assert (tmp_path / "data" / "tasks.json").exists()
     for name in ("scores.json", "analysis.json", "murphy.json", "run_summary.json"):
         assert (tmp_path / "results" / name).exists()
 
-    # stage 9: the flat headline plots/ set (RQ1-3 + the two Murphy figures)...
+    # stage 8: the flat headline plots/ set (RQ1-3 + Murphy figures)...
     plots_dir = tmp_path / "results" / "plots"
-    for name in ("rq1_wins_by_model", "rq2_wins_vs_solverate", "rq3_thinking_delta",
+    for name in ("rq1_loss_by_model", "rq2_loss_vs_solverate", "rq3_thinking_delta",
                  "murphy_decomposition", "reliability_diagrams"):
         assert (plots_dir / f"{name}.png").exists(), f"missing headline plot {name}"
-    # ...and the full figures/ set under primary__<cross_slug>/ (A1-A3, B1-B2, C1-C2)
-    cross_slug = json.loads(
-        (tmp_path / "data" / "cross_predictor.json").read_text())["cross_model"].replace("/", "__")
-    figures_dir = tmp_path / "results" / "figures" / f"primary__{cross_slug}"
-    assert len(list(figures_dir.glob("*.png"))) == 7
+    # ...and the full figures/ set (A2 + both C2 layouts) flat under figures/
+    figures_dir = tmp_path / "results" / "figures"
+    for name in ("a2_scaling", "c2_reliability_diagrams",
+                 "c2_reliability_diagrams_2x2_plus_1"):
+        assert (figures_dir / f"{name}.png").exists(), f"missing figure {name}"
 
-    # stage 8: murphy.json covers the binary dims with the exact CORP identity
+    # stage 7: murphy.json covers the binary dims with the exact CORP identity
     murphy = json.loads((tmp_path / "results" / "murphy.json").read_text())
     block = murphy["conditions"]["no_thinking"]["p_solve"]
     for entry in block["per_model"].values():
-        for kind in ("self", "cross"):
-            comp = entry[kind]
-            assert comp["brier"] == pytest.approx(
-                comp["reliability"] - comp["resolution"] + comp["uncertainty"], abs=1e-12)
+        assert entry["brier"] == pytest.approx(
+            entry["reliability"] - entry["resolution"] + entry["uncertainty"], abs=1e-12)
 
-    # summary carries each RQ's headline point estimate (wins-based, sec 15.6)
+    # summary carries each RQ's headline point estimate (loss-based, sec 15.6)
     assert summary["mode"] == "dry_run"
     assert summary["n_models"] == 5 and summary["n_tasks"] == 4
-    assert summary["n_iai_models"] == 4              # 5 models - 1 cross-predictor
-    for key in ("rq1_mean_wins", "rq2_spearman_rho_wins_vs_solve_rate", "rq3_delta_wins"):
+    for key in ("rq1_mean_loss", "rq2_spearman_rho_loss_vs_solve_rate", "rq3_delta_loss"):
         assert isinstance(summary[key], float)
 
     analysis = json.loads((tmp_path / "results" / "analysis.json").read_text())
-    for section in ("rq1_existence", "rq2_scaling", "rq3_elicitation",
+    for section in ("rq1_accuracy", "rq2_scaling", "rq3_elicitation",
                     "exploratory", "missingness", "solve_rates"):
         assert section in analysis
     # rq2 is descriptive (Spearman rho only); the inferential battery stays pruned
@@ -136,21 +127,18 @@ def test_dry_run_executes_all_nine_stages(tmp_path):
     assert "robustness" not in analysis
 
 
-def test_dry_run_designates_a_cross_predictor(tmp_path):
+def test_dry_run_scores_all_models(tmp_path):
     summary = run.run(_quick_config(tmp_path))
-    assert summary["cross_model"] in QUICK_MODELS
-    # the cross-predictor receives no wins score
     scores = json.loads((tmp_path / "results" / "scores.json").read_text())
-    assert summary["cross_model"] not in scores["wins"]["no_thinking"]
+    assert len(scores["scores"]["no_thinking"]) == summary["n_models"]
 
 
 def test_dry_run_is_resumable(tmp_path):
     cfg = _quick_config(tmp_path)
     first = run.run(cfg)
-    # second run re-reads every cache; designation and headline estimates are stable
+    # second run re-reads every cache; headline estimates are stable
     second = run.run(cfg)
-    assert first["cross_model"] == second["cross_model"]
-    assert first["rq1_mean_wins"] == pytest.approx(second["rq1_mean_wins"])
+    assert first["rq1_mean_loss"] == pytest.approx(second["rq1_mean_loss"])
     assert first["llm_accounting"]["calls"] > 0
     assert second["llm_accounting"]["calls"] == 0  # everything served from cache
 
@@ -215,9 +203,8 @@ def test_dry_run_with_high_parallelism_matches_serial(tmp_path, monkeypatch):
     p_scores = json.loads((parallel_dir / "results" / "scores.json").read_text())
 
     # Bit-for-bit identical outcomes -- mocked client is deterministic.
-    assert s_summary["rq1_mean_wins"] == pytest.approx(p_summary["rq1_mean_wins"])
-    assert s_summary["cross_model"] == p_summary["cross_model"]
-    assert s_scores["wins"] == p_scores["wins"]
+    assert s_summary["rq1_mean_loss"] == pytest.approx(p_summary["rq1_mean_loss"])
+    assert s_scores["scores"] == p_scores["scores"]
 
 
 def test_partial_cell_resume_completes_missing_rollouts(tmp_path):

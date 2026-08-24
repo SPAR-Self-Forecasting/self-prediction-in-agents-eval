@@ -1,21 +1,20 @@
-"""Experiment 1 entrypoint -- the 9-stage pipeline (EVAL_SPEC_V1.md sec 12.1).
+"""Experiment 1 entrypoint -- the 8-stage pipeline (EVAL_SPEC_V1.md sec 12.1).
 
     1. Dataset                -- select 30 SWE-bench Verified tasks (10/10/10).
     2. Rollouts               -- 12 x 30 x 8 mini-swe-agent rollouts.
     3. Ground truth           -- extract all 10 dimensions; dims 3-5 via 2 judges.
-    4. Cross-predictor        -- designate the highest-solve-rate model.
-    5. Forecasting            -- self + cross forecasts, two-stage extraction.
-    6. Scoring                -- wins-fraction loss-difference aggregation.
-    7. Analysis               -- descriptive readout (point estimates only; the
+    4. Forecasting            -- self forecasts for all models, two-stage extraction.
+    5. Scoring                -- self-forecast loss aggregation.
+    6. Analysis               -- descriptive readout (point estimates only; the
                                  inferential statistics tier is pruned for the MVP).
-    8. Murphy                 -- Brier decomposition of the binary dims
+    7. Murphy                 -- Brier decomposition of the binary dims
                                  (REL - RES + UNC; murphy.py) -> murphy.json.
-    9. Figures                -- every figure: the flat headline plots/ set
+    8. Figures                -- every figure: the flat headline plots/ set
                                  (make_plots.py) + the full figures/ set (plots.py).
 
 Every stage caches to ``data/`` at (model, task) granularity, so an interrupted
 run resumes by re-reading the cache. ``--dry-run`` swaps in the mocked LLM client
-and mocked rollouts: the full 9 stages run with no network, no Docker, no spend.
+and mocked rollouts: the full 8 stages run with no network, no Docker, no spend.
 """
 
 from __future__ import annotations
@@ -414,28 +413,7 @@ def stage_ground_truth(cfg: RunConfig, rollouts: dict, llm) -> dict:
 
 
 # --------------------------------------------------------------------------
-# Stage 4 -- cross-predictor designation
-# --------------------------------------------------------------------------
-def stage_designate(cfg: RunConfig, outcomes: dict) -> dict:
-    path = cfg.data_dir / "cross_predictor.json"
-    ranking = metrics.rank_models(outcomes, list(cfg.model_ids))
-    if path.exists():
-        info = _read_json(path)
-        if info.get("cross_model") == ranking[0]:
-            _log(f"stage 4 cross-predictor: {info['cross_model']} (cached)")
-            return info
-    info = {
-        "cross_model": ranking[0],
-        "ranking": ranking,
-        "solve_rates": {m: metrics.empirical_solve_rate(outcomes, m) for m in cfg.model_ids},
-    }
-    _write_json(path, info)
-    _log(f"stage 4 cross-predictor: {info['cross_model']} designated")
-    return info
-
-
-# --------------------------------------------------------------------------
-# Stage 5 -- forecasting
+# Stage 4 -- forecasting
 # --------------------------------------------------------------------------
 def _forecast_sample(cfg: RunConfig, llm, forecaster, task, kind: str, sample_idx: int) -> dict[str, Forecast]:
     """Elicit one sample (both conditions) of one kind for one (forecaster, task) cell."""
@@ -452,51 +430,26 @@ def _forecast_sample_path(cfg: RunConfig, kind: str, slug: str, task_id: str, sa
     """Sub-cell layout (multi-sample, sec 9.6): one file per sample, both conditions inside.
 
     ``forecasts/<kind>/<slug>/<task_id>/s<sample_idx>.json``.
-
-    The peer directory is ``forecasts/anonymous/``; it was ``forecasts/cross/``
-    before the kind was renamed. A pre-rename cache is not misread, it is simply
-    not found, so the sweep would re-elicit and re-bill it -- migrate with
-    ``mv data_real/forecasts/cross data_real/forecasts/anonymous``.
     """
     return cfg.data_dir / "forecasts" / kind / slug / task_id / f"s{sample_idx}.json"
 
 
-def stage_forecasting(cfg: RunConfig, tasks, llm, designation: dict) -> dict:
-    """Self forecasts (11 bottom models) + cross forecasts (the top model).
+def stage_forecasting(cfg: RunConfig, tasks, llm) -> dict:
+    """Self forecasts for every model in the battery.
 
     Parallel forecasting (Fix 3) + multi-sample (sec 9.6 amendment 2026-05-20):
-    N = ``config.N_FORECAST_SAMPLES`` independent samples per (forecaster, task,
-    kind) cell, computed across a ThreadPoolExecutor of ``cfg.max_workers``
-    threads. Sub-cell crash safety: each sample writes its own file
-    ``forecasts/<kind>/<slug>/<task_id>/s<sample_idx>.json`` atomically; resume
-    only re-runs the samples missing from disk. Both conditions live in one
-    sample file (they're elicited together per sample slot for efficiency --
-    the per-sample cost dominates the per-condition split).
-
-    Aggregation (Option A, sec 15.6): predictions are averaged across non-
-    broken samples in ``metrics.ScoringData``; loss is then computed once per
-    cell from the mean predictions. Sample variance feeds the per-dim
-    diagnostic (sec 15.7 multi-sample addendum).
+    N = ``config.N_FORECAST_SAMPLES`` independent samples per (forecaster, task)
+    cell, computed across a ThreadPoolExecutor of ``cfg.max_workers`` threads.
     """
-    cross_candidates = [designation["cross_model"]]
-
-    # 1. Enumerate every (forecaster, task, kind, sample_idx) unit, splitting cached vs work.
     work: list[tuple[str, "dataset.Task", str, int, Path]] = []
     for model in cfg.model_ids:
         slug = config.model_by_id(model).slug
-        kinds = []
-        if model not in cross_candidates:
-            kinds.append("self")
-        if model in cross_candidates:
-            kinds.append("anonymous")
-        for kind in kinds:
-            for task in tasks:
-                for sample_idx in range(config.N_FORECAST_SAMPLES):
-                    path = _forecast_sample_path(cfg, kind, slug, task.instance_id, sample_idx)
-                    if not path.exists():
-                        work.append((model, task, kind, sample_idx, path))
+        for task in tasks:
+            for sample_idx in range(config.N_FORECAST_SAMPLES):
+                path = _forecast_sample_path(cfg, "self", slug, task.instance_id, sample_idx)
+                if not path.exists():
+                    work.append((model, task, "self", sample_idx, path))
 
-    # 2. Run uncached units in parallel.
     def _elicit_and_write(unit) -> None:
         model, task, kind, sample_idx, path = unit
         forecaster = config.model_by_id(model)
@@ -506,9 +459,6 @@ def stage_forecasting(cfg: RunConfig, tasks, llm, designation: dict) -> dict:
     n_to_run = len(work)
     _parallel_fill(work, _elicit_and_write, cfg.max_workers)
 
-    # 3. Re-load every (forecaster, task, kind) cell into the return shape:
-    #    {model: {task_id: {condition: [Forecast_0, ..., Forecast_{N-1}]}}}.
-    #    Broken samples are kept (the aggregation in metrics.py decides what to do).
     def _read_samples(model: str, kind: str) -> dict:
         slug = config.model_by_id(model).slug
         out: dict[str, dict[str, list[Forecast]]] = {}
@@ -516,24 +466,23 @@ def stage_forecasting(cfg: RunConfig, tasks, llm, designation: dict) -> dict:
             per_condition: dict[str, list[Forecast]] = {c: [] for c in cfg.conditions}
             for sample_idx in range(config.N_FORECAST_SAMPLES):
                 path = _forecast_sample_path(cfg, kind, slug, task.instance_id, sample_idx)
-                if not path.exists():  # tolerate gaps (sample-level retention)
+                if not path.exists():
                     continue
                 for c, d in _read_json(path).items():
                     per_condition[c].append(Forecast.from_dict(d))
             out[task.instance_id] = per_condition
         return out
 
-    self_forecasts = {m: _read_samples(m, "self") for m in cfg.model_ids if m not in cross_candidates}
-    cross_forecasts = {m: _read_samples(m, "anonymous") for m in cross_candidates}
+    self_forecasts = {m: _read_samples(m, "self") for m in cfg.model_ids}
 
-    _log(f"stage 5 forecasting: {len(self_forecasts)} self + {len(cross_forecasts)} cross "
-         f"forecast sets ({n_to_run} sample-units run, rest from cache; "
+    _log(f"stage 4 forecasting: {len(self_forecasts)} self forecast sets "
+         f"({n_to_run} sample-units run, rest from cache; "
          f"{cfg.max_workers}x workers, N={config.N_FORECAST_SAMPLES} samples/cell)")
-    return {"self": self_forecasts, "cross": cross_forecasts}
+    return self_forecasts
 
 
 # --------------------------------------------------------------------------
-# Stage 6 -- scoring
+# Stage 5 -- scoring
 # --------------------------------------------------------------------------
 def _restricted_families(model_ids) -> dict[str, list[str]]:
     keep = set(model_ids)
@@ -541,82 +490,98 @@ def _restricted_families(model_ids) -> dict[str, list[str]]:
     return {f: v for f, v in out.items() if v}
 
 
-def _build_scoring_data(cfg: RunConfig, outcomes, self_forecasts, cross_forecasts,
-                        cross_model: str, task_ids: list[str]) -> metrics.ScoringData:
-    """Assemble a ScoringData for a given cross-predictor and its forecast set."""
-    cross_cells = cross_forecasts[cross_model]  # task_id -> {cond: list[Forecast]}
+def _build_scoring_data(cfg: RunConfig, outcomes, self_forecasts, task_ids: list[str]) -> metrics.ScoringData:
     return metrics.ScoringData(
         dimensions=config.DIMENSIONS,
         models=list(cfg.model_ids),
         families=_restricted_families(cfg.model_ids),
         tasks=list(task_ids),
-        cross_model=cross_model,
         outcomes=outcomes,
-        self_forecasts={m: self_forecasts[m] for m in self_forecasts},
-        cross_forecasts=cross_cells,
+        self_forecasts=self_forecasts,
     )
 
 
 def _score_dict(data: metrics.ScoringData, conditions) -> dict:
-    """The ``{wins, scores}`` pair for one ``ScoringData`` -- both conditions."""
-    return {
-        "wins": {cond: metrics.all_model_wins(data, cond) for cond in conditions},
-        "scores": {cond: metrics.all_model_scores(data, cond) for cond in conditions},
-    }
+    return {cond: metrics.all_model_scores(data, cond) for cond in conditions}
 
 
-def stage_scoring(cfg: RunConfig, outcomes, forecasts, designation: dict, task_ids):
-    """Build the ScoringData and the point scores -- wins-fraction (sec 15.6)."""
-    cross_model = designation["cross_model"]
-    data = _build_scoring_data(cfg, outcomes, forecasts["self"], forecasts["cross"],
-                               cross_model, task_ids)
+def stage_scoring_data(cfg: RunConfig, data: metrics.ScoringData) -> metrics.ScoringData:
+    """Write ``scores.json`` from an assembled ``ScoringData``."""
     _write_json(cfg.results_dir / "scores.json", {
-        "cross_model": cross_model,
-        **_score_dict(data, cfg.conditions),
+        "scores": _score_dict(data, cfg.conditions),
     })
-    _log("stage 6 scoring: wins-fraction computed")
+    _log("stage 5 scoring: self-forecast loss computed")
     return data
 
 
+def stage_scoring(cfg: RunConfig, outcomes, self_forecasts, task_ids):
+    """Build the ScoringData and per-model self-forecast scores."""
+    data = _build_scoring_data(cfg, outcomes, self_forecasts, task_ids)
+    return stage_scoring_data(cfg, data)
+
+
+def rescore_from_cache(cfg: RunConfig) -> dict:
+    """Re-run stages 5–8 from an existing ``data_dir`` cache (no API, no Docker).
+
+    Reads tasks, outcomes, and self forecasts from disk; writes fresh
+    ``results/{scores,analysis,murphy}.json`` and figures.
+    """
+    started = time.time()
+    cfg.results_dir.mkdir(parents=True, exist_ok=True)
+    _log(f"rescore-only: loading cache from {cfg.data_dir}")
+    data = murphy.load_scoring_data(cfg.data_dir)
+    n_tasks = len(data.tasks)
+    report = stage_analysis(cfg, stage_scoring_data(cfg, data))
+    stage_murphy(cfg, data)
+    if cfg.render_figures:
+        stage_figures(cfg)
+    summary = {
+        "mode": "rescore",
+        "n_models": report["rq1_accuracy"]["n_models"],
+        "n_tasks": n_tasks,
+        "rq1_mean_loss": report["rq1_accuracy"]["point_estimate"],
+        "rq2_spearman_rho_loss_vs_solve_rate": report["rq2_scaling"]["spearman_rho"],
+        "rq3_delta_loss": report["rq3_elicitation"]["point_estimate"],
+        "elapsed_seconds": round(time.time() - started, 1),
+    }
+    _write_json(cfg.results_dir / "run_summary.json", summary)
+    _log(f"rescore done in {summary['elapsed_seconds']}s -> {cfg.results_dir}")
+    return summary
+
+
 # --------------------------------------------------------------------------
-# Stage 7 -- analysis (descriptive readout; statistics tier pruned for the MVP)
+# Stage 6 -- analysis (descriptive readout; statistics tier pruned for the MVP)
 # --------------------------------------------------------------------------
 def stage_analysis(cfg: RunConfig, data: metrics.ScoringData) -> dict:
     report = analysis.run_full_analysis(data)
     _write_json(cfg.results_dir / "analysis.json", report)
-    rq1 = report["rq1_existence"]
-    _log(f"stage 7 analysis: mean wins = {rq1['point_estimate']:.4f} "
-         f"(null = {rq1['null']}); "
-         f"wins~capability Spearman rho = {report['rq2_scaling']['spearman_rho']:.3f}")
+    rq1 = report["rq1_accuracy"]
+    _log(f"stage 6 analysis: mean self loss = {rq1['point_estimate']:.4f}; "
+         f"loss~capability Spearman rho = {report['rq2_scaling']['spearman_rho']:.3f}")
     return report
 
 
 # --------------------------------------------------------------------------
-# Stage 8 -- Murphy decomposition (binary dims; downstream of scoring)
+# Stage 7 -- Murphy decomposition (binary dims; downstream of scoring)
 # --------------------------------------------------------------------------
 def stage_murphy(cfg: RunConfig, data: metrics.ScoringData) -> dict:
     report = murphy.murphy_report(data)
     _write_json(cfg.results_dir / "murphy.json", report)
     p_solve = report["conditions"]["no_thinking"].get("p_solve", {})
     mean = p_solve.get("mean_across_models", {})
-    s, c = mean.get("self", {}), mean.get("cross", {})
-    _log(f"stage 8 murphy: p_solve REL self {s.get('reliability', float('nan')):.3f} "
-         f"vs cross {c.get('reliability', float('nan')):.3f}; "
-         f"RES self {s.get('resolution', float('nan')):.3f} "
-         f"vs cross {c.get('resolution', float('nan')):.3f} -> murphy.json")
+    _log(f"stage 7 murphy: p_solve REL {mean.get('reliability', float('nan')):.3f}; "
+         f"RES {mean.get('resolution', float('nan')):.3f} -> murphy.json")
     return report
 
 
 # --------------------------------------------------------------------------
-# Stage 9 -- figures (headline plots/ + full figures/ sets)
+# Stage 8 -- figures (headline plots/ + full figures/ sets)
 # --------------------------------------------------------------------------
 def stage_figures(cfg: RunConfig) -> list[Path]:
     """Render every figure from the results just written to ``cfg.results_dir``.
 
-    Two sets: the flat headline ``plots/`` set (make_plots.py; RQ1-3 + the two
-    Murphy figures) and the full ``figures/primary__<cross>/`` set (plots.py;
-    A1-A3, B1-B2, C1-C2). Imported lazily so the compute stages never pay the
-    matplotlib/seaborn import cost.
+    Two sets: the flat headline ``plots/`` set (make_plots.py; RQ1-3 + Murphy)
+    and the full ``figures/`` set (plots.py; A1-A3, B1-B2, C1-C2).
     """
     import make_plots
     import plots
@@ -630,7 +595,7 @@ def stage_figures(cfg: RunConfig) -> list[Path]:
                             murphy=murphy_obj)
 
     written = headline + full
-    _log(f"stage 9 figures: {len(headline)} headline plot(s) -> plots/, "
+    _log(f"stage 8 figures: {len(headline)} headline plot(s) -> plots/, "
          f"{len(full)} figure(s) -> figures/")
     return written
 
@@ -646,7 +611,7 @@ def build_llm_client(cfg: RunConfig):
 
 
 def run(cfg: RunConfig) -> dict:
-    """Execute all 7 pipeline stages and return a run summary."""
+    """Execute all 8 pipeline stages and return a run summary."""
     started = time.time()
     cfg.data_dir.mkdir(parents=True, exist_ok=True)
     cfg.results_dir.mkdir(parents=True, exist_ok=True)
@@ -658,9 +623,8 @@ def run(cfg: RunConfig) -> dict:
     task_ids = [t.instance_id for t in tasks]
     rollouts = stage_rollouts(cfg, tasks)
     outcomes = stage_ground_truth(cfg, rollouts, llm)
-    designation = stage_designate(cfg, outcomes)
-    forecasts = stage_forecasting(cfg, tasks, llm, designation)
-    data = stage_scoring(cfg, outcomes, forecasts, designation, task_ids)
+    self_forecasts = stage_forecasting(cfg, tasks, llm)
+    data = stage_scoring(cfg, outcomes, self_forecasts, task_ids)
     report = stage_analysis(cfg, data)
     stage_murphy(cfg, data)
     if cfg.render_figures:
@@ -670,11 +634,9 @@ def run(cfg: RunConfig) -> dict:
         "mode": "dry_run" if cfg.dry_run else "real",
         "n_models": len(cfg.model_ids),
         "n_tasks": len(tasks),
-        "n_iai_models": len(cfg.model_ids) - 1,
-        "cross_model": designation["cross_model"],
-        "rq1_mean_wins": report["rq1_existence"]["point_estimate"],
-        "rq2_spearman_rho_wins_vs_solve_rate": report["rq2_scaling"]["spearman_rho"],
-        "rq3_delta_wins": report["rq3_elicitation"]["point_estimate"],
+        "rq1_mean_loss": report["rq1_accuracy"]["point_estimate"],
+        "rq2_spearman_rho_loss_vs_solve_rate": report["rq2_scaling"]["spearman_rho"],
+        "rq3_delta_loss": report["rq3_elicitation"]["point_estimate"],
         "llm_accounting": llm.accounting(),
         "elapsed_seconds": round(time.time() - started, 1),
     }
@@ -727,7 +689,10 @@ def main(argv: list[str] | None = None) -> int:
                              "containers ~= 2 * rollout_workers. Default 2 (~8 GB peak); "
                              "bump to 4 or 6 on a 16+ GB free-RAM machine.")
     parser.add_argument("--skip-figures", action="store_true",
-                        help="Skip stage 9 (figure rendering); compute-only run.")
+                        help="Skip stage 8 (figure rendering); compute-only run.")
+    parser.add_argument("--rescore-only", action="store_true",
+                        help="Re-score from an existing data_dir cache (stages 5–8 only; "
+                             "no rollouts, forecasting, or API calls).")
     parser.add_argument("--data-dir", default=None)
     parser.add_argument("--results-dir", default=None)
     args = parser.parse_args(argv)
@@ -741,7 +706,7 @@ def main(argv: list[str] | None = None) -> int:
             pass
 
     cfg = build_config(args)
-    summary = run(cfg)
+    summary = rescore_from_cache(cfg) if args.rescore_only else run(cfg)
     print(json.dumps(summary, indent=2, default=_json_default))
     return 0
 

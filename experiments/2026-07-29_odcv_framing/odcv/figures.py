@@ -1,8 +1,8 @@
 """Figures A1-A3, B1-B3, C1-C2 (spec §3 step 6c). One figure = one question.
 
 Style: dataviz-skill reference palette (validated); conditions keep a FIXED
-categorical assignment everywhere (self=blue, simulated_cross=orange,
-genuine_cross=aqua; ground truth = neutral ink); sequential single-hue for the
+categorical assignment everywhere (self=blue, simulated_cross=orange;
+ground truth = neutral ink); sequential single-hue for the
 A3 count heatmap; one axis per chart; recessive grid; selective direct labels.
 Every function takes plain data and a path -- no global state -- so the whole
 module smoke-tests offline.
@@ -21,12 +21,11 @@ from . import config, groundtruth
 # dataviz reference palette (validated instance; light mode)
 C_SELF = "#2a78d6"        # slot 1 blue
 C_SIM = "#eb6834"         # slot 2 orange
-C_GENUINE = "#1baf7a"     # slot 3 aqua
 C_TRUTH = "#52514e"       # neutral secondary ink -- ground truth is not a series
 C_GRID = "#d9d8d4"
 C_TEXT = "#0b0b0b"
-CONDITION_COLORS = {"self": C_SELF, "simulated_cross": C_SIM, "genuine_cross": C_GENUINE}
-CONDITION_LABELS = {"self": "self", "simulated_cross": "simulated-cross", "genuine_cross": "genuine-cross"}
+CONDITION_COLORS = {"self": C_SELF, "simulated_cross": C_SIM}
+CONDITION_LABELS = {"self": "self", "simulated_cross": "simulated-cross"}
 
 
 def _short(model_id: str) -> str:
@@ -50,41 +49,81 @@ def _save(fig, path):
     plt.close(fig)
 
 
-def _forest(per_model: dict, value_key: str, ci_key: str, title: str, xlabel: str,
-            path, pooled: dict | None = None, funnel_note: str = ""):
-    rows = [(m, d) for m, d in per_model.items() if value_key in d]
-    fig, ax = plt.subplots(figsize=(7, 0.45 * (len(rows) + 2) + 1.2))
+def _paired_framing(per_model: dict, title: str, path, pooled: dict | None = None,
+                    funnel_note: str = ""):
+    """Per-model dumbbell: self vs simulated-cross mean severity on one axis."""
+    rows = [
+        (spec.openrouter_id, per_model[spec.openrouter_id])
+        for spec in config.MODELS
+        if spec.openrouter_id in per_model and "mean_self" in per_model[spec.openrouter_id]
+    ]
+    n_rows = len(rows) + (1 if pooled and "mean_self" in pooled else 0)
+    fig, ax = plt.subplots(figsize=(7.5, 0.45 * n_rows + 1.6))
     ys = np.arange(len(rows), 0, -1)
+    cap = 4
+
+    def _point(val, lo, hi, y, color, marker):
+        ax.errorbar(
+            [val], [y],
+            xerr=[[val - lo], [hi - val]],
+            fmt=marker, color=color, ecolor=color, markerfacecolor=color,
+            capsize=cap, capthick=1.1, elinewidth=1.8, markersize=7, zorder=3,
+        )
+
+    xmax = 0.0
     for y, (m, d) in zip(ys, rows):
-        lo, hi = d[ci_key]
-        ax.plot([lo, hi], [y, y], color=C_SELF, linewidth=2, solid_capstyle="round")
-        ax.plot(d[value_key], y, "o", color=C_SELF, markersize=8)
-        star = " *" if d.get("significant") else ""
-        ax.annotate(f"{d[value_key]:+.2f}{star} (n={d['n']})", (hi, y),
-                    textcoords="offset points", xytext=(8, -3), fontsize=8, color=C_TEXT)
-    if pooled:
-        lo, hi = pooled["ci95_reported"]
-        ax.plot([lo, hi], [0, 0], color=C_TRUTH, linewidth=2, solid_capstyle="round")
-        ax.plot(pooled["mean_gap"], 0, "D", color=C_TRUTH, markersize=8)
-        ax.annotate("pooled (summary only)", (hi, 0), textcoords="offset points",
-                    xytext=(8, -3), fontsize=8, color=C_TRUTH)
-    ax.axvline(0, color=C_TRUTH, linewidth=1, linestyle="--", alpha=0.7)
-    ax.set_yticks(list(ys) + ([0] if pooled else []))
-    ax.set_yticklabels([_short(m) for m, _ in rows] + (["pooled"] if pooled else []))
-    _style(ax, title, xlabel=xlabel)
+        self_v, sim_v = d["mean_self"], d["mean_simulated_cross"]
+        self_lo, self_hi = d["ci95_self"]
+        sim_lo, sim_hi = d["ci95_simulated_cross"]
+        xmax = max(xmax, self_hi, sim_hi)
+        ax.plot([self_v, sim_v], [y, y], color=C_TRUTH, linewidth=1.2, alpha=0.45, zorder=1)
+        _point(self_v, self_lo, self_hi, y, C_SELF, "o")
+        _point(sim_v, sim_lo, sim_hi, y, C_SIM, "s")
+        gap = d["mean_gap"]
+        star = "*" if d.get("significant") else ""
+        ax.annotate(f"Δ={gap:+.2f}{star}", (max(self_hi, sim_hi), y),
+                    textcoords="offset points", xytext=(8, -3), fontsize=7.5, color=C_TEXT)
+
+    if pooled and "mean_self" in pooled:
+        self_v, sim_v = pooled["mean_self"], pooled["mean_simulated_cross"]
+        self_lo, self_hi = pooled["ci95_self"]
+        sim_lo, sim_hi = pooled["ci95_simulated_cross"]
+        xmax = max(xmax, self_hi, sim_hi)
+        ax.plot([self_v, sim_v], [0, 0], color=C_TRUTH, linewidth=1.2, alpha=0.45, zorder=1)
+        _point(self_v, self_lo, self_hi, 0, C_TRUTH, "o")
+        _point(sim_v, sim_lo, sim_hi, 0, C_TRUTH, "s")
+        ax.annotate("pooled (summary only)", (max(self_hi, sim_hi), 0),
+                    textcoords="offset points", xytext=(8, -3), fontsize=7.5, color=C_TRUTH)
+
+    ax.set_xlim(-0.05, xmax * 1.08 + 0.35)
+    ax.set_yticks(list(ys) + ([0] if pooled and "mean_self" in pooled else []))
+    ax.set_yticklabels([_short(m) for m, _ in rows]
+                       + (["pooled"] if pooled and "mean_self" in pooled else []))
+    handles = [
+        plt.Line2D([0], [0], marker="o", color=C_SELF, linestyle="None", markersize=7, label="self"),
+        plt.Line2D([0], [0], marker="s", color=C_SIM, linestyle="None", markersize=7,
+                   label="simulated-cross"),
+    ]
+    ax.legend(handles=handles, fontsize=8, frameon=False, loc="lower right")
+    _style(ax, title, xlabel="mean predicted severity (median over 5 samples per cell)")
+    note_parts = ["Error bars = 95% CI", "wild bootstrap, scenario-clustered"]
     if funnel_note:
-        ax.annotate(funnel_note, (0, -0.14), xycoords="axes fraction", fontsize=7, color=C_TRUTH)
+        note_parts.append(funnel_note)
+    ax.annotate("; ".join(note_parts), (0, -0.12), xycoords="axes fraction",
+                fontsize=7, color=C_TRUTH)
     _save(fig, path)
 
 
 # --------------------------------------------------------------------------
 def figure_a1(rq1: dict, path):
-    """THE HEADLINE: per-model framing gap forest, 95% CI, zero reference."""
-    _forest(rq1["per_model"], "mean_gap", "ci95",
-            f"A1 - Framing gap per model (simulated-cross - self) - {rq1['headline']}",
-            "mean severity gap (positive = self-framing understates)", path,
-            pooled=rq1.get("pooled"),
-            funnel_note="* = one-sided p<=0.05 after Benjamini-Hochberg across models; CI = wild bootstrap, scenario-clustered")
+    """THE HEADLINE: per-model self vs simulated-cross severity (paired dumbbell)."""
+    _paired_framing(
+        rq1["per_model"],
+        f"A1 - Mean predicted severity by framing - {rq1['headline']}",
+        path,
+        pooled=rq1.get("pooled"),
+        funnel_note="Δ = simulated-cross − self; * = one-sided p≤0.05 after Benjamini–Hochberg",
+    )
 
 
 def figure_a2(dist: dict, path):
@@ -134,12 +173,13 @@ def figure_b1(rq2: dict, path):
     """RQ2 binary accuracy per condition per model, vs ceiling + baseline."""
     models = [m.openrouter_id for m in config.MODELS]
     x = np.arange(len(models))
-    width = 0.26
+    width = 0.35
     fig, ax = plt.subplots(figsize=(9, 3.8))
-    for k, cond in enumerate(("self", "simulated_cross", "genuine_cross")):
+    for k, cond in enumerate(("self", "simulated_cross")):
         per = rq2["per_condition"][cond]["per_model"]
         vals = [per[m]["binary_accuracy"] if per[m]["binary_accuracy"] is not None else np.nan for m in models]
-        ax.bar(x + (k - 1) * width, vals, width=width * 0.92,
+        offset = (k - 0.5) * width
+        ax.bar(x + offset, vals, width=width * 0.92,
                color=CONDITION_COLORS[cond], edgecolor="white", linewidth=1,
                label=CONDITION_LABELS[cond])
     base = rq2["per_condition"]["self"]["per_model"]
@@ -154,7 +194,7 @@ def figure_b1(rq2: dict, path):
                     ha="right", va="bottom", fontsize=7.5, color=C_TRUTH)
     ax.set_xticks(x); ax.set_xticklabels([_short(m) for m in models], rotation=30, ha="right")
     ax.set_ylim(0, 1.12)
-    ax.legend(fontsize=8, frameon=False, ncols=3, loc="upper left")
+    ax.legend(fontsize=8, frameon=False, ncols=2, loc="upper left")
     _style(ax, "B1 - Binary accuracy (all cells with ground truth) vs ceiling and per-model constant baseline (black tick)",
            ylabel="agreement on crossing >=3")
     _save(fig, path)
@@ -162,7 +202,7 @@ def figure_b1(rq2: dict, path):
 
 def figure_b2(rq2: dict, path):
     """The directional asymmetry: FN vs FP counts per condition (D25)."""
-    conds = ("self", "simulated_cross", "genuine_cross")
+    conds = ("self", "simulated_cross")
     x = np.arange(len(conds))
     fn = [rq2["per_condition"][c]["confusion"]["fn"] for c in conds]
     fp = [rq2["per_condition"][c]["confusion"]["fp"] for c in conds]
@@ -181,14 +221,6 @@ def figure_b2(rq2: dict, path):
     _style(ax, "B2 - Error asymmetry per condition: the hypothesis predicts MORE FN under self-framing",
            ylabel="error count (all cells with ground truth)")
     _save(fig, path)
-
-
-def figure_b3(rq3: dict, path):
-    """RQ3 forest: self-projection vs the scenario-only baseline."""
-    _forest(rq3["per_model"], "mean_advantage", "ci95",
-            "B3 - accuracy(simulated-cross) - accuracy(genuine-cross) per model",
-            "paired accuracy advantage (positive = M's answer carries self-information)", path,
-            funnel_note="baseline is target-blind (D28); contrast also absorbs capability differences")
 
 
 def figure_c1(exploratory: dict, path):
@@ -235,7 +267,7 @@ def figure_d1(cal: dict, path):
     fig, ax = plt.subplots(figsize=(6, 4.6))
     ax.plot([0, 1], [0, 1], color=C_TRUTH, linewidth=1, linestyle="--", alpha=0.7)
     ax.annotate("perfect calibration", (0.62, 0.56), rotation=38, fontsize=7.5, color=C_TRUTH)
-    for k, cond in enumerate(("self", "simulated_cross", "genuine_cross")):
+    for k, cond in enumerate(("self", "simulated_cross")):
         rel = cal[cond]["reliability"]
         xs = [float(b) for b in rel]
         ys = [rel[b]["observed_violation_rate"] for b in rel]
@@ -262,7 +294,7 @@ def figure_d2(cal: dict, path):
     models = [m.openrouter_id for m in config.MODELS]
     fig, ax = plt.subplots(figsize=(7, 0.42 * (len(models) + 2) + 1.0))
     ys = np.arange(len(models), 0, -1)
-    for cond in ("self", "simulated_cross", "genuine_cross"):
+    for cond in ("self", "simulated_cross"):
         per = cal[cond]["per_model_auc"]
         vals = [per[m] for m in models]
         ax.plot(vals, ys, "o", color=CONDITION_COLORS[cond], markersize=8,
@@ -281,7 +313,7 @@ def figure_d2(cal: dict, path):
 
 # --------------------------------------------------------------------------
 def render_all(analysis_result: dict, cells: dict, out_dir=None) -> list:
-    """Render the eight figures from a run_full_analysis() result + cells."""
+    """Render figures from a run_full_analysis() result + cells."""
     from .analysis import _cell_value  # local import to avoid a cycle
 
     out_dir = out_dir or config.FIGURES_DIR
@@ -309,7 +341,6 @@ def render_all(analysis_result: dict, cells: dict, out_dir=None) -> list:
         ("figure_a3.png", figure_a3, (pairs,)),
         ("figure_b1.png", figure_b1, (analysis_result["rq2"],)),
         ("figure_b2.png", figure_b2, (analysis_result["rq2"],)),
-        ("figure_b3.png", figure_b3, (analysis_result["rq3"],)),
         ("figure_c1.png", figure_c1, (analysis_result["exploratory"],)),
         ("figure_c2.png", figure_c2, (analysis_result["layer0"],)),
     ) + (

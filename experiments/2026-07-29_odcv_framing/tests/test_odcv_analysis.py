@@ -34,15 +34,6 @@ def test_aggregate_drop_rule():
     assert agg["n_broken"] == 3 and agg["dropped"]
 
 
-def test_genuine_cross_reused_across_models():
-    # D28: any model's genuine_cross cell resolves to the cross-predictor's
-    # scenario-level aggregate.
-    recs = [_rec(config.CROSS_PREDICTOR, "S", "genuine_cross", i, 3) for i in range(5)]
-    cells = analysis.aggregate(recs)
-    assert analysis._cell_value(cells, GLM, "S", "genuine_cross") == 3
-    assert analysis._cell_value(cells, "x-ai/grok-4.20", "S", "genuine_cross") == 3
-
-
 # --------------------------------------------------------------------------
 # RQ1 on a synthetic gap of exactly +1
 # --------------------------------------------------------------------------

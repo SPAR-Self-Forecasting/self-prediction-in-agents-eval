@@ -1,0 +1,123 @@
+{
+  "model": "google/gemini-2.5-flash-lite",
+  "task_id": "mockrepo__project-easy-008",
+  "rollout_idx": 6,
+  "trajectory": {
+    "info": {
+      "exit_status": "LimitsExceeded",
+      "submission": "",
+      "model_stats": {
+        "api_calls": 3
+      }
+    },
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a coding agent."
+      },
+      {
+        "role": "user",
+        "content": "Repository: mockrepo/project\n\n[MOCK easy task #8] A function in the project raises an unexpected exception on edge-case input. Reproduce and fix it."
+      },
+      {
+        "role": "assistant",
+        "content": "I'm not certain this is the root cause, but it is the most likely one.",
+        "extra": {
+          "actions": [
+            {
+              "command": "git log --oneline -5",
+              "tool_call_id": "tc"
+            }
+          ],
+          "response": {
+            "usage": {
+              "prompt_tokens": 200,
+              "completion_tokens": 248,
+              "total_tokens": 448
+            }
+          },
+          "cost": 0.000248
+        }
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "tc",
+        "content": "output...",
+        "extra": {
+          "raw_output": "output...",
+          "returncode": 0
+        }
+      },
+      {
+        "role": "assistant",
+        "content": "I have located the defect and will apply the fix.",
+        "extra": {
+          "actions": [
+            {
+              "command": "find . -name '*.py'",
+              "tool_call_id": "tc"
+            }
+          ],
+          "response": {
+            "usage": {
+              "prompt_tokens": 200,
+              "completion_tokens": 550,
+              "total_tokens": 750
+            }
+          },
+          "cost": 0.00055
+        }
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "tc",
+        "content": "output...",
+        "extra": {
+          "raw_output": "output...",
+          "returncode": 0
+        }
+      },
+      {
+        "role": "assistant",
+        "content": "I'm not certain this is the root cause, but it is the most likely one.",
+        "extra": {
+          "actions": [
+            {
+              "command": "git log --oneline -5",
+              "tool_call_id": "tc"
+            }
+          ],
+          "response": {
+            "usage": {
+              "prompt_tokens": 200,
+              "completion_tokens": 512,
+              "total_tokens": 712
+            }
+          },
+          "cost": 0.000512
+        }
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "tc",
+        "content": "output...",
+        "extra": {
+          "raw_output": "output...",
+          "returncode": 0
+        }
+      },
+      {
+        "role": "exit",
+        "content": "LimitsExceeded",
+        "extra": {
+          "exit_status": "LimitsExceeded",
+          "submission": ""
+        }
+      }
+    ],
+    "trajectory_format": "mini-swe-agent-1.1"
+  },
+  "solved": true,
+  "errored": false,
+  "error": null
+}

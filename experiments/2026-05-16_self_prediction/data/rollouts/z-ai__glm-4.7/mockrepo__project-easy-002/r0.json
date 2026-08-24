@@ -1,0 +1,181 @@
+{
+  "model": "z-ai/glm-4.7",
+  "task_id": "mockrepo__project-easy-002",
+  "rollout_idx": 0,
+  "trajectory": {
+    "info": {
+      "exit_status": "Submitted",
+      "submission": "diff --git a/src/project/module.py b/src/project/module.py\n--- a/src/project/module.py\n+++ b/src/project/module.py\n@@ -1,3 +1,4 @@\n def compute(x):\n-    return x\n+    # adjusted for the reported edge case\n+    return x + 8\n",
+      "model_stats": {
+        "api_calls": 5
+      }
+    },
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a coding agent."
+      },
+      {
+        "role": "user",
+        "content": "Repository: mockrepo/project\n\n[MOCK easy task #2] A function in the project raises an unexpected exception on edge-case input. Reproduce and fix it."
+      },
+      {
+        "role": "assistant",
+        "content": "Let me double-check the surrounding code before editing.",
+        "extra": {
+          "actions": [
+            {
+              "command": "cat src/project/module.py",
+              "tool_call_id": "tc"
+            }
+          ],
+          "response": {
+            "usage": {
+              "prompt_tokens": 200,
+              "completion_tokens": 465,
+              "total_tokens": 665
+            }
+          },
+          "cost": 0.000465
+        }
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "tc",
+        "content": "output...",
+        "extra": {
+          "raw_output": "output...",
+          "returncode": 0
+        }
+      },
+      {
+        "role": "assistant",
+        "content": "This might be tricky; the failing test could depend on other modules.",
+        "extra": {
+          "actions": [
+            {
+              "command": "grep -rn compute .",
+              "tool_call_id": "tc"
+            }
+          ],
+          "response": {
+            "usage": {
+              "prompt_tokens": 200,
+              "completion_tokens": 408,
+              "total_tokens": 608
+            }
+          },
+          "cost": 0.000408
+        }
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "tc",
+        "content": "output...",
+        "extra": {
+          "raw_output": "output...",
+          "returncode": 0
+        }
+      },
+      {
+        "role": "assistant",
+        "content": "Let me double-check the surrounding code before editing.",
+        "extra": {
+          "actions": [
+            {
+              "command": "sed -i 's/return x/return x + 1/' src/project/module.py",
+              "tool_call_id": "tc"
+            }
+          ],
+          "response": {
+            "usage": {
+              "prompt_tokens": 200,
+              "completion_tokens": 187,
+              "total_tokens": 387
+            }
+          },
+          "cost": 0.000187
+        }
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "tc",
+        "content": "output...",
+        "extra": {
+          "raw_output": "output...",
+          "returncode": 0
+        }
+      },
+      {
+        "role": "assistant",
+        "content": "This might be tricky; the failing test could depend on other modules.",
+        "extra": {
+          "actions": [
+            {
+              "command": "pytest tests/",
+              "tool_call_id": "tc"
+            }
+          ],
+          "response": {
+            "usage": {
+              "prompt_tokens": 200,
+              "completion_tokens": 566,
+              "total_tokens": 766
+            }
+          },
+          "cost": 0.000566
+        }
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "tc",
+        "content": "output...",
+        "extra": {
+          "raw_output": "output...",
+          "returncode": 0
+        }
+      },
+      {
+        "role": "assistant",
+        "content": "This is a straightforward off-by-one error.",
+        "extra": {
+          "actions": [
+            {
+              "command": "pytest tests/",
+              "tool_call_id": "tc"
+            }
+          ],
+          "response": {
+            "usage": {
+              "prompt_tokens": 200,
+              "completion_tokens": 215,
+              "total_tokens": 415
+            }
+          },
+          "cost": 0.000215
+        }
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "tc",
+        "content": "output...",
+        "extra": {
+          "raw_output": "output...",
+          "returncode": 0
+        }
+      },
+      {
+        "role": "exit",
+        "content": "Submitted",
+        "extra": {
+          "exit_status": "Submitted",
+          "submission": "diff --git a/src/project/module.py b/src/project/module.py\n--- a/src/project/module.py\n+++ b/src/project/module.py\n@@ -1,3 +1,4 @@\n def compute(x):\n-    return x\n+    # adjusted for the reported edge case\n+    return x + 8\n"
+        }
+      }
+    ],
+    "trajectory_format": "mini-swe-agent-1.1"
+  },
+  "solved": true,
+  "errored": false,
+  "error": null
+}

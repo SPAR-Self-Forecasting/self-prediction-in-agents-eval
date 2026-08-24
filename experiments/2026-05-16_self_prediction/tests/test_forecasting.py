@@ -1,4 +1,4 @@
-"""Tests for forecasting.py -- self/cross forecast prompts and elicitation (sec 4, 5)."""
+"""Tests for forecasting.py -- self forecast prompts and elicitation (sec 4)."""
 
 import importlib.util
 import json
@@ -40,6 +40,18 @@ class FakeLLM:
         return type("R", (), {"content": self.contents.pop(0)})()
 
 
+class FakeChatLLM(FakeLLM):
+    """FakeLLM plus the multi-turn entry point the primed self-forecast uses."""
+
+    def __init__(self, contents):
+        super().__init__(contents)
+        self.chats = []
+
+    def chat(self, model, messages, **kwargs):
+        self.chats.append({"model": model, "messages": messages, "kwargs": kwargs})
+        return type("R", (), {"content": self.contents.pop(0)})()
+
+
 # --------------------------------------------------------------------------
 # Prompt construction
 # --------------------------------------------------------------------------
@@ -67,37 +79,25 @@ def test_self_prompt_hybrid_identical_across_conditions():
     assert a == b
 
 
-def test_cross_prompt_is_anonymous():
-    prompt = forecasting.build_cross_prompt(TASK, QWEN8B, "no_thinking")
-    assert "An AI coding agent" in prompt
-    # the target model is never named in the cross prompt (sec 5)
-    assert QWEN8B.name not in prompt
-    assert QWEN8B.openrouter_id not in prompt
-
-
 # --------------------------------------------------------------------------
 # Agent scaffold in the forecast prompt
 # --------------------------------------------------------------------------
-def test_prompts_include_agent_system_prompt_and_instructions():
-    # Both forecast kinds must show the verbatim scaffold: the system prompt, the
-    # task message, and the stated rules the n_constraint_violations dim scores.
+def test_self_prompt_includes_agent_system_prompt_and_instructions():
     markers = [
         "You are a helpful assistant that can interact with a computer shell",
         "DO NOT MODIFY: Tests, configuration files",
         "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT",
         "Do NOT commit your changes.",
     ]
-    for build in (forecasting.build_self_prompt, forecasting.build_cross_prompt):
-        prompt = build(TASK, QWEN8B, "no_thinking")
-        for marker in markers:
-            assert marker in prompt
-        # the real task is substituted into the scaffold's {{task}} slot
-        assert TASK.problem_statement in prompt
-        assert "{{TASK}}" not in prompt and "{{task}}" not in prompt
+    prompt = forecasting.build_self_prompt(TASK, QWEN8B, "no_thinking")
+    for marker in markers:
+        assert marker in prompt
+    assert TASK.problem_statement in prompt
+    assert "{{TASK}}" not in prompt and "{{task}}" not in prompt
 
 
 def test_scaffold_does_not_name_executor_model():
-    # The yaml's default model_name must not leak into the (anonymous) scaffold.
+    # The yaml's default model_name must not leak into the scaffold.
     scaffold = forecasting.build_agent_scaffold(TASK)
     assert "claude" not in scaffold.lower()
     assert "model_name" not in scaffold
@@ -136,7 +136,7 @@ def test_value_validator_clamps_probabilities_and_counts():
 
 
 # --------------------------------------------------------------------------
-# elicit_forecast
+# elicit_forecast -- self
 # --------------------------------------------------------------------------
 def test_elicit_self_forecast_happy_path():
     llm = FakeLLM([_good_forecast_json()])
@@ -159,20 +159,6 @@ def test_elicit_non_reasoning_model_sends_no_reasoning_param():
     llm = FakeLLM([_good_forecast_json()])
     forecasting.elicit_forecast(llm, QWEN_CODER, TASK, "thinking", "self")
     assert llm.calls[0]["kwargs"].get("reasoning") is None
-
-
-def test_elicit_anonymous_forecast():
-    llm = FakeLLM([_good_forecast_json()])
-    fc = forecasting.elicit_forecast(llm, QWEN8B, TASK, "no_thinking", "anonymous")
-    assert fc.kind == "anonymous"
-    assert "An AI coding agent" in llm.calls[0]["prompt"]
-
-
-def test_the_retired_cross_kind_is_rejected():
-    """"cross" once meant anonymous; it must not quietly resolve to either kind."""
-    llm = FakeLLM([_good_forecast_json()])
-    with pytest.raises(ValueError, match="kind"):
-        forecasting.elicit_forecast(llm, QWEN8B, TASK, "no_thinking", "cross")
 
 
 def test_elicit_broken_forecast_flagged():
@@ -215,84 +201,6 @@ def test_elicit_rejects_bad_kind():
     llm = FakeLLM([_good_forecast_json()])
     with pytest.raises(ValueError):
         forecasting.elicit_forecast(llm, QWEN8B, TASK, "no_thinking", "sideways")
-
-
-# --------------------------------------------------------------------------
-# Named cross forecast (the target is told to the peer)
-# --------------------------------------------------------------------------
-GLM5 = config.model_by_id("z-ai/glm-5")     # the designated cross-predictor
-
-
-class FakeChatLLM(FakeLLM):
-    """FakeLLM plus the multi-turn entry point the primed self-forecast uses."""
-
-    def __init__(self, contents):
-        super().__init__(contents)
-        self.chats = []
-
-    def chat(self, model, messages, **kwargs):
-        self.chats.append({"model": model, "messages": messages, "kwargs": kwargs})
-        return type("R", (), {"content": self.contents.pop(0)})()
-
-
-def test_named_cross_prompt_names_the_target():
-    prompt = forecasting.build_cross_prompt(TASK, GLM5, "no_thinking", target=QWEN8B)
-    assert QWEN8B.name in prompt
-    assert "{{MODEL}}" not in prompt
-
-
-def test_named_cross_prompt_names_the_target_not_the_forecaster():
-    """The subject is who is being predicted, never who is doing the predicting."""
-    prompt = forecasting.build_cross_prompt(TASK, GLM5, "no_thinking", target=QWEN8B)
-    assert GLM5.name not in prompt
-
-
-def test_anonymous_prompt_survives_the_named_edit():
-    """The RQ1 baseline must stay runnable after cross_forecast.txt was renamed."""
-    prompt = forecasting.build_cross_prompt(TASK, GLM5, "no_thinking")
-    assert "An AI coding agent" in prompt
-    assert QWEN8B.name not in prompt
-    assert "{{MODEL}}" not in prompt
-
-
-def test_both_cross_variants_ask_for_every_dimension():
-    """Naming the target must not have quietly dropped part of the battery."""
-    for target in (None, QWEN8B):
-        prompt = forecasting.build_cross_prompt(TASK, GLM5, "no_thinking", target=target)
-        for dim in config.DIMENSION_NAMES:
-            assert dim in prompt, (target, dim)
-        assert TASK.problem_statement in prompt
-        assert "{{AGENT_SCAFFOLD}}" not in prompt
-
-
-def test_named_and_anonymous_cross_prompts_actually_differ():
-    anon = forecasting.build_cross_prompt(TASK, GLM5, "no_thinking")
-    named = forecasting.build_cross_prompt(TASK, GLM5, "no_thinking", target=QWEN8B)
-    assert anon != named
-
-
-def test_elicit_cross_named_records_the_target():
-    llm = FakeLLM([_good_forecast_json()])
-    fc = forecasting.elicit_forecast(
-        llm, GLM5, TASK, "no_thinking", "cross_named", target=QWEN8B)
-    assert fc.kind == "cross_named"
-    assert fc.model == GLM5.openrouter_id        # forecaster
-    assert fc.target == QWEN8B.openrouter_id     # subject
-    assert QWEN8B.name in llm.calls[0]["prompt"]
-
-
-def test_cross_named_without_a_target_is_a_loud_failure():
-    """Silently falling back to anonymous would mislabel the estimand."""
-    llm = FakeLLM([_good_forecast_json()])
-    with pytest.raises(ValueError, match="target"):
-        forecasting.elicit_forecast(llm, GLM5, TASK, "no_thinking", "cross_named")
-
-
-def test_anonymous_forecast_refuses_a_target():
-    llm = FakeLLM([_good_forecast_json()])
-    with pytest.raises(ValueError, match="target"):
-        forecasting.elicit_forecast(
-            llm, GLM5, TASK, "no_thinking", "anonymous", target=QWEN8B)
 
 
 # --------------------------------------------------------------------------
@@ -359,4 +267,3 @@ def test_unprimed_self_forecast_carries_no_identity_reply():
     llm = FakeLLM([_good_forecast_json()])
     fc = forecasting.elicit_forecast(llm, QWEN8B, TASK, "no_thinking", "self")
     assert fc.identity_reply is None
-    assert fc.target is None

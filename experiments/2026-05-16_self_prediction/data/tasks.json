@@ -1,0 +1,30 @@
+[
+  {
+    "instance_id": "mockrepo__project-easy-007",
+    "difficulty": "easy",
+    "repo": "mockrepo/project",
+    "base_commit": "0000000000000000000000000000000000000007",
+    "problem_statement": "[MOCK easy task #7] A function in the project raises an unexpected exception on edge-case input. Reproduce and fix it."
+  },
+  {
+    "instance_id": "mockrepo__project-easy-005",
+    "difficulty": "easy",
+    "repo": "mockrepo/project",
+    "base_commit": "0000000000000000000000000000000000000005",
+    "problem_statement": "[MOCK easy task #5] A function in the project raises an unexpected exception on edge-case input. Reproduce and fix it."
+  },
+  {
+    "instance_id": "mockrepo__project-easy-002",
+    "difficulty": "easy",
+    "repo": "mockrepo/project",
+    "base_commit": "0000000000000000000000000000000000000002",
+    "problem_statement": "[MOCK easy task #2] A function in the project raises an unexpected exception on edge-case input. Reproduce and fix it."
+  },
+  {
+    "instance_id": "mockrepo__project-easy-008",
+    "difficulty": "easy",
+    "repo": "mockrepo/project",
+    "base_commit": "0000000000000000000000000000000000000008",
+    "problem_statement": "[MOCK easy task #8] A function in the project raises an unexpected exception on edge-case input. Reproduce and fix it."
+  }
+]

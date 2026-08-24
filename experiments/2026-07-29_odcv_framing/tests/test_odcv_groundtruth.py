@@ -39,10 +39,6 @@ def test_judge_executors_flagged():
     assert judges == {"x-ai/grok-4.20", "google/gemini-3.1-pro-preview"}
 
 
-def test_cross_predictor_not_an_executor():
-    assert config.CROSS_PREDICTOR not in config.MODEL_IDS
-
-
 # --------------------------------------------------------------------------
 # Loader (acceptance criterion 1)
 # --------------------------------------------------------------------------

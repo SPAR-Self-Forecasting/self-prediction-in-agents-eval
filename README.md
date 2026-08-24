@@ -3,11 +3,10 @@
 Can a language model predict its own behavior — and should anyone believe it when
 it tries?
 
-Two experiments here attack that question from opposite ends. The first asks
-whether models have an **introspective advantage**: can a model forecast its own
-conduct better than a strong peer forecasts it? The second asks
-what happens to those self-reports when the subject is **misbehavior** rather than
-coding ability.
+Two experiments here attack that question from opposite ends. The first measures
+how accurately models **forecast their own coding behavior** on SWE-bench. The
+second asks what happens to those self-reports when the subject is **misbehavior**
+rather than coding ability.
 
 Both are complete, with committed results, figures, and full writeups.
 
@@ -16,7 +15,7 @@ Both are complete, with committed results, figures, and full writeups.
 | **Question** | Do models know their own coding behavior? | Do models report their own propensity to violate constraints? |
 | **Setting** | 30 SWE-bench Verified tasks | 40 ODCV-Bench constraint-conflict scenarios |
 | **Subjects** | 12 open-weight models, 2,880 Docker rollouts | 9 models, 358 previously-recorded behavioral cells |
-| **Headline** | No aggregate advantage (49.2% vs. 50% chance), but it tracks capability | All 9 models rate themselves safer than an identical anonymous agent — 357 of 358 cells |
+| **Headline** | Self-forecasts miscalibrated on `p_solve` (Brier ≈ 0.49); accuracy tracks capability (ρ ≈ −0.81) | All 9 models rate themselves safer than an identical anonymous agent — 357 of 358 cells |
 | **Spend** | ~$5.57 pipeline LLM cost | ~$28 total |
 | **Report** | [`REPORT.md`](experiments/2026-05-16_self_prediction/REPORT.md) | [`REPORT.md`](experiments/2026-07-29_odcv_framing/REPORT.md) |
 
@@ -24,32 +23,29 @@ Both are complete, with committed results, figures, and full writeups.
 
 ## The shared idea
 
-Both experiments use the same trick to make "self-knowledge" measurable rather
-than rhetorical: **compare a model's self-report against an anonymous peer's
-report about the same thing.**
-
-The peer is never told *which* model it is describing. So anything the
-self-report adds over the peer's must come from private information the outside
-view cannot have. 
+Both experiments elicit **self-reports** under controlled prompts and score them
+against recorded behavior. Experiment 2 additionally contrasts self-framing with
+an anonymous peer framing; Experiment 1 scores self-forecasts directly against
+rollout ground truth.
 
 ## Experiment 1 — the introspection battery
 
 Twelve models each attempted 30 SWE-bench Verified tasks, 8 rollouts apiece, via
-`mini-swe-agent` in Docker. Every model forecast its own behavior across 10
+`mini-swe-agent` in Docker. Eleven models forecast their own behavior across 10
 dimensions (solve probability, documentation, defensive coding, hedging, step
-counts, and so on); the strongest model, GLM-5, forecast an unnamed agent on the
-same tasks. Scoring is cell-by-cell: whose forecast was closer?
+counts, and so on); scoring is per-cell loss (Brier for binary dims, MAE for
+continuous).
 
-The four most capable models all beat
-the peer at predicting themselves (up to 61.3%); the six weakest all lose to it.
+Headline findings from the real run:
 
-Two findings survive scrutiny better than the headline:
+**Severe overconfidence on task success.** Mean Brier on `p_solve` ≈ 0.49 — worse
+than always guessing 0.5 (0.25).
 
-**Self-knowledge lives in style, not capability.** Models beat the outside view on
-*stylistic* propensities — whether they write defensive code, whether they hedge —
-and lose outright on whether they will actually solve the task. Knowing the task
-tells you more about success than the agent's self-model adds, and the self-model
-is actively biased toward overconfidence.
+**Better models self-predict more accurately.** Spearman ρ ≈ −0.81 between mean
+self loss and empirical solve rate (descriptive).
+
+**Error is miscalibration, not blindness.** Murphy decomposition: reliability
+(REL ≈ 0.37) dwarfs resolution (RES ≈ 0.04) on `p_solve`.
 
 ### Sidebar — calibration vs. discrimination
 
@@ -89,19 +85,17 @@ Worked through with the study's own numbers, self-forecasts on `p_solve`:
 the reliability term. Resolution of 0.035 against a 0.160 ceiling means the
 forecasts barely order tasks at all.
 
-That is what makes "why did self lose to the peer?" an answerable question rather
-than a shrug: it becomes *is the model miscalibrated about itself, or blind to
-task-to-task variation?* Experiment 1 estimates the split with CORP (isotonic/PAV
+That is what makes "what drives forecast error?" an answerable question rather
+than a shrug: it becomes *is the model miscalibrated, or blind to task-to-task
+variation?* Experiment 1 estimates the split with CORP (isotonic/PAV
 recalibration; Dimitriadis et al. 2021), which is bin-free and makes the identity
 exact with non-negative components.
 
 **The error is miscalibration, not blindness.** Reliability dwarfs resolution on
-every binary dimension, for the peer predictor as much as for the self-forecasters
-— overconfidence about coding agents is not specific to introspection. Models are
-so overconfident on `p_solve` (mean Brier 0.492) that they lose to a constant 0.5
-guess. Recalibration would recover about 75% of that error (0.492 → ~0.125), but
-it cannot buy discrimination: mean resolution never exceeds 0.062 on any dimension
-for either side. Discrimination, not calibration, is the binding research problem.
+every binary dimension — models are so overconfident on `p_solve` (mean Brier
+≈ 0.49) that they lose to a constant 0.5 guess. Recalibration would recover much
+of that error, but discrimination remains low: mean resolution never exceeds ~0.06
+on `p_solve`. Discrimination, not calibration, is the binding research problem.
 
 ## Experiment 2 — the framing gap
 

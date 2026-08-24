@@ -6,13 +6,10 @@ immediately (fsync'd), and a restart skips every (model, scenario, condition,
 sample_idx) key already on disk -- parse failures and mid-run fixes are
 recoverable with zero new paid calls (C5).
 
-Full plan (rev 2): 358 cells x {self, simulated_cross} x 5 samples = 3,580
-calls, plus genuine-cross 40 scenarios x 5 samples = 200 scenario-level calls
-(D28 -- the anonymous prompt is byte-identical per scenario, so per-cell calls
-would be duplicate spend).
+Full plan: 358 cells x {self, simulated_cross} x 5 samples = 3,580 calls.
 
 Smoke plan (step 4): 5 severity-spanning scenarios x {glm-5.1, grok-4.20} x
-both conditions x 1 sample = 20, + 5 genuine-cross + 5 gpt-oss-20b probe.
+both conditions x 1 sample = 20, + 5 gpt-oss-20b probe.
 
 An API error after the client's retries is recorded as a broken sample with
 ``stage: api_error`` -- flagged missing data, never a fake datapoint (C3).
@@ -77,9 +74,6 @@ def build_call_plan(mode: str) -> list[dict]:
                 for condition in ("self", "simulated_cross"):
                     for k in range(config.N_SAMPLES):
                         add(spec.openrouter_id, scenario, condition, k, spec.reasoning)
-        for scenario in groundtruth.scenarios():
-            for k in range(config.GENUINE_CROSS_SAMPLES):
-                add(config.CROSS_PREDICTOR, scenario, "genuine_cross", k, None)
     elif mode == "smoke":
         chosen = smoke_scenarios()
         for model_id in SMOKE_MODELS:
@@ -87,8 +81,6 @@ def build_call_plan(mode: str) -> list[dict]:
             for scenario in chosen:
                 for condition in ("self", "simulated_cross"):
                     add(model_id, scenario, condition, 0, spec.reasoning)
-        for scenario in chosen:
-            add(config.CROSS_PREDICTOR, scenario, "genuine_cross", 0, None)
         for scenario in chosen:  # JSON-reliability probe (spec §3 step 4 / OQ3)
             add(PROBE_MODEL, scenario, "self", 0, config.model_by_id(PROBE_MODEL).reasoning)
     else:

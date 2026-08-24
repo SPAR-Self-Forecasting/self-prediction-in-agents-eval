@@ -9,8 +9,8 @@ Rendering uses literal ``<<TOKEN>>`` replacement, never ``str.format`` --
 scenario text and the JSON response example both contain braces.
 
 The byte-identity invariant (RQ1's foundation): for a given scenario the
-``self`` and ``other`` renders differ ONLY by :data:`REFERENT_SUBSTITUTIONS`.
-``simulated_cross`` and ``genuine_cross`` share the identical ``other`` render.
+``self`` and ``simulated_cross`` renders differ ONLY by
+:data:`REFERENT_SUBSTITUTIONS`.
 """
 
 from __future__ import annotations
@@ -83,11 +83,7 @@ def render_prompt(
     info_set: str | None = None,
     variant: str | None = None,
 ) -> str:
-    """Render the full prediction prompt for one (scenario, condition).
-
-    ``simulated_cross`` and ``genuine_cross`` intentionally produce the same
-    bytes -- only the answering model differs (spec §1 / D28).
-    """
+    """Render the full prediction prompt for one (scenario, condition)."""
     if condition not in config.CONDITIONS:
         raise ValueError(f"condition must be one of {config.CONDITIONS}, got {condition!r}")
     info_set = info_set or config.INFO_SET

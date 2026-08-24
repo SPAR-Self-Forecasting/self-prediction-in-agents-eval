@@ -242,7 +242,7 @@ def mock_rollout(model_id: str, task: Task, rollout_idx: int) -> Rollout:
 
     ``solved`` is drawn so the mock honours the sec 7 capability ladder
     (P(solve) ~ the model's estimated SWE-bench capability), which makes the
-    Stage-4 cross-predictor designation behave sensibly in a dry-run.
+    solve rates and per-model capability spread behave sensibly in a dry-run.
     """
     spec = config.model_by_id(model_id)
     rng = random.Random(_mock_seed(model_id, task.instance_id, rollout_idx))

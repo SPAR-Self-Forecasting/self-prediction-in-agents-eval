@@ -47,13 +47,17 @@ _UNINFORMATIVE_TOKENS = frozenset({
 })
 
 
-def load_identity_question() -> str:
-    """The question, from ``prompts/identity_check.txt``.
+def load_identity_questions() -> tuple[str, str, str]:
+    """General, specific-ID, and OpenRouter-slug questions."""
+    general = (PROMPTS_DIR / "identity_check.txt").read_text(encoding="utf-8").strip()
+    specific = (PROMPTS_DIR / "identity_check_specific.txt").read_text(encoding="utf-8").strip()
+    openrouter = (PROMPTS_DIR / "identity_check_openrouter.txt").read_text(encoding="utf-8").strip()
+    return general, specific, openrouter
 
-    Lives in ``prompts/`` rather than as a literal so this script and the
-    identity-primed forecast condition provably ask the same thing.
-    """
-    return (PROMPTS_DIR / "identity_check.txt").read_text(encoding="utf-8").strip()
+
+def load_identity_question() -> str:
+    """Backward-compat: the general question only."""
+    return load_identity_questions()[0]
 
 
 def _name_tokens(spec: config.ModelSpec) -> list[str]:
@@ -79,16 +83,9 @@ def keyword_hint(spec: config.ModelSpec, reply: str) -> dict:
     }
 
 
-def ask_one(llm, spec: config.ModelSpec, question: str) -> dict:
-    """Ask one model the identity question; never raises."""
-    record = {
-        "model": spec.openrouter_id,
-        "name": spec.name,
-        "family": spec.family,
-        "question": question,
-        "reply": None,
-        "error": None,
-    }
+def _ask_question(llm, spec: config.ModelSpec, question: str) -> dict:
+    """One question to one model; never raises."""
+    record = {"question": question, "reply": None, "error": None}
     started = time.time()
     try:
         response = llm.chat(
@@ -97,12 +94,42 @@ def ask_one(llm, spec: config.ModelSpec, question: str) -> dict:
             temperature=IDENTITY_TEMPERATURE,
         )
         record["reply"] = response.content
+        record["returned_model"] = response.raw.get("model")
+        record["provider"] = response.raw.get("provider")
     except Exception as exc:            # noqa: BLE001 -- one bad model must not abort the sweep
         record["error"] = f"{type(exc).__name__}: {exc}"
     record["elapsed_seconds"] = round(time.time() - started, 2)
     if record["reply"] is not None:
-        record.update(keyword_hint(spec, record["reply"]))
+        hint = keyword_hint(spec, record["reply"])
+        record.update(hint)
+        low = record["reply"].lower()
+        slug = spec.openrouter_id.split("/", 1)[-1].split(":", 1)[0].lower()
+        record["mentions_openrouter_id"] = spec.openrouter_id.lower() in low
+        record["mentions_slug"] = slug in low
     return record
+
+
+def ask_one(llm, spec: config.ModelSpec, question: str) -> dict:
+    """Ask one model one identity question (legacy single-question API)."""
+    return {
+        "model": spec.openrouter_id,
+        "name": spec.name,
+        "family": spec.family,
+        **_ask_question(llm, spec, question),
+    }
+
+
+def ask_all(llm, spec: config.ModelSpec, general: str, specific: str, openrouter: str) -> dict:
+    """Ask all three identity questions; separate calls, same temperature."""
+    return {
+        "model": spec.openrouter_id,
+        "name": spec.name,
+        "family": spec.family,
+        "openrouter_id": spec.openrouter_id,
+        "general": _ask_question(llm, spec, general),
+        "specific_id": _ask_question(llm, spec, specific),
+        "openrouter_slug": _ask_question(llm, spec, openrouter),
+    }
 
 
 class _StubClient:
@@ -117,33 +144,56 @@ class _StubClient:
 
 
 def check_identities(models=None, *, dry_run: bool = False) -> list[dict]:
-    """Ask every requested model the identity question, in list order."""
+    """Ask every requested model both identity questions, in list order."""
     specs = [config.MODEL_BY_ID[m] for m in models] if models else list(config.MODELS)
-    question = load_identity_question()
+    general, specific, openrouter = load_identity_questions()
     llm = _StubClient() if dry_run else LLMClient()
-    return [ask_one(llm, spec, question) for spec in specs]
+    return [ask_all(llm, spec, general, specific, openrouter) for spec in specs]
+
+
+def _reply_line(block: dict, *, width: int) -> tuple[str, str]:
+    if block["error"]:
+        return "ERR ", block["error"]
+    mark = "yes " if block.get("looks_self_identified") else "?   "
+    detail = " ".join((block["reply"] or "").split())
+    if len(detail) > width:
+        detail = detail[: width - 1] + "…"
+    return mark, detail
 
 
 def format_report(records: list[dict], *, width: int = 96) -> str:
-    """Human-readable summary: one block per model, raw reply included."""
-    lines = [f"Identity check — {len(records)} models", ""]
+    """Human-readable summary: one block per model, both replies included."""
+    lines = [f"Identity check — {len(records)} models (general + specific + openrouter)", ""]
     for r in records:
-        if r["error"]:
-            mark, detail = "ERR ", r["error"]
-        else:
-            mark = "yes " if r.get("looks_self_identified") else "?   "
-            detail = " ".join((r["reply"] or "").split())
-            if len(detail) > width:
-                detail = detail[: width - 1] + "…"
-        lines.append(f"[{mark}] {r['name']}  ({r['model']})")
-        lines.append(f"        {detail}")
-        if r.get("matched_tokens"):
-            lines.append(f"        matched: {', '.join(r['matched_tokens'])}")
+        lines.append(f"{r['name']}  ({r['model']})")
+        for label, key in (
+            ("general", "general"),
+            ("specific", "specific_id"),
+            ("openrouter", "openrouter_slug"),
+        ):
+            mark, detail = _reply_line(r[key], width=width)
+            id_note = ""
+            if key == "openrouter_slug" and r[key].get("mentions_openrouter_id"):
+                id_note = " [full id]"
+            elif key == "openrouter_slug" and r[key].get("mentions_slug"):
+                id_note = " [slug]"
+            prov = r[key].get("provider") or "?"
+            lines.append(f"  [{mark}] {label} ({prov}): {detail}{id_note}")
         lines.append("")
-    ok = sum(1 for r in records if r.get("looks_self_identified"))
-    errs = sum(1 for r in records if r["error"])
-    lines.append(f"keyword hint fired for {ok}/{len(records)} models; {errs} errored")
-    lines.append("The hint is advisory — read the replies before trusting it.")
+    ok_g = sum(1 for r in records if r["general"].get("looks_self_identified"))
+    ok_s = sum(1 for r in records if r["specific_id"].get("looks_self_identified"))
+    slug_ok = sum(1 for r in records if r["openrouter_slug"].get("mentions_slug"))
+    id_ok = sum(1 for r in records if r["openrouter_slug"].get("mentions_openrouter_id"))
+    errs = sum(
+        1 for r in records
+        if r["general"]["error"] or r["specific_id"]["error"] or r["openrouter_slug"]["error"]
+    )
+    lines.append(
+        f"keyword hint: general {ok_g}/{len(records)}, specific {ok_s}/{len(records)}; "
+        f"openrouter slug {slug_ok}/{len(records)}, full id {id_ok}/{len(records)}; "
+        f"{errs} models errored"
+    )
+    lines.append("The hints are advisory — read the replies before trusting them.")
     return "\n".join(lines)
 
 
@@ -162,11 +212,15 @@ def main(argv: list[str] | None = None) -> int:
     if unknown:
         parser.error(f"not in config.MODELS: {', '.join(unknown)}")
 
+    from dotenv import load_dotenv
+    load_dotenv(_ROOT / ".env")
+
+    general, specific, openrouter = load_identity_questions()
     records = check_identities(args.models, dry_run=args.dry_run)
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({
-        "question": load_identity_question(),
+        "questions": {"general": general, "specific_id": specific, "openrouter_slug": openrouter},
         "temperature": IDENTITY_TEMPERATURE,
         "dry_run": bool(args.dry_run),
         "records": records,

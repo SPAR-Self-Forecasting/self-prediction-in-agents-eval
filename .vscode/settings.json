@@ -1,0 +1,27 @@
+{
+  "latex-workshop.latex.outDir": "%DIR%/build",
+  "latex-workshop.latex.tools": [
+    {
+      "name": "tectonic",
+      "command": "tectonic",
+      "args": [
+        "--synctex",
+        "--keep-logs",
+        "-o",
+        "%OUTDIR%",
+        "%DOC_EXT%"
+      ]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "Tectonic",
+      "tools": [
+        "tectonic"
+      ]
+    }
+  ],
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.latex.autoClean.run": "never"
+}

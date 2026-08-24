@@ -1,0 +1,594 @@
+{
+  "arm": "direct_vendor",
+  "questions": {
+    "general": "Do you know what model you are?",
+    "specific_id": "Do you know what model you are? Give your specific model ID.",
+    "openrouter_slug": "What is the exact OpenRouter model string for this session?"
+  },
+  "temperature": 0.0,
+  "dry_run": false,
+  "priority": "p1",
+  "records": [
+    {
+      "openrouter_id": "openai/gpt-oss-120b",
+      "display_name": "OpenAI gpt-oss-120b",
+      "provider": "openai",
+      "env_var": "OPENAI_API_KEY",
+      "priority": "p0",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": null,
+        "error": "LLMError: HTTP 404 (non-retryable): {'error': {'message': 'The model `gpt-oss-120b:free` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
+        "endpoint": "openai",
+        "env_var": "OPENAI_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.54
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": null,
+        "error": "LLMError: HTTP 404 (non-retryable): {'error': {'message': 'The model `gpt-oss-120b:free` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
+        "endpoint": "openai",
+        "env_var": "OPENAI_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.31
+      },
+      "openrouter_slug": {
+        "question": "What is the exact OpenRouter model string for this session?",
+        "reply": null,
+        "error": "LLMError: HTTP 404 (non-retryable): {'error': {'message': 'The model `gpt-oss-120b:free` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
+        "endpoint": "openai",
+        "env_var": "OPENAI_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.77
+      }
+    },
+    {
+      "openrouter_id": "openai/gpt-oss-20b",
+      "display_name": "OpenAI gpt-oss-20b",
+      "provider": "openai",
+      "env_var": "OPENAI_API_KEY",
+      "priority": "p0",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": null,
+        "error": "LLMError: HTTP 404 (non-retryable): {'error': {'message': 'The model `gpt-oss-20b` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
+        "endpoint": "openai",
+        "env_var": "OPENAI_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.23
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": null,
+        "error": "LLMError: HTTP 404 (non-retryable): {'error': {'message': 'The model `gpt-oss-20b` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
+        "endpoint": "openai",
+        "env_var": "OPENAI_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.06
+      },
+      "openrouter_slug": {
+        "question": "What is the exact OpenRouter model string for this session?",
+        "reply": null,
+        "error": "LLMError: HTTP 404 (non-retryable): {'error': {'message': 'The model `gpt-oss-20b` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}",
+        "endpoint": "openai",
+        "env_var": "OPENAI_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.2
+      }
+    },
+    {
+      "openrouter_id": "deepseek/deepseek-v3.2",
+      "display_name": "DeepSeek V3.2",
+      "provider": "deepseek",
+      "env_var": "DEEPSEEK_API_KEY",
+      "priority": "p0",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "Yes, I'm DeepSeek's latest model, specifically **DeepSeek-V3**. I'm a pure text-based AI assistant created by DeepSeek (\u6df1\u5ea6\u6c42\u7d22) in China.\n\nHere are some key details about me:\n- **Knowledge cutoff**: May 2025\n- **Context window**: 1 million tokens (I can process massive amounts of text at once\u2014think three-volume novels!)\n- **Capabilities**: Text-based conversations, coding, analysis, file uploads (images, PDFs, Word, Excel, PPT, etc., extracting text from them), and web search (when manually enabled)\n- **Cost**: Completely free to use\n- **Platforms**: Available via web, mobile app (with voice input), and API\n\nIf you're asking because you want to verify my identity or capabilities, feel free to test me with any question or task! What would you like to know or do today? \ud83d\ude0a",
+        "error": null,
+        "endpoint": "deepseek",
+        "env_var": "DEEPSEEK_API_KEY",
+        "direct_model_id": "deepseek-chat",
+        "returned_model": "deepseek-v4-flash",
+        "elapsed_seconds": 3.57,
+        "vendor": "deepseek",
+        "vendor_hits": [
+          "deepseek"
+        ],
+        "name_tokens": [
+          "deepseek",
+          "v3.2"
+        ],
+        "matched_tokens": [
+          "deepseek"
+        ],
+        "mentions_slug": false,
+        "mentions_openrouter_id": false,
+        "looks_self_identified": true
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I\u2019m DeepSeek\u2019s latest model, specifically **DeepSeek-V3**. \n\nMy model ID is **DeepSeek-V3** (sometimes referred to as the base version, not the \u201cR1\u201d reasoning variant). \n\nIf you\u2019re asking for a more granular internal version string, I don\u2019t have a public-facing unique serial number beyond that\u2014my official designation is **DeepSeek-V3**. \n\nIs there anything else you\u2019d like to know about my capabilities or version?",
+        "error": null,
+        "endpoint": "deepseek",
+        "env_var": "DEEPSEEK_API_KEY",
+        "direct_model_id": "deepseek-chat",
+        "returned_model": "deepseek-v4-flash",
+        "elapsed_seconds": 2.23,
+        "vendor": "deepseek",
+        "vendor_hits": [
+          "deepseek"
+        ],
+        "name_tokens": [
+          "deepseek",
+          "v3.2"
+        ],
+        "matched_tokens": [
+          "deepseek"
+        ],
+        "mentions_slug": false,
+        "mentions_openrouter_id": false,
+        "looks_self_identified": true
+      },
+      "openrouter_slug": {
+        "question": "What is the exact OpenRouter model string for this session?",
+        "reply": "The exact OpenRouter model string for this session is **`openrouter/auto`**. \n\nThis is the model string that gets used when you're routed through OpenRouter's automatic fallback or default routing system, which dynamically selects the best available model for your query based on the current context and availability.",
+        "error": null,
+        "endpoint": "deepseek",
+        "env_var": "DEEPSEEK_API_KEY",
+        "direct_model_id": "deepseek-chat",
+        "returned_model": "deepseek-v4-flash",
+        "elapsed_seconds": 1.97,
+        "vendor": "deepseek",
+        "vendor_hits": [],
+        "name_tokens": [
+          "deepseek",
+          "v3.2"
+        ],
+        "matched_tokens": [],
+        "mentions_slug": false,
+        "mentions_openrouter_id": false,
+        "looks_self_identified": false
+      }
+    },
+    {
+      "openrouter_id": "minimax/minimax-m3",
+      "display_name": "MiniMax M3",
+      "provider": "minimax",
+      "env_var": "MINIMAX_API_KEY",
+      "priority": "p0",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": null,
+        "error": "missing env var MINIMAX_API_KEY",
+        "endpoint": "minimax",
+        "env_var": "MINIMAX_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": null,
+        "error": "missing env var MINIMAX_API_KEY",
+        "endpoint": "minimax",
+        "env_var": "MINIMAX_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null
+      },
+      "openrouter_slug": {
+        "question": "What is the exact OpenRouter model string for this session?",
+        "reply": null,
+        "error": "missing env var MINIMAX_API_KEY",
+        "endpoint": "minimax",
+        "env_var": "MINIMAX_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null
+      }
+    },
+    {
+      "openrouter_id": "minimax/minimax-m2.7",
+      "display_name": "MiniMax M2.7",
+      "provider": "minimax",
+      "env_var": "MINIMAX_API_KEY",
+      "priority": "p1",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": null,
+        "error": "missing env var MINIMAX_API_KEY",
+        "endpoint": "minimax",
+        "env_var": "MINIMAX_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": null,
+        "error": "missing env var MINIMAX_API_KEY",
+        "endpoint": "minimax",
+        "env_var": "MINIMAX_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null
+      },
+      "openrouter_slug": {
+        "question": "What is the exact OpenRouter model string for this session?",
+        "reply": null,
+        "error": "missing env var MINIMAX_API_KEY",
+        "endpoint": "minimax",
+        "env_var": "MINIMAX_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null
+      }
+    },
+    {
+      "openrouter_id": "x-ai/grok-4.20",
+      "display_name": "Grok 4.20",
+      "provider": "xai",
+      "env_var": "XAI_API_KEY",
+      "priority": "p1",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": null,
+        "error": "auth failure (XAI_API_KEY): LLMError: HTTP 403 (non-retryable): {'code': 'permission-denied', 'error': 'Your team c069e23c-1b2a-4573-b348-22b6ec148943 has either used all available credits or reached its monthly spending limit. To continue making API requests, please purchase more credits or raise your spending limit.'}",
+        "endpoint": "xai",
+        "env_var": "XAI_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.25
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": null,
+        "error": "auth failure (XAI_API_KEY): LLMError: HTTP 403 (non-retryable): {'code': 'permission-denied', 'error': 'Your team c069e23c-1b2a-4573-b348-22b6ec148943 has either used all available credits or reached its monthly spending limit. To continue making API requests, please purchase more credits or raise your spending limit.'}",
+        "endpoint": "xai",
+        "env_var": "XAI_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.31
+      },
+      "openrouter_slug": {
+        "question": "What is the exact OpenRouter model string for this session?",
+        "reply": null,
+        "error": "auth failure (XAI_API_KEY): LLMError: HTTP 403 (non-retryable): {'code': 'permission-denied', 'error': 'Your team c069e23c-1b2a-4573-b348-22b6ec148943 has either used all available credits or reached its monthly spending limit. To continue making API requests, please purchase more credits or raise your spending limit.'}",
+        "endpoint": "xai",
+        "env_var": "XAI_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.36
+      }
+    },
+    {
+      "openrouter_id": "x-ai/grok-4.5",
+      "display_name": "Grok 4.5",
+      "provider": "xai",
+      "env_var": "XAI_API_KEY",
+      "priority": "p1",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": null,
+        "error": "auth failure (XAI_API_KEY): LLMError: HTTP 403 (non-retryable): {'code': 'permission-denied', 'error': 'Your team c069e23c-1b2a-4573-b348-22b6ec148943 has either used all available credits or reached its monthly spending limit. To continue making API requests, please purchase more credits or raise your spending limit.'}",
+        "endpoint": "xai",
+        "env_var": "XAI_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.41
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": null,
+        "error": "auth failure (XAI_API_KEY): LLMError: HTTP 403 (non-retryable): {'code': 'permission-denied', 'error': 'Your team c069e23c-1b2a-4573-b348-22b6ec148943 has either used all available credits or reached its monthly spending limit. To continue making API requests, please purchase more credits or raise your spending limit.'}",
+        "endpoint": "xai",
+        "env_var": "XAI_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.07
+      },
+      "openrouter_slug": {
+        "question": "What is the exact OpenRouter model string for this session?",
+        "reply": null,
+        "error": "auth failure (XAI_API_KEY): LLMError: HTTP 403 (non-retryable): {'code': 'permission-denied', 'error': 'Your team c069e23c-1b2a-4573-b348-22b6ec148943 has either used all available credits or reached its monthly spending limit. To continue making API requests, please purchase more credits or raise your spending limit.'}",
+        "endpoint": "xai",
+        "env_var": "XAI_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.07
+      }
+    },
+    {
+      "openrouter_id": "moonshotai/kimi-k2.5",
+      "display_name": "Kimi K2.5",
+      "provider": "moonshot",
+      "env_var": "MOONSHOT_API_KEY",
+      "priority": "p1",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": null,
+        "error": "auth failure (MOONSHOT_API_KEY): LLMError: HTTP 404 (non-retryable): {'error': {'message': 'Not found the model moonshot-v1-128k or Permission denied', 'type': 'resource_not_found_error'}}",
+        "endpoint": "moonshot",
+        "env_var": "MOONSHOT_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 1.16
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": null,
+        "error": "auth failure (MOONSHOT_API_KEY): LLMError: HTTP 404 (non-retryable): {'error': {'message': 'Not found the model moonshot-v1-128k or Permission denied', 'type': 'resource_not_found_error'}}",
+        "endpoint": "moonshot",
+        "env_var": "MOONSHOT_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.59
+      },
+      "openrouter_slug": {
+        "question": "What is the exact OpenRouter model string for this session?",
+        "reply": null,
+        "error": "auth failure (MOONSHOT_API_KEY): LLMError: HTTP 404 (non-retryable): {'error': {'message': 'Not found the model moonshot-v1-128k or Permission denied', 'type': 'resource_not_found_error'}}",
+        "endpoint": "moonshot",
+        "env_var": "MOONSHOT_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.98
+      }
+    },
+    {
+      "openrouter_id": "moonshotai/kimi-k2.6",
+      "display_name": "Kimi K2.6",
+      "provider": "moonshot",
+      "env_var": "MOONSHOT_API_KEY",
+      "priority": "p1",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": null,
+        "error": "LLMError: HTTP 400 (non-retryable): {'error': {'message': 'invalid temperature: only 1 is allowed for this model', 'type': 'invalid_request_error'}}",
+        "endpoint": "moonshot",
+        "env_var": "MOONSHOT_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.65
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": null,
+        "error": "LLMError: HTTP 400 (non-retryable): {'error': {'message': 'invalid temperature: only 1 is allowed for this model', 'type': 'invalid_request_error'}}",
+        "endpoint": "moonshot",
+        "env_var": "MOONSHOT_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.61
+      },
+      "openrouter_slug": {
+        "question": "What is the exact OpenRouter model string for this session?",
+        "reply": null,
+        "error": "LLMError: HTTP 400 (non-retryable): {'error': {'message': 'invalid temperature: only 1 is allowed for this model', 'type': 'invalid_request_error'}}",
+        "endpoint": "moonshot",
+        "env_var": "MOONSHOT_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.4
+      }
+    },
+    {
+      "openrouter_id": "google/gemini-3.1-pro-preview",
+      "display_name": "Gemini 3.1 Pro",
+      "provider": "google",
+      "env_var": "GOOGLE_API_KEY",
+      "priority": "p1",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": null,
+        "error": "LLMError: HTTP 404: {'error': {'code': 404, 'message': 'models/gemini-2.5-pro-preview-06-05 is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
+        "endpoint": "google",
+        "env_var": "GOOGLE_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.59
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": null,
+        "error": "LLMError: HTTP 404: {'error': {'code': 404, 'message': 'models/gemini-2.5-pro-preview-06-05 is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
+        "endpoint": "google",
+        "env_var": "GOOGLE_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.5
+      },
+      "openrouter_slug": {
+        "question": "What is the exact OpenRouter model string for this session?",
+        "reply": null,
+        "error": "LLMError: HTTP 404: {'error': {'code': 404, 'message': 'models/gemini-2.5-pro-preview-06-05 is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
+        "endpoint": "google",
+        "env_var": "GOOGLE_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.57
+      }
+    },
+    {
+      "openrouter_id": "qwen/qwen3.6-27b",
+      "display_name": "Qwen3.6 27B",
+      "provider": "dashscope",
+      "env_var": "DASHSCOPE_API_KEY",
+      "priority": "p1",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": null,
+        "error": "auth failure (DASHSCOPE_API_KEY): LLMError: HTTP 403 (non-retryable): {'error': {'message': 'Access to model denied. Please make sure you are eligible for using the model.', 'type': 'AccessDenied.Unpurchased', 'param': None, 'code': 'AccessDenied.Unpurchased'}, 'id': 'chatcmpl-c4623b09-76b3-98df-8e74-21babb9bac2e', 'request_id': 'c4623b09-76b3-98df-8e74-21babb9bac2e'}",
+        "endpoint": "dashscope",
+        "env_var": "DASHSCOPE_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.57
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": null,
+        "error": "auth failure (DASHSCOPE_API_KEY): LLMError: HTTP 403 (non-retryable): {'error': {'message': 'Access to model denied. Please make sure you are eligible for using the model.', 'type': 'AccessDenied.Unpurchased', 'param': None, 'code': 'AccessDenied.Unpurchased'}, 'id': 'chatcmpl-d2862d82-94b7-90cd-b230-21caae6ecf57', 'request_id': 'd2862d82-94b7-90cd-b230-21caae6ecf57'}",
+        "endpoint": "dashscope",
+        "env_var": "DASHSCOPE_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.3
+      },
+      "openrouter_slug": {
+        "question": "What is the exact OpenRouter model string for this session?",
+        "reply": null,
+        "error": "auth failure (DASHSCOPE_API_KEY): LLMError: HTTP 403 (non-retryable): {'error': {'message': 'Access to model denied. Please make sure you are eligible for using the model.', 'type': 'AccessDenied.Unpurchased', 'param': None, 'code': 'AccessDenied.Unpurchased'}, 'id': 'chatcmpl-8066b225-0a8d-9bb7-b282-957d011f52c9', 'request_id': '8066b225-0a8d-9bb7-b282-957d011f52c9'}",
+        "endpoint": "dashscope",
+        "env_var": "DASHSCOPE_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.25
+      }
+    },
+    {
+      "openrouter_id": "qwen/qwen3.6-max-preview",
+      "display_name": "Qwen3.6 Max",
+      "provider": "dashscope",
+      "env_var": "DASHSCOPE_API_KEY",
+      "priority": "p1",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": null,
+        "error": "auth failure (DASHSCOPE_API_KEY): LLMError: HTTP 403 (non-retryable): {'error': {'message': 'Access to model denied. Please make sure you are eligible for using the model.', 'type': 'AccessDenied.Unpurchased', 'param': None, 'code': 'AccessDenied.Unpurchased'}, 'id': 'chatcmpl-fe873725-4186-913e-beb9-b7a200162460', 'request_id': 'fe873725-4186-913e-beb9-b7a200162460'}",
+        "endpoint": "dashscope",
+        "env_var": "DASHSCOPE_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.27
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": null,
+        "error": "auth failure (DASHSCOPE_API_KEY): LLMError: HTTP 403 (non-retryable): {'error': {'message': 'Access to model denied. Please make sure you are eligible for using the model.', 'type': 'AccessDenied.Unpurchased', 'param': None, 'code': 'AccessDenied.Unpurchased'}, 'id': 'chatcmpl-a99ac4bf-f3b8-9f75-b3cb-51d6f916f31e', 'request_id': 'a99ac4bf-f3b8-9f75-b3cb-51d6f916f31e'}",
+        "endpoint": "dashscope",
+        "env_var": "DASHSCOPE_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.19
+      },
+      "openrouter_slug": {
+        "question": "What is the exact OpenRouter model string for this session?",
+        "reply": null,
+        "error": "auth failure (DASHSCOPE_API_KEY): LLMError: HTTP 403 (non-retryable): {'error': {'message': 'Access to model denied. Please make sure you are eligible for using the model.', 'type': 'AccessDenied.Unpurchased', 'param': None, 'code': 'AccessDenied.Unpurchased'}, 'id': 'chatcmpl-e4ed8bf5-3b6c-9a28-b539-dd778e002261', 'request_id': 'e4ed8bf5-3b6c-9a28-b539-dd778e002261'}",
+        "endpoint": "dashscope",
+        "env_var": "DASHSCOPE_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.63
+      }
+    },
+    {
+      "openrouter_id": "z-ai/glm-5.1",
+      "display_name": "GLM 5.1",
+      "provider": "zhipu",
+      "env_var": "ZHIPU_API_KEY",
+      "priority": "p1",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": null,
+        "error": "missing env var ZHIPU_API_KEY",
+        "endpoint": "zhipu",
+        "env_var": "ZHIPU_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": null,
+        "error": "missing env var ZHIPU_API_KEY",
+        "endpoint": "zhipu",
+        "env_var": "ZHIPU_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null
+      },
+      "openrouter_slug": {
+        "question": "What is the exact OpenRouter model string for this session?",
+        "reply": null,
+        "error": "missing env var ZHIPU_API_KEY",
+        "endpoint": "zhipu",
+        "env_var": "ZHIPU_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null
+      }
+    },
+    {
+      "openrouter_id": "z-ai/glm-5.2",
+      "display_name": "GLM 5.2 (Together)",
+      "provider": "together",
+      "env_var": "TOGETHER_API_KEY",
+      "priority": "p1",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": null,
+        "error": "LLMError: HTTP 404 (non-retryable): {'id': 'oumvYei-2kFHot-a25902b3894d03c2', 'error': {'message': 'Unable to access model zhipuai/glm-5.2. Please visit https://api.together.ai/models to view the list of supported models.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_available'}}",
+        "endpoint": "together",
+        "env_var": "TOGETHER_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 1.07
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": null,
+        "error": "LLMError: HTTP 404 (non-retryable): {'id': 'oumvYmy-2kFHot-a25902b6da5103c2', 'error': {'message': 'Unable to access model zhipuai/glm-5.2. Please visit https://api.together.ai/models to view the list of supported models.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_available'}}",
+        "endpoint": "together",
+        "env_var": "TOGETHER_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.34
+      },
+      "openrouter_slug": {
+        "question": "What is the exact OpenRouter model string for this session?",
+        "reply": null,
+        "error": "LLMError: HTTP 404 (non-retryable): {'id': 'oumvYtQ-2kFHot-a25902b87e5703c2', 'error': {'message': 'Unable to access model zhipuai/glm-5.2. Please visit https://api.together.ai/models to view the list of supported models.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_available'}}",
+        "endpoint": "together",
+        "env_var": "TOGETHER_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null,
+        "elapsed_seconds": 0.4
+      }
+    },
+    {
+      "openrouter_id": "stepfun/step-3.7-flash",
+      "display_name": "Step 3.7 Flash",
+      "provider": "stepfun",
+      "env_var": "STEPFUN_API_KEY",
+      "priority": "p1",
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": null,
+        "error": "missing env var STEPFUN_API_KEY",
+        "endpoint": "stepfun",
+        "env_var": "STEPFUN_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": null,
+        "error": "missing env var STEPFUN_API_KEY",
+        "endpoint": "stepfun",
+        "env_var": "STEPFUN_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null
+      },
+      "openrouter_slug": {
+        "question": "What is the exact OpenRouter model string for this session?",
+        "reply": null,
+        "error": "missing env var STEPFUN_API_KEY",
+        "endpoint": "stepfun",
+        "env_var": "STEPFUN_API_KEY",
+        "direct_model_id": null,
+        "returned_model": null
+      }
+    }
+  ]
+}

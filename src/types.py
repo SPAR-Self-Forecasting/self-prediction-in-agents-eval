@@ -16,12 +16,8 @@ from dataclasses import asdict, dataclass, field
 # Allowed enum values -- a wrong value is a loud failure, never a silent default.
 _KINDS = frozenset({"binary", "continuous"})
 _CONDITIONS = frozenset({"no_thinking", "thinking"})
-#: The peer-forecast kinds say whether the subject was named, because that is the
-#: whole difference between them. ``cross`` is deliberately *not* a value: it used
-#: to mean the anonymous forecast, so reusing it for the named one would let an old
-#: cache and new code disagree about what was measured. Retired outright, a stale
-#: ``kind="cross"`` record fails loudly here instead.
-_KINDS_FORECAST = frozenset({"self", "self_primed", "anonymous", "cross_named"})
+#: Self-forecast kinds only.
+_KINDS_FORECAST = frozenset({"self", "self_primed"})
 
 #: A (model, task) cell is retained for a dimension only if at least this many
 #: of its 8 rollouts are valid for that dimension (EVAL_SPEC_V1.md sec 9.6).
@@ -144,19 +140,13 @@ class Forecast:
     ``sample_idx`` identifies the sample within its (model, task, condition)
     cell -- 0-indexed up to ``N_FORECAST_SAMPLES - 1`` (sec 9.6, multi-sample).
 
-    Four ``kind`` values -- two self, two peer:
+    Two ``kind`` values:
 
     * ``self``        -- the model forecasting itself (sec 4).
     * ``self_primed`` -- the same, after it answered "which model are you?".
-    * ``anonymous``   -- a peer forecasting an unnamed subject (sec 5).
-    * ``cross_named`` -- a peer forecasting a subject it was told the name of.
 
-    ``model`` is always the forecaster. For ``kind="cross_named"`` the *subject* is
-    a different model, so ``target`` records it; an ``anonymous`` forecast has no
-    target, which is exactly why one of them serves every subject.
     ``identity_reply`` holds the model's answer to the identity question for
-    ``kind="self_primed"``, kept so the priming that produced the forecast is
-    auditable rather than merely asserted.
+    ``kind="self_primed"``.
     """
 
     model: str
@@ -167,7 +157,6 @@ class Forecast:
     broken: bool = False
     raw_response: str = ""
     sample_idx: int = 0
-    target: str | None = None
     identity_reply: str | None = None
 
     def __post_init__(self) -> None:
@@ -178,14 +167,6 @@ class Forecast:
         if self.kind not in _KINDS_FORECAST:
             raise ValueError(
                 f"Forecast.kind must be one of {sorted(_KINDS_FORECAST)}, got {self.kind!r}"
-            )
-        # The fields that distinguish the peer kinds are load-bearing: a named
-        # forecast with no recorded subject cannot be scored against anything, and a
-        # "primed" forecast with no priming turn is just an unprimed one mislabelled.
-        if (self.kind == "cross_named") != (self.target is not None):
-            raise ValueError(
-                "Forecast.target is required for kind='cross_named' and forbidden "
-                f"otherwise; got kind={self.kind!r}, target={self.target!r}"
             )
         if (self.kind == "self_primed") != (self.identity_reply is not None):
             raise ValueError(
@@ -207,7 +188,6 @@ class Forecast:
             broken=d.get("broken", False),
             raw_response=d.get("raw_response", ""),
             sample_idx=d.get("sample_idx", 0),
-            target=d.get("target"),
             identity_reply=d.get("identity_reply"),
         )
 

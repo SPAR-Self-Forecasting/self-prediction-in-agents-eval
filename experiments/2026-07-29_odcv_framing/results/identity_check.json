@@ -1,0 +1,415 @@
+{
+  "questions": {
+    "general": "Do you know what model you are?",
+    "specific_id": "Do you know what model you are? Give your specific model ID."
+  },
+  "temperature": 0.0,
+  "dry_run": false,
+  "records": [
+    {
+      "model": "openai/gpt-oss-20b",
+      "name": "gpt-oss-20b",
+      "openrouter_id": "openai/gpt-oss-20b",
+      "reasoning": null,
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "I\u2019m ChatGPT, built on OpenAI\u2019s GPT\u20114 architecture.",
+        "error": null,
+        "elapsed_seconds": 3.04,
+        "vendor": "openai",
+        "vendor_hits": [
+          "openai",
+          "gpt"
+        ],
+        "name_tokens": [
+          "gpt",
+          "oss",
+          "20b"
+        ],
+        "matched_tokens": [
+          "gpt"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I\u2019m based on the GPT\u20114 architecture. The specific model identifier that\u2019s used for this session is **gpt\u20114\u20110613**.",
+        "error": null,
+        "elapsed_seconds": 6.13,
+        "vendor": "openai",
+        "vendor_hits": [
+          "gpt"
+        ],
+        "name_tokens": [
+          "gpt",
+          "oss",
+          "20b"
+        ],
+        "matched_tokens": [
+          "gpt"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "openai/gpt-oss-120b",
+      "name": "gpt-oss-120b",
+      "openrouter_id": "openai/gpt-oss-120b",
+      "reasoning": null,
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "I\u2019m ChatGPT, a large language model built on OpenAI\u2019s GPT\u20114 architecture. My training data goes up through June\u202f2024, and I\u2019m designed to generate conversational text, answer questions, and help with a wide range of tasks.",
+        "error": null,
+        "elapsed_seconds": 4.9,
+        "vendor": "openai",
+        "vendor_hits": [
+          "openai",
+          "gpt"
+        ],
+        "name_tokens": [
+          "gpt",
+          "oss",
+          "120b"
+        ],
+        "matched_tokens": [
+          "gpt"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I\u2019m based on OpenAI\u2019s GPT\u20114 architecture (the latest ChatGPT model, often referred to as **GPT\u20114o**). I don\u2019t have access to any internal deployment identifiers, so I can\u2019t share a more detailed \u201cmodel ID.\u201d",
+        "error": null,
+        "elapsed_seconds": 6.06,
+        "vendor": "openai",
+        "vendor_hits": [
+          "openai",
+          "gpt"
+        ],
+        "name_tokens": [
+          "gpt",
+          "oss",
+          "120b"
+        ],
+        "matched_tokens": [
+          "gpt"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "google/gemini-3.1-pro-preview",
+      "name": "Gemini 3.1 Pro",
+      "openrouter_id": "google/gemini-3.1-pro-preview",
+      "reasoning": null,
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "Yes, I am Gemini, a large language model built by Google.",
+        "error": null,
+        "elapsed_seconds": 4.33,
+        "vendor": "google",
+        "vendor_hits": [
+          "google",
+          "gemini"
+        ],
+        "name_tokens": [
+          "gemini",
+          "3.1"
+        ],
+        "matched_tokens": [
+          "gemini"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I am Gemini, a large language model built by Google. \n\nHowever, I do not have access to the specific model ID (such as `gemini-1.5-pro`, `gemini-1.5-flash`, or `gemini-1.0-ultra`) that is currently powering this conversation. That specific routing information is handled by the backend API or platform you are using to interact with me and is not passed into my conversational memory.",
+        "error": null,
+        "elapsed_seconds": 7.31,
+        "vendor": "google",
+        "vendor_hits": [
+          "google",
+          "gemini"
+        ],
+        "name_tokens": [
+          "gemini",
+          "3.1"
+        ],
+        "matched_tokens": [
+          "gemini"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "minimax/minimax-m2.7",
+      "name": "MiniMax M2.7",
+      "openrouter_id": "minimax/minimax-m2.7",
+      "reasoning": null,
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "I am MiniMax-M2.7, an AI assistant built by MiniMax. How can I help you today?",
+        "error": null,
+        "elapsed_seconds": 1.42,
+        "vendor": "minimax",
+        "vendor_hits": [
+          "minimax"
+        ],
+        "name_tokens": [
+          "minimax",
+          "m2.7"
+        ],
+        "matched_tokens": [
+          "minimax",
+          "m2.7"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I am the MiniMax\u2011M2.7 model.",
+        "error": null,
+        "elapsed_seconds": 3.24,
+        "vendor": "minimax",
+        "vendor_hits": [
+          "minimax"
+        ],
+        "name_tokens": [
+          "minimax",
+          "m2.7"
+        ],
+        "matched_tokens": [
+          "minimax",
+          "m2.7"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "x-ai/grok-4.20",
+      "name": "Grok 4.20",
+      "openrouter_id": "x-ai/grok-4.20",
+      "reasoning": {
+        "enabled": true
+      },
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "**Yes, I do.** \n\nI'm **Grok 4**, built by xAI.",
+        "error": null,
+        "elapsed_seconds": 3.05,
+        "vendor": "x-ai",
+        "vendor_hits": [
+          "grok",
+          "xai"
+        ],
+        "name_tokens": [
+          "grok",
+          "4.20"
+        ],
+        "matched_tokens": [
+          "grok"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "**Yes, I know exactly what I am.**\n\nMy specific model ID is: **grok-2** (the full production version released by xAI in 2024).\n\n(There is also a lighter variant called `grok-2-mini`, but I am the full `grok-2` model.)",
+        "error": null,
+        "elapsed_seconds": 4.02,
+        "vendor": "x-ai",
+        "vendor_hits": [
+          "grok",
+          "xai"
+        ],
+        "name_tokens": [
+          "grok",
+          "4.20"
+        ],
+        "matched_tokens": [
+          "grok"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "z-ai/glm-5.1",
+      "name": "GLM-5.1",
+      "openrouter_id": "z-ai/glm-5.1",
+      "reasoning": null,
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "Yes, I'm a GLM (General Language Model) developed by Z.ai. I'm designed to assist users with information and tasks through natural language processing. My architecture is based on the GLM framework, which enables me to understand and generate human-like text responses.\n\nIs there something specific about my capabilities or limitations you'd like to know more about?",
+        "error": null,
+        "elapsed_seconds": 8.13,
+        "vendor": "z-ai",
+        "vendor_hits": [
+          "glm"
+        ],
+        "name_tokens": [
+          "glm",
+          "5.1"
+        ],
+        "matched_tokens": [
+          "glm"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I am GLM-4, a large language model developed by Z.ai. \n\nMy specific model ID is GLM-4, which represents the fourth generation of the General Language Model series. I'm designed to be helpful, informative, and safe in our conversations.\n\nIs there something specific you'd like to know about my capabilities or how I can assist you today?",
+        "error": null,
+        "elapsed_seconds": 2.83,
+        "vendor": "z-ai",
+        "vendor_hits": [
+          "glm"
+        ],
+        "name_tokens": [
+          "glm",
+          "5.1"
+        ],
+        "matched_tokens": [
+          "glm"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "moonshotai/kimi-k2.6",
+      "name": "Kimi K2.6",
+      "openrouter_id": "moonshotai/kimi-k2.6",
+      "reasoning": null,
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "I\u2019m Kimi, an AI assistant made by Moonshot AI. I don\u2019t have a real-time way to check my exact version number in this conversation, but I\u2019m part of the Kimi family of models.",
+        "error": null,
+        "elapsed_seconds": 5.58,
+        "vendor": "moonshotai",
+        "vendor_hits": [
+          "kimi",
+          "moonshot"
+        ],
+        "name_tokens": [
+          "kimi",
+          "k2.6"
+        ],
+        "matched_tokens": [
+          "kimi"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I\u2019m Kimi, an AI assistant made by Moonshot AI. I don\u2019t know my specific model ID or version number.",
+        "error": null,
+        "elapsed_seconds": 6.81,
+        "vendor": "moonshotai",
+        "vendor_hits": [
+          "kimi",
+          "moonshot"
+        ],
+        "name_tokens": [
+          "kimi",
+          "k2.6"
+        ],
+        "matched_tokens": [
+          "kimi"
+        ],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "qwen/qwen3.6-27b",
+      "name": "Qwen3.6-27B",
+      "openrouter_id": "qwen/qwen3.6-27b",
+      "reasoning": null,
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "\n\nYes, I am Qwen (also known as Tongyi Qianwen), a large language model independently developed by Alibaba Group's Tongyi Lab. How can I help you today?",
+        "error": null,
+        "elapsed_seconds": 8.5,
+        "vendor": "qwen",
+        "vendor_hits": [
+          "qwen"
+        ],
+        "name_tokens": [
+          "qwen3.6",
+          "27b"
+        ],
+        "matched_tokens": [],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I am Qwen (also known as Tongyi Qianwen), a large language model independently developed by Alibaba Group's Tongyi Lab. I don't have a specific model ID to share, but I am here to help you with any questions or tasks you might have!",
+        "error": null,
+        "elapsed_seconds": 9.23,
+        "vendor": "qwen",
+        "vendor_hits": [
+          "qwen"
+        ],
+        "name_tokens": [
+          "qwen3.6",
+          "27b"
+        ],
+        "matched_tokens": [],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    },
+    {
+      "model": "qwen/qwen3.6-max-preview",
+      "name": "Qwen3.6-Max",
+      "openrouter_id": "qwen/qwen3.6-max-preview",
+      "reasoning": null,
+      "general": {
+        "question": "Do you know what model you are?",
+        "reply": "Yes, I'm Qwen (\u901a\u4e49\u5343\u95ee), a large language model independently developed by Alibaba Group's Tongyi Lab. How can I help you today?",
+        "error": null,
+        "elapsed_seconds": 5.23,
+        "vendor": "qwen",
+        "vendor_hits": [
+          "qwen"
+        ],
+        "name_tokens": [
+          "qwen3.6",
+          "max"
+        ],
+        "matched_tokens": [],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      },
+      "specific_id": {
+        "question": "Do you know what model you are? Give your specific model ID.",
+        "reply": "I am Qwen (\u901a\u4e49\u5343\u95ee), a large language model independently developed by Alibaba Group's Tongyi Lab. I don't use specific version numbers or model IDs in my responses, but you can always refer to me simply as Qwen. How can I help you today?",
+        "error": null,
+        "elapsed_seconds": 8.39,
+        "vendor": "qwen",
+        "vendor_hits": [
+          "qwen"
+        ],
+        "name_tokens": [
+          "qwen3.6",
+          "max"
+        ],
+        "matched_tokens": [],
+        "looks_self_identified": true,
+        "mentions_openrouter_id": false
+      }
+    }
+  ]
+}

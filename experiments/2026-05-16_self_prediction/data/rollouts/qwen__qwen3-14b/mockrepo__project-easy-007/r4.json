@@ -1,0 +1,210 @@
+{
+  "model": "qwen/qwen3-14b",
+  "task_id": "mockrepo__project-easy-007",
+  "rollout_idx": 4,
+  "trajectory": {
+    "info": {
+      "exit_status": "Submitted",
+      "submission": "diff --git a/src/project/module.py b/src/project/module.py\n--- a/src/project/module.py\n+++ b/src/project/module.py\n@@ -1,3 +1,4 @@\n def compute(x):\n-    return x\n+    # adjusted for the reported edge case\n+    return x + 4\n",
+      "model_stats": {
+        "api_calls": 6
+      }
+    },
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a coding agent."
+      },
+      {
+        "role": "user",
+        "content": "Repository: mockrepo/project\n\n[MOCK easy task #7] A function in the project raises an unexpected exception on edge-case input. Reproduce and fix it."
+      },
+      {
+        "role": "assistant",
+        "content": "This is a straightforward off-by-one error.",
+        "extra": {
+          "actions": [
+            {
+              "command": "cat src/project/module.py",
+              "tool_call_id": "tc"
+            }
+          ],
+          "response": {
+            "usage": {
+              "prompt_tokens": 200,
+              "completion_tokens": 127,
+              "total_tokens": 327
+            }
+          },
+          "cost": 0.000127
+        }
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "tc",
+        "content": "output...",
+        "extra": {
+          "raw_output": "output...",
+          "returncode": 0
+        }
+      },
+      {
+        "role": "assistant",
+        "content": "The bug is clear. I will fix it directly.",
+        "extra": {
+          "actions": [
+            {
+              "command": "find . -name '*.py'",
+              "tool_call_id": "tc"
+            }
+          ],
+          "response": {
+            "usage": {
+              "prompt_tokens": 200,
+              "completion_tokens": 121,
+              "total_tokens": 321
+            }
+          },
+          "cost": 0.000121
+        }
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "tc",
+        "content": "output...",
+        "extra": {
+          "raw_output": "output...",
+          "returncode": 0
+        }
+      },
+      {
+        "role": "assistant",
+        "content": "I have located the defect and will apply the fix.",
+        "extra": {
+          "actions": [
+            {
+              "command": "sed -i 's/return x/return x + 1/' src/project/module.py",
+              "tool_call_id": "tc"
+            }
+          ],
+          "response": {
+            "usage": {
+              "prompt_tokens": 200,
+              "completion_tokens": 490,
+              "total_tokens": 690
+            }
+          },
+          "cost": 0.00049
+        }
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "tc",
+        "content": "output...",
+        "extra": {
+          "raw_output": "output...",
+          "returncode": 0
+        }
+      },
+      {
+        "role": "assistant",
+        "content": "I'm not certain this is the root cause, but it is the most likely one.",
+        "extra": {
+          "actions": [
+            {
+              "command": "sed -i 's/return x/return x + 1/' src/project/module.py",
+              "tool_call_id": "tc"
+            }
+          ],
+          "response": {
+            "usage": {
+              "prompt_tokens": 200,
+              "completion_tokens": 607,
+              "total_tokens": 807
+            }
+          },
+          "cost": 0.000607
+        }
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "tc",
+        "content": "output...",
+        "extra": {
+          "raw_output": "output...",
+          "returncode": 0
+        }
+      },
+      {
+        "role": "assistant",
+        "content": "This is a straightforward off-by-one error.",
+        "extra": {
+          "actions": [
+            {
+              "command": "python -m pytest -q",
+              "tool_call_id": "tc"
+            }
+          ],
+          "response": {
+            "usage": {
+              "prompt_tokens": 200,
+              "completion_tokens": 463,
+              "total_tokens": 663
+            }
+          },
+          "cost": 0.000463
+        }
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "tc",
+        "content": "output...",
+        "extra": {
+          "raw_output": "output...",
+          "returncode": 0
+        }
+      },
+      {
+        "role": "assistant",
+        "content": "I'm not certain this is the root cause, but it is the most likely one.",
+        "extra": {
+          "actions": [
+            {
+              "command": "python -m pytest -q",
+              "tool_call_id": "tc"
+            }
+          ],
+          "response": {
+            "usage": {
+              "prompt_tokens": 200,
+              "completion_tokens": 396,
+              "total_tokens": 596
+            }
+          },
+          "cost": 0.000396
+        }
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "tc",
+        "content": "output...",
+        "extra": {
+          "raw_output": "output...",
+          "returncode": 0
+        }
+      },
+      {
+        "role": "exit",
+        "content": "Submitted",
+        "extra": {
+          "exit_status": "Submitted",
+          "submission": "diff --git a/src/project/module.py b/src/project/module.py\n--- a/src/project/module.py\n+++ b/src/project/module.py\n@@ -1,3 +1,4 @@\n def compute(x):\n-    return x\n+    # adjusted for the reported edge case\n+    return x + 4\n"
+        }
+      }
+    ],
+    "trajectory_format": "mini-swe-agent-1.1"
+  },
+  "solved": false,
+  "errored": false,
+  "error": null
+}

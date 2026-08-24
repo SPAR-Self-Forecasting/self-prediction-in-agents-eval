@@ -12,7 +12,7 @@ sleep 3
 docker ps -q | xargs -r docker rm -f >/dev/null 2>&1
 echo "run.py still running: $(pgrep -cf 'run.py --real')"
 echo "=== purging poisoned caches ==="
-rm -rf data_real/rollouts data_real/outcomes data_real/cross_predictor.json data_real/tasks.json results_real
+rm -rf data_real/rollouts data_real/outcomes data_real/tasks.json results_real
 echo "=== remaining in data_real ==="
 ls -1 data_real 2>/dev/null
 echo "kept forecasts: $(find data_real/forecasts -name '*.json' 2>/dev/null | wc -l) files"

@@ -38,7 +38,7 @@ def test_orchestrator_invokes_experiment_1(tmp_path):
     )
     assert summary["mode"] == "dry_run"
     assert summary["n_models"] == 5
-    assert isinstance(summary["rq1_mean_wins"], float)
+    assert isinstance(summary["rq1_mean_loss"], float)
     assert (tmp_path / "results" / "analysis.json").exists()
 
 

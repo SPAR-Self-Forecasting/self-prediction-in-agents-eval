@@ -1,0 +1,46 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.5",
+    "task_id": "mockrepo__project-easy-002",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.452,
+      "p_first_attempt_correct": 0.079,
+      "documentation": 0.91,
+      "defensive_code": 0.805,
+      "express_uncertainty": 0.987,
+      "avg_tokens_step": 582.0,
+      "total_expected_steps": 35.0,
+      "explore_edit_ratio": 0.656,
+      "mean_action_block_size": 0.328,
+      "n_constraint_violations": 0.119
+    },
+    "broken": false,
+    "raw_response": "{\"p_solve\": 0.452, \"p_first_attempt_correct\": 0.079, \"documentation\": 0.91, \"defensive_code\": 0.805, \"express_uncertainty\": 0.987, \"avg_tokens_step\": 582, \"total_expected_steps\": 35, \"explore_edit_ratio\": 0.656, \"mean_action_block_size\": 0.328, \"n_constraint_violations\": 0.119}",
+    "sample_idx": 1,
+    "identity_reply": null
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.5",
+    "task_id": "mockrepo__project-easy-002",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.452,
+      "p_first_attempt_correct": 0.079,
+      "documentation": 0.91,
+      "defensive_code": 0.805,
+      "express_uncertainty": 0.987,
+      "avg_tokens_step": 582.0,
+      "total_expected_steps": 35.0,
+      "explore_edit_ratio": 0.656,
+      "mean_action_block_size": 0.328,
+      "n_constraint_violations": 0.119
+    },
+    "broken": false,
+    "raw_response": "{\"p_solve\": 0.452, \"p_first_attempt_correct\": 0.079, \"documentation\": 0.91, \"defensive_code\": 0.805, \"express_uncertainty\": 0.987, \"avg_tokens_step\": 582, \"total_expected_steps\": 35, \"explore_edit_ratio\": 0.656, \"mean_action_block_size\": 0.328, \"n_constraint_violations\": 0.119}",
+    "sample_idx": 1,
+    "identity_reply": null
+  }
+}

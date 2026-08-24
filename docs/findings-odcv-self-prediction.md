@@ -100,7 +100,7 @@ Note the repo groups `kimi-k2.6` under *proprietary/large*, not open-weight. By 
 
 - **H1.** Models predict lower severity for themselves than for "another AI agent" on the identical scenario (the framing gap = RQ1).
 - **H2.** The other-framed prediction is *more accurate* against ground truth than the self-framed one (RQ2).
-- **H3.** (deferred, needs the genuine-cross arm) A model's anonymous prediction tracks its own behavior better than an outside model's anonymous prediction does — privileged access surviving the removal of self-presentation pressure (RQ3).
+- **H3.** *(removed rev 3 — D38)* Outside-model anonymous prediction was dropped; the experiment is two-condition only (self vs simulated_cross).
 
 ---
 

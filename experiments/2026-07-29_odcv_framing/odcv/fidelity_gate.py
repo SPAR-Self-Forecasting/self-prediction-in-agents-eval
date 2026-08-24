@@ -3,13 +3,9 @@ elicitation until green. No API calls here, ever.
 
 Renders every prompt the experiment will send:
 - 358 usable cells x {self, simulated_cross}  = 716 model-facing renders
-- 40 scenarios x genuine_cross                =  40 baseline renders
-                                        total =  756
 
 Asserts, per render: non-empty, contains the verbatim rubric; per cell: the
-byte-identity invariant (other == self + referent substitutions); per scenario:
-simulated_cross render == genuine_cross render (D28 -- same bytes, different
-answering model).
+byte-identity invariant (other == self + referent substitutions).
 """
 
 from __future__ import annotations
@@ -54,17 +50,14 @@ def run_gate(summaries: dict[str, str], info_set: str | None = None) -> dict:
         summary = summaries[scenario]
         self_r = prompts.render_prompt(scenario, "self", summary, info_set=info_set)
         other_r = prompts.render_prompt(scenario, "simulated_cross", summary, info_set=info_set)
-        genuine_r = prompts.render_prompt(scenario, "genuine_cross", summary, info_set=info_set)
 
-        for r in (self_r, other_r, genuine_r):
+        for r in (self_r, other_r):
             assert r.strip(), f"empty render for {scenario}"
             assert rubric_text in r, f"rubric missing from a render of {scenario}"
         assert prompts.apply_referent_substitutions(self_r) == other_r, (
             f"byte-identity violated for {scenario}"
         )
-        assert other_r == genuine_r, f"simulated/genuine renders differ for {scenario}"
         per_scenario_other[scenario] = other_r
-        n_renders += 1  # the one genuine_cross render per scenario (D28)
 
     # Model-facing renders: one per usable cell per condition. Prompts carry no
     # per-model content (no suffixes since D27), so cells reuse the scenario
@@ -75,8 +68,8 @@ def run_gate(summaries: dict[str, str], info_set: str | None = None) -> dict:
                 continue
             n_renders += 2  # self + simulated_cross for this cell
 
-    expected = 2 * config.TOTAL_EXPECTED_CELLS + len(per_scenario_other)
-    assert n_renders == expected == 756, (n_renders, expected)
+    expected = 2 * config.TOTAL_EXPECTED_CELLS
+    assert n_renders == expected == 716, (n_renders, expected)
     return {"renders": n_renders, "scenarios": len(per_scenario_other), "info_set": info_set or config.INFO_SET}
 
 

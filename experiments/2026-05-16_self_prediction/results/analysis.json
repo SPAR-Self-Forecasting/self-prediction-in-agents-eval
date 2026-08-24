@@ -1,41 +1,68 @@
 {
-  "rq1_existence": {
-    "estimand": "mean wins(M) across IAI-eligible models",
-    "null": 0.5,
+  "rq1_accuracy": {
+    "estimand": "mean self-forecast loss across models",
     "condition": "no_thinking",
-    "n_models": 11,
-    "point_estimate": 0.49224660397074194,
-    "per_model_wins": {
-      "qwen/qwen3-next-80b-a3b-instruct": 0.49137931034482757,
-      "qwen/qwen3-8b": 0.43333333333333335,
-      "qwen/qwen3-14b": 0.43833333333333335,
-      "qwen/qwen3-32b": 0.4816666666666667,
-      "google/gemini-2.5-flash-lite": 0.4533333333333333,
-      "google/gemini-3.1-flash-lite": 0.37666666666666665,
-      "qwen/qwen3-coder": 0.5,
-      "deepseek/deepseek-v3.2": 0.58,
-      "z-ai/glm-4.5": 0.5416666666666666,
-      "z-ai/glm-4.7": 0.505,
-      "moonshotai/kimi-k2.5": 0.6133333333333333
+    "n_models": 12,
+    "point_estimate": 43.57628750887694,
+    "per_model_loss": {
+      "qwen/qwen3-next-80b-a3b-instruct": 17.272281410567977,
+      "qwen/qwen3-8b": 93.56716707084146,
+      "qwen/qwen3-14b": 64.42214531457375,
+      "qwen/qwen3-32b": 82.95054128584334,
+      "google/gemini-2.5-flash-lite": 59.292442716824084,
+      "google/gemini-3.1-flash-lite": 65.65201018272447,
+      "qwen/qwen3-coder": 24.05045385701304,
+      "deepseek/deepseek-v3.2": 15.943535326588522,
+      "z-ai/glm-4.5": 16.783050677512524,
+      "z-ai/glm-4.7": 24.160541577209965,
+      "moonshotai/kimi-k2.5": 15.24499317794718,
+      "z-ai/glm-5": NaN
     }
   },
   "rq2_scaling": {
-    "estimand": "Spearman rho of wins(M) vs empirical solve rate",
+    "estimand": "Spearman rho of equal-dimension mean self loss vs empirical solve rate",
     "condition": "no_thinking",
-    "n_models": 11,
-    "spearman_rho": 0.8272727272727273,
-    "per_model_wins": {
-      "qwen/qwen3-next-80b-a3b-instruct": 0.49137931034482757,
-      "qwen/qwen3-8b": 0.43333333333333335,
-      "qwen/qwen3-14b": 0.43833333333333335,
-      "qwen/qwen3-32b": 0.4816666666666667,
-      "google/gemini-2.5-flash-lite": 0.4533333333333333,
-      "google/gemini-3.1-flash-lite": 0.37666666666666665,
-      "qwen/qwen3-coder": 0.5,
-      "deepseek/deepseek-v3.2": 0.58,
-      "z-ai/glm-4.5": 0.5416666666666666,
-      "z-ai/glm-4.7": 0.505,
-      "moonshotai/kimi-k2.5": 0.6133333333333333
+    "n_models": 12,
+    "spearman_rho": -0.8909090909090911,
+    "per_model_loss": {
+      "qwen/qwen3-next-80b-a3b-instruct": 0.6177488193431564,
+      "qwen/qwen3-8b": 0.6980550074490969,
+      "qwen/qwen3-14b": 0.5874037717188036,
+      "qwen/qwen3-32b": 0.5920363994496876,
+      "google/gemini-2.5-flash-lite": 0.6260601479966252,
+      "google/gemini-3.1-flash-lite": 0.5873223156776307,
+      "qwen/qwen3-coder": 0.5644436642360564,
+      "deepseek/deepseek-v3.2": 0.5548367962193709,
+      "z-ai/glm-4.5": 0.49293644504114226,
+      "z-ai/glm-4.7": 0.5312556687634801,
+      "moonshotai/kimi-k2.5": 0.46620817846265306,
+      "z-ai/glm-5": NaN
+    },
+    "per_model_loss_native": {
+      "qwen/qwen3-next-80b-a3b-instruct": 17.272281410567977,
+      "qwen/qwen3-8b": 93.56716707084146,
+      "qwen/qwen3-14b": 64.42214531457375,
+      "qwen/qwen3-32b": 82.95054128584334,
+      "google/gemini-2.5-flash-lite": 59.292442716824084,
+      "google/gemini-3.1-flash-lite": 65.65201018272447,
+      "qwen/qwen3-coder": 24.05045385701304,
+      "deepseek/deepseek-v3.2": 15.943535326588522,
+      "z-ai/glm-4.5": 16.783050677512524,
+      "z-ai/glm-4.7": 24.160541577209965,
+      "moonshotai/kimi-k2.5": 15.24499317794718,
+      "z-ai/glm-5": NaN
+    },
+    "loss_scales": {
+      "p_solve": 0.6606080571428571,
+      "p_first_attempt_correct": 0.4435790476190476,
+      "documentation": 0.34421254960317454,
+      "defensive_code": 0.5232520444444445,
+      "express_uncertainty": 0.5788969675925926,
+      "avg_tokens_step": 903.8189567065303,
+      "total_expected_steps": 144.01406525573194,
+      "explore_edit_ratio": 0.5039996412051141,
+      "mean_action_block_size": 1.3479693486590039,
+      "n_constraint_violations": 0.4916666666666666
     },
     "solve_rates": {
       "qwen/qwen3-next-80b-a3b-instruct": 0.15207373271889402,
@@ -48,45 +75,47 @@
       "deepseek/deepseek-v3.2": 0.5482456140350878,
       "z-ai/glm-4.5": 0.4260869565217391,
       "z-ai/glm-4.7": 0.5689655172413793,
-      "moonshotai/kimi-k2.5": 0.6026200873362445
+      "moonshotai/kimi-k2.5": 0.6026200873362445,
+      "z-ai/glm-5": 0.6470588235294118
     },
-    "caveat": "descriptive monotonic association; upper bound (W2 variance confound); not a significance test"
+    "caveat": "descriptive monotonic association; not a significance test"
   },
   "rq3_elicitation": {
-    "estimand": "mean paired Δwins(M) = wins(thinking) - wins(no_thinking)",
+    "estimand": "mean paired Δloss(M) = loss(thinking) - loss(no_thinking)",
     "null": 0.0,
-    "n_models": 11,
+    "n_models": 12,
     "excluded_models": [],
-    "point_estimate": 0.002261369315342336,
+    "point_estimate": 3.0093024529736483,
     "per_model_difference": {
-      "qwen/qwen3-next-80b-a3b-instruct": -0.018965517241379293,
-      "qwen/qwen3-8b": -0.0016666666666667052,
-      "qwen/qwen3-14b": -0.021666666666666667,
-      "qwen/qwen3-32b": -0.04666666666666669,
-      "google/gemini-2.5-flash-lite": -0.036666666666666625,
-      "google/gemini-3.1-flash-lite": 0.019629629629629664,
-      "qwen/qwen3-coder": 0.0537037037037037,
-      "deepseek/deepseek-v3.2": 0.022173913043478266,
-      "z-ai/glm-4.5": -0.008333333333333304,
-      "z-ai/glm-4.7": 0.05999999999999994,
-      "moonshotai/kimi-k2.5": 0.0033333333333334103
+      "qwen/qwen3-next-80b-a3b-instruct": 3.0275887111481765,
+      "qwen/qwen3-8b": -2.320266455433469,
+      "qwen/qwen3-14b": 0.32912643010426734,
+      "qwen/qwen3-32b": 0.24375159276149816,
+      "google/gemini-2.5-flash-lite": -2.47699922982261,
+      "google/gemini-3.1-flash-lite": 35.36673393684741,
+      "qwen/qwen3-coder": -1.2365033686644331,
+      "deepseek/deepseek-v3.2": 1.463295771175071,
+      "z-ai/glm-4.5": -1.2114484756155814,
+      "z-ai/glm-4.7": -0.6216277785695716,
+      "moonshotai/kimi-k2.5": 0.5386758487793717,
+      "z-ai/glm-5": NaN
     }
   },
   "exploratory": {
-    "per_dimension_raw_iai_mean": {
-      "p_solve": -0.061474668722805485,
-      "p_first_attempt_correct": -0.09486515737589354,
-      "documentation": -0.02422774805982649,
-      "defensive_code": 0.059897137576503966,
-      "express_uncertainty": 0.028027258140103838,
-      "avg_tokens_step": -45.10280817052245,
-      "total_expected_steps": 2.8236776218672746,
-      "explore_edit_ratio": -0.03313215587631435,
-      "mean_action_block_size": 0.25628778728084656,
-      "n_constraint_violations": 0.004179562455424532
+    "per_dimension_mean_loss": {
+      "p_solve": 0.4916718690832795,
+      "p_first_attempt_correct": 0.3059233451164629,
+      "documentation": 0.25976611592899435,
+      "defensive_code": 0.31478396797711655,
+      "express_uncertainty": 0.2820600877368374,
+      "avg_tokens_step": 373.5126970770712,
+      "total_expected_steps": 59.254465578057534,
+      "explore_edit_ratio": 0.3903039215721831,
+      "mean_action_block_size": 0.826053850214469,
+      "n_constraint_violations": 0.12514927601134498
     },
-    "partition_capability_mean_raw_iai": -0.07816991304934952,
-    "partition_behavioral_mean_raw_iai": -5.248512338392304
+    "partition_capability_mean_loss": 0.3987976070998712,
+    "partition_behavioral_mean_loss": 54.370659984321215
   },
   "missingness": {
     "dropped_cell_rate": {
@@ -221,6 +250,18 @@
         "explore_edit_ratio": 0.0,
         "mean_action_block_size": 0.0,
         "n_constraint_violations": 0.0
+      },
+      "z-ai/glm-5": {
+        "p_solve": 0.0,
+        "p_first_attempt_correct": 0.0,
+        "documentation": 0.0,
+        "defensive_code": 0.0,
+        "express_uncertainty": 0.0,
+        "avg_tokens_step": 0.0,
+        "total_expected_steps": 0.0,
+        "explore_edit_ratio": 0.0,
+        "mean_action_block_size": 0.0,
+        "n_constraint_violations": 0.0
       }
     },
     "broken_forecast_rate": {
@@ -267,11 +308,16 @@
       "moonshotai/kimi-k2.5": {
         "no_thinking": 0.0,
         "thinking": 0.0
+      },
+      "z-ai/glm-5": {
+        "no_thinking": 1.0,
+        "thinking": 1.0
       }
     },
     "flagged_models_dropped_cells": [],
     "flagged_models_broken_forecasts": [
-      "deepseek/deepseek-v3.2"
+      "deepseek/deepseek-v3.2",
+      "z-ai/glm-5"
     ]
   },
   "solve_rates": {
@@ -285,6 +331,7 @@
     "deepseek/deepseek-v3.2": 0.5482456140350878,
     "z-ai/glm-4.5": 0.4260869565217391,
     "z-ai/glm-4.7": 0.5689655172413793,
-    "moonshotai/kimi-k2.5": 0.6026200873362445
+    "moonshotai/kimi-k2.5": 0.6026200873362445,
+    "z-ai/glm-5": 0.6470588235294118
   }
 }

@@ -6,9 +6,8 @@ three classic Murphy (1973) components:
     BS  =  REL  -  RES  +  UNC
 
   - **UNC**  (uncertainty)   -- ``base_rate * (1 - base_rate)``: the variance of
-    the outcomes themselves. The floor no forecaster can beat; identical for
-    self and cross on the same cells. Captures the rollout-to-rollout
-    stochasticity of the agent.
+    the outcomes themselves. The floor no forecaster can beat. Captures the
+    rollout-to-rollout stochasticity of the agent.
   - **REL**  (reliability / miscalibration, lower better) -- how far the stated
     probabilities sit from the observed frequencies at that probability level
     ("says 0.7, happens 0.3").
@@ -45,15 +44,10 @@ mean loss exactly (a built-in validation invariant, asserted in tests).
 
 Units of analysis
 -----------------
-Per (model, dim, condition, kind in {self, cross}), on **exactly the cells the
-wins-fraction scored** (same retention + both-sides forecast gates as
-``metrics._dim_losses``), then a mean across models (RQ1 style). A pooled view
-(events concatenated across models) is also reported, clearly caveated: base
-rates differ wildly across models, and the cross forecast is *shared across
-targets* (one anonymous forecast per task), so pooled cross resolution has
-zero between-model component by construction. The per-model self-vs-cross RES
-gap is the introspection readout: can the model use private information about
-itself that a task-only forecast cannot?
+Per (model, dim, condition), on **exactly the cells self-forecast scoring used**
+(same retention + forecast-usability gates as ``metrics._dim_self_losses``),
+then a mean across models. A pooled view (events concatenated across models)
+is also reported, clearly caveated: base rates differ wildly across models.
 """
 
 from __future__ import annotations
@@ -254,23 +248,15 @@ def binned_decomposition(
 # Event assembly from ScoringData -- mirrors metrics._dim_losses gating
 # --------------------------------------------------------------------------
 def binary_events(
-    data: metrics.ScoringData, model: str, dim, condition: str, kind: str,
+    data: metrics.ScoringData, model: str, dim, condition: str,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, int]:
     """(forecasts, outcomes, weights, n_cells) event arrays for one scored slice.
 
-    Applies exactly the gates of ``metrics._dim_losses`` -- retention (>=5
-    valid rollouts), *both* self and cross forecast usable -- so self and
-    cross decompose over identical events and the analysis explains the same
-    cells the wins-fraction was computed from. Each cell's valid rollouts
-    become events sharing the cell's aggregated forecast, weighted
-    ``1 / n_valid`` so cells contribute equally (see module docstring).
+    Applies exactly the gates of ``metrics._dim_self_losses`` -- retention (>=5
+    valid rollouts) and a usable self forecast. Each cell's valid rollouts
+    become events sharing the cell's aggregated forecast, weighted ``1 / n_valid``
+    so cells contribute equally (see module docstring).
     """
-    # ``kind`` here selects which *forecast set* to decompose -- self vs the
-    # cross-predictor's -- and is a different vocabulary from ``Forecast.kind``,
-    # where the peer forecast is called "anonymous". This name is what murphy.json
-    # keys its output by, so it stays stable.
-    if kind not in ("self", "cross"):
-        raise ValueError(f"kind must be 'self' or 'cross', got {kind!r}")
     fs: list[float] = []
     os_: list[float] = []
     ws: list[float] = []
@@ -279,19 +265,16 @@ def binary_events(
         if not data._retained[model][task][dim.name]:
             continue
         self_samples = data.self_forecasts.get(model, {}).get(task, {}).get(condition)
-        cross_samples = data.cross_forecasts.get(task, {}).get(condition)
         self_pred = metrics._aggregate_prediction(self_samples, dim.name)
-        cross_pred = metrics._aggregate_prediction(cross_samples, dim.name)
-        if self_pred is None or cross_pred is None:
+        if self_pred is None:
             continue
         cell = data.outcomes[model][task]
         valid = [o.values[dim.name] for o in cell if o.valid_for(dim.name)]
         if not valid:
             continue
         n_cells += 1
-        pred = self_pred if kind == "self" else cross_pred
         for v in valid:
-            fs.append(float(pred))
+            fs.append(float(self_pred))
             os_.append(float(v))
             ws.append(1.0 / len(valid))
     return (np.asarray(fs), np.asarray(os_), np.asarray(ws), n_cells)
@@ -301,8 +284,7 @@ def binary_events(
 # Report assembly
 # --------------------------------------------------------------------------
 _POOLED_CAVEAT = (
-    "Pooled across models: base rates differ per model, and the cross forecast "
-    "is shared across targets (zero between-model resolution by construction). "
+    "Pooled across models: base rates differ per model. "
     "Read the per-model decomposition as primary."
 )
 
@@ -312,14 +294,12 @@ _SCALAR_KEYS = ("brier", "reliability", "resolution", "uncertainty",
 
 
 def _mean_components(per_model: dict) -> dict:
-    """Unweighted mean of each scalar component across models with events (RQ1 style)."""
-    out: dict = {"self": {}, "cross": {}}
-    used = [m for m, entry in per_model.items() if entry["self"]["n_events"] > 0]
-    for kind in ("self", "cross"):
-        for key in _SCALAR_KEYS:
-            vals = [per_model[m][kind][key] for m in used]
-            out[kind][key] = float(np.mean(vals)) if vals else float("nan")
-    out["n_models"] = len(used)
+    """Unweighted mean of each scalar component across models with events."""
+    used = [m for m, entry in per_model.items() if entry["n_events"] > 0]
+    out: dict = {"n_models": len(used)}
+    for key in _SCALAR_KEYS:
+        vals = [per_model[m][key] for m in used]
+        out[key] = float(np.mean(vals)) if vals else float("nan")
     return out
 
 
@@ -333,15 +313,11 @@ def murphy_report(
     """The full Murphy readout: per (condition, binary dim), per model + mean + pooled.
 
     ``dimensions`` defaults to the binary dims of ``data.dimensions`` (Murphy
-    applies to Brier-scored dims only). IAI-eligible models only (the
-    cross-predictor has no self forecasts), same pool as the wins-fraction.
-    ``per_model[m]['self'|'cross']`` decompose over identical events, so their
-    ``uncertainty`` / ``base_rate`` agree exactly.
+    applies to Brier-scored dims only).
     """
     if dimensions is None:
         dimensions = tuple(d for d in data.dimensions if d.is_binary)
-    iai_models = [m for m in data.models
-                  if m != data.cross_model and metrics._has_self_forecasts(data, m)]
+    scored_models = [m for m in data.models if metrics._has_self_forecasts(data, m)]
     report: dict = {
         "method": {
             "primary": "CORP (PAV isotonic recalibration; Dimitriadis et al. 2021)",
@@ -351,32 +327,26 @@ def murphy_report(
             "identity": "brier == reliability - resolution + uncertainty (CORP: exact)",
         },
         "n_bins": n_bins,
-        "cross_model": data.cross_model,
-        "models": iai_models,
+        "models": scored_models,
         "conditions": {},
     }
     for cond in conditions:
         report["conditions"][cond] = {}
         for dim in dimensions:
             per_model: dict = {}
-            pooled = {kind: {"f": [], "o": [], "w": []} for kind in ("self", "cross")}
-            for m in iai_models:
-                entry: dict = {}
-                for kind in ("self", "cross"):
-                    f, o, w, n_cells = binary_events(data, m, dim, cond, kind)
-                    entry[kind] = corp_decomposition(f, o, w, n_bins=n_bins)
-                    entry["n_cells"] = n_cells  # identical for self/cross (same gates)
-                    pooled[kind]["f"].append(f)
-                    pooled[kind]["o"].append(o)
-                    pooled[kind]["w"].append(w)
+            pooled = {"f": [], "o": [], "w": []}
+            for m in scored_models:
+                f, o, w, n_cells = binary_events(data, m, dim, cond)
+                entry = corp_decomposition(f, o, w, n_bins=n_bins)
+                entry["n_cells"] = n_cells
                 per_model[m] = entry
-            pooled_view = {}
-            for kind in ("self", "cross"):
-                arrays = pooled[kind]
-                f = np.concatenate(arrays["f"]) if arrays["f"] else np.array([])
-                o = np.concatenate(arrays["o"]) if arrays["o"] else np.array([])
-                w = np.concatenate(arrays["w"]) if arrays["w"] else np.array([])
-                pooled_view[kind] = corp_decomposition(f, o, w, n_bins=n_bins)
+                pooled["f"].append(f)
+                pooled["o"].append(o)
+                pooled["w"].append(w)
+            f = np.concatenate(pooled["f"]) if pooled["f"] else np.array([])
+            o = np.concatenate(pooled["o"]) if pooled["o"] else np.array([])
+            w = np.concatenate(pooled["w"]) if pooled["w"] else np.array([])
+            pooled_view = corp_decomposition(f, o, w, n_bins=n_bins)
             report["conditions"][cond][dim.name] = {
                 "per_model": per_model,
                 "mean_across_models": _mean_components(per_model),
@@ -401,7 +371,6 @@ def load_scoring_data(data_dir: Path) -> metrics.ScoringData:
         return json.loads(path.read_text(encoding="utf-8"))
 
     task_ids = [t["instance_id"] for t in _read(data_dir / "tasks.json")]
-    cross_model = _read(data_dir / "cross_predictor.json")["cross_model"]
 
     outcomes: dict = {}
     for model in config.MODEL_IDS:
@@ -430,19 +399,15 @@ def load_scoring_data(data_dir: Path) -> metrics.ScoringData:
             out[tid] = per_condition
         return out
 
-    self_forecasts = {m: _read_samples(m, "self")
-                      for m in config.MODEL_IDS if m != cross_model}
-    cross_forecasts = _read_samples(cross_model, "anonymous")
+    self_forecasts = {m: _read_samples(m, "self") for m in config.MODEL_IDS}
 
     return metrics.ScoringData(
         dimensions=config.DIMENSIONS,
         models=list(config.MODEL_IDS),
         families=config.families(),
         tasks=task_ids,
-        cross_model=cross_model,
         outcomes=outcomes,
         self_forecasts=self_forecasts,
-        cross_forecasts=cross_forecasts,
     )
 
 
@@ -465,13 +430,10 @@ def main(argv: list[str] | None = None) -> int:
     out = results_dir / "murphy.json"
     out.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    # One-line readout per dim (no_thinking): what drives the self-vs-cross gap.
     for dim_name, block in report["conditions"]["no_thinking"].items():
         mean = block["mean_across_models"]
-        s, c = mean["self"], mean["cross"]
-        print(f"[murphy] {dim_name:26s} REL self {s['reliability']:.4f} vs cross {c['reliability']:.4f}"
-              f" | RES self {s['resolution']:.4f} vs cross {c['resolution']:.4f}"
-              f" | UNC {s['uncertainty']:.4f}")
+        print(f"[murphy] {dim_name:26s} REL {mean['reliability']:.4f}"
+              f" | RES {mean['resolution']:.4f} | UNC {mean['uncertainty']:.4f}")
     print(f"[murphy] wrote {out}")
     return 0
 

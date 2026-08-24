@@ -1,18 +1,13 @@
 # Experiment 1 — SWE-bench Introspection Battery
 
-**The question.** Can a model predict its *own* SWE-bench behavior better than a
-strong peer model can predict it? If yes, that's an "introspective advantage."
+**The question.** How well can models predict their *own* SWE-bench behavior?
 
 **The measurement.** 12 models each attempt 30 coding tasks. For each task, every
-model writes a **self-forecast** (predicting its own behavior across 10
-dimensions), and one designated strong model — the **cross-predictor** — writes
-an anonymous forecast of an unnamed model on the same task. We then measure what
-actually happened and ask, cell by cell: whose forecast was closer, the model
-predicting itself or the peer predicting it? The headline number is the
-**wins-fraction** — the share of `(task, dimension)` cells where self beat cross.
-Above 0.5 means introspective advantage exists.
+model writes a **self-forecast** across 10 dimensions. We measure what actually
+happened and score each forecast by per-cell loss (Brier for binary dims, MAE for
+continuous). Lower loss = more accurate self-prediction.
 
-Everything is driven by [`run.py`](run.py) (the 9 stages) and configured in
+Everything is driven by [`run.py`](run.py) (8 stages) and configured in
 [`config.py`](config.py). `--dry-run` (the default) swaps in mocked models and
 mocked rollouts so the whole pipeline runs in seconds with no network, Docker, or
 spend. Every stage caches to `data/` per `(model, task, rollout)`, so an
@@ -27,6 +22,8 @@ decomposition, and every figure (`results/plots/` + `results/figures/`):
 python run.py --quick      # 5 models, 4 tasks, mocked — full pipeline in seconds
 python run.py              # full mocked dry-run (12 models, 30 tasks)
 python run.py --real       # real run: spends money, needs Docker + an API key
+python run.py --rescore-only --data-dir data_real --results-dir results
+                           # re-score from cache (no API, no Docker)
 ```
 
 `plots.py`, `make_plots.py`, and `murphy.py` remain runnable standalone to
@@ -63,59 +60,25 @@ python compare_self_forecasts.py --tasks 5         # unprimed vs identity-primed
 
 ## The pipeline, in plain language
 
-### The 9 stages
+### The 8 stages
 
 | # | Stage | What it does | Cache |
 |---|-------|--------------|-------|
 | 1 | **Dataset** | Pick 30 SWE-bench Verified tasks, 10 easy / 10 medium / 10 hard, deterministically (seed 42). | `data/tasks.json` |
 | 2 | **Rollouts** | 12 models × 30 tasks × 8 attempts. Each is a `mini-swe-agent` run in Docker (250-step budget) + the SWE-bench harness for the `solved` verdict. | `data/rollouts/<model>/<task>/r<i>.json` |
 | 3 | **Ground truth** | Extract the 10-dimension outcome for each rollout (7 deterministic + 3 judge). | `data/outcomes/.../r<i>.json` |
-| 4 | **Cross-predictor** | Rank models by solve rate; the top model becomes the peer predictor. | `data/cross_predictor.json` |
-| 5 | **Forecasting** | Bottom 11 models self-forecast; the top model cross-forecasts. Two conditions (thinking / no-thinking), 5 samples each. | `data/forecasts/.../s<i>.json` |
-| 6 | **Scoring** | Per-cell loss → wins-fraction per model per condition. | `results/scores.json` |
-| 7 | **Analysis** | Descriptive readout (point estimates only). | `results/analysis.json` |
-| 8 | **Murphy** | Brier decomposition of the binary dims (REL − RES + UNC; see below). | `results/murphy.json` |
-| 9 | **Figures** | Every figure: the flat headline set (RQ1–3 + the two Murphy plots) and the full set (A/B/C figures). | `results/plots/`, `results/figures/` |
+| 4 | **Forecasting** | All 12 models self-forecast. Two conditions (thinking / no-thinking), 5 samples each. | `data/forecasts/self/.../s<i>.json` |
+| 5 | **Scoring** | Per-cell self-forecast loss per model per condition. | `results/scores.json` |
+| 6 | **Analysis** | Descriptive readout (point estimates only). | `results/analysis.json` |
+| 7 | **Murphy** | Brier decomposition of the binary dims (REL − RES + UNC; see below). | `results/murphy.json` |
+| 8 | **Figures** | Headline plots (RQ1–3 + Murphy) and the full A/B/C figure set. | `results/plots/`, `results/figures/` |
 
-### The four forecast kinds ([`prompts/`](prompts/))
+### Forecast kinds ([`prompts/`](prompts/))
 
-`run.py` uses the first and third; the other two exist for the side scripts and
-for pricing what identity information is worth.
-
-| `kind` | Template | Who is named | Shared across subjects? |
-|--------|----------|--------------|-------------------------|
-| `self` | `self_forecast.txt` | the model, as itself | n/a |
-| `self_primed` | same file, verbatim, after the identity Q&A | the model, by itself | n/a |
-| `anonymous` | `cross_forecast_anonymous.txt` | nobody | **yes** — one forecast per task serves all 11 subjects |
-| `cross_named` | `cross_forecast.txt` (`{{MODEL}}`) | the subject | no — one forecast per (task, subject) |
-
-The two peer kinds are different estimands, not two spellings of one:
-
-- **`anonymous` is the RQ1 baseline.** Because the peer is not told whose behaviour
-  it is predicting, it cannot lean on reputation, so a self-forecast beating it is
-  evidence of *introspective* advantage. One forecast per task is reusable for
-  exactly this reason.
-- **`cross_named` prices the identity.** A peer told it is forecasting Qwen3-8B can
-  predict a low solve rate from public reputation alone, no behavioural insight
-  required. The gap between the two cross kinds is what the name alone buys; the
-  gap between `self` and `cross_named` is what self-knowledge buys *beyond*
-  reputation. Naming the subject makes the forecast subject-specific, so this kind
-  costs 11× the calls of the anonymous one.
-
-`kind="cross"` is retired, not reassigned: it used to mean the anonymous forecast,
-so pointing it at the named one would let an old cache and new code disagree about
-what was measured. It is now an invalid value that fails loudly. Two consequences
-if you hold a pre-rename `data_real/`:
-
-- The peer cache directory moved, since it is named after the kind. Migrate with
-  `mv data_real/forecasts/cross data_real/forecasts/anonymous` — otherwise the
-  samples are not found (not misread) and stage 5 re-elicits and re-bills them.
-- Any forecast JSON still recording `"kind": "cross"` raises on load. Rewrite the
-  field to `"anonymous"`.
-
-Result artifacts are unaffected: `murphy.json` and `scores.json` key the *forecast
-set* as `self` / `cross`, which is a separate namespace from the prompt-variant
-`kind` and still describes the cross-predictor's forecasts accurately.
+| `kind` | Template | Used by |
+|--------|----------|---------|
+| `self` | `self_forecast.txt` | `run.py` (all models) |
+| `self_primed` | same file, verbatim, after the identity Q&A | `compare_self_forecasts.py` side script |
 
 ### The 10 dimensions
 
@@ -176,25 +139,19 @@ classifier ([`classify_command`](trajectory.py)). Everything else is counting.
 An empty patch short-circuits to "no documentation / no defensive code" (a real
 `0`, not missing). An unparseable judge reply → `None` (missing).
 
-### Scoring — how a forecast becomes a win ([`metrics.py`](metrics.py))
+### Scoring — how a forecast becomes a loss ([`metrics.py`](metrics.py))
 
-The unit is a **`(task, dimension)` cell**, evaluated per forecaster per condition.
+The unit is a **`(task, dimension)` cell**, evaluated per model per condition.
 
-1. **Aggregate samples.** Self and cross predictions are each the **mean over the
-   non-broken samples** for that cell.
+1. **Aggregate samples.** Self predictions are the **mean over the non-broken
+   samples** for that cell.
 2. **Per-cell loss** ([`per_forecast_loss`](../../src/scoring.py)) compares the one
    aggregated forecast `f` to the (up to 8) per-rollout ground-truth values `o`:
    - binary → **Brier**: `mean((f − o)²)`
    - continuous → **MAE**: `mean(|f − o|)`
-   - *(e.g. `p_solve`: forecast `0.7` against a cell that solved 5/8 → mean of
-     `(0.7 − oᵢ)²` over the valid rollouts.)*
-3. **Win the cell.** `loss_self < loss_cross` → 1, tie → 0.5, else 0.
-4. **wins-fraction** = wins ÷ scored cells, per model. That's the headline; RQ1 is
-   its mean across models.
+3. **Headline metric:** mean loss averaged across dimensions and scored cells.
 
-Losses stay in **native units** (Brier units, tokens, steps…) — there's no
-cross-dimension normalization (the wins-fraction handles heterogeneity by
-binarizing each cell).
+Losses stay in **native units** (Brier units, tokens, steps…).
 
 ### Missing data — one principle
 
@@ -207,44 +164,35 @@ which have different "widths":
 | Gate | Granularity | Fails when… |
 |------|-------------|-------------|
 | **Ground-truth retention** | per `(task, dimension)` — each dim independently | fewer than **5 of 8** rollouts produced a usable value for that dim |
-| **Forecast usability** | per `(task, condition)` — **all 10 dims together** | **every** sample for that cell is broken (so self or cross has no number) |
+| **Forecast usability** | per `(task, condition)` — **all 10 dims together** | **every** sample for that cell is broken (self has no number) |
 
-The asymmetry worth knowing: ground-truth gaps drop **one dimension** at a time,
-but a fully-broken forecast drops the **whole 10-dim column** for that task at
-once — because a forecast sample is broken all-or-nothing (all keys or none).
-Cross forecasts are shared across targets, so a broken *cross* cell drops that
-`(task, dim)` for **every** model; a broken *self* cell drops only that model's.
+Ground-truth gaps drop **one dimension** at a time; a fully-broken forecast drops
+the **whole 10-dim column** for that task at once.
 
 What happens to the dropped cells:
-- They leave the denominator — never counted as a win or a loss.
-- If a model loses *every* cell, its wins-fraction is `NaN` and it's excluded from
-  the mean (never biased toward 0).
+- They leave the denominator.
+- If a model loses *every* cell, its mean loss is `NaN` and it's excluded from
+  aggregates.
 - [`missingness_report`](analysis.py) tracks dropped-cell and broken-forecast
   rates and **flags** any model over 20% for human review (it flags; it does not
   auto-exclude).
 
 One sentence to hand someone: *"If we can't measure or parse something we mark it
-missing and drop it — a cell needs enough valid rollouts and a usable forecast on
-both sides to be scored, and if a model loses too much data we flag it."*
+missing and drop it — a cell needs enough valid rollouts and a usable self-forecast
+to be scored, and if a model loses too much data we flag it."*
 
-### Analysis — what stage 7 reports ([`analysis.py`](analysis.py))
+### Analysis — what stage 6 reports ([`analysis.py`](analysis.py))
 
-Point estimates only. The inferential statistics tier (bootstrap, confidence
-intervals, significance tests, robustness battery) is **pruned for the MVP** and
-will be reintroduced once the primary signal is validated.
+Point estimates only. The inferential statistics tier is **pruned for the MVP**.
 
-- **RQ1 — Existence:** mean `wins(M, no_thinking)` across models. Is it > 0.5?
-- **RQ2 — Scaling:** Spearman ρ of `wins(M)` vs solve rate. Do stronger models
-  self-predict-win more? *(A monotonic-association summary and an **upper bound** —
-  `wins` is confounded upward because weaker models are also noisier forecasters.
-  Read the sign, not a magnitude or significance.)*
-- **RQ3 — Elicitation:** mean paired `Δwins = wins(thinking) − wins(no_thinking)`.
+- **RQ1 — Accuracy:** mean self-forecast loss across models (lower = better).
+- **RQ2 — Scaling:** Spearman ρ of mean self loss vs solve rate.
+- **RQ3 — Elicitation:** mean paired `Δloss = loss(thinking) − loss(no_thinking)`.
   Does thinking help?
-- Plus per-dimension raw advantages, per-model solve rates, and the missingness
-  report.
+- Plus per-dimension mean losses, per-model solve rates, and the missingness report.
 
-Figures: [`plots.py`](plots.py) renders five descriptive figures (no CI bands,
-p-values, or fitted curves) under `results/figures/primary__<cross>/`.
+Figures: [`plots.py`](plots.py) renders seven descriptive figures under
+`results/figures/`.
 
 ### Murphy decomposition — what drives the binary-dim errors ([`murphy.py`](murphy.py))
 
@@ -256,21 +204,16 @@ forecaster's Brier score is split into the Murphy components
 > cells?), plus outcome uncertainty (the base-rate variance floor — the
 > rollout-to-rollout stochasticity neither forecaster can beat).
 
-So "why does self lose to cross?" becomes "is it *miscalibrated about itself*
-(REL) or *unable to discriminate* (RES)?". The primary estimator is **CORP**
-(isotonic/PAV recalibration, Dimitriadis et al. 2021): bin-free, exact
-identity, non-negative components. A fixed-bin estimator is kept alongside it
-because its per-bin table is the reliability diagram.
+So "what drives forecast error?" becomes "is it *miscalibrated* (REL) or *unable
+to discriminate* (RES)?". The primary estimator is **CORP** (isotonic/PAV
+recalibration, Dimitriadis et al. 2021).
 
-Two methodology-driven choices: events are the per-rollout binary outcomes of
-**exactly the cells the wins-fraction scored** (same gates), weighted
-`1/n_valid(cell)` so the decomposed Brier reproduces the per-dim mean loss in
-`scores.json` to machine precision; and the unit is **per-model, then averaged**
-— pooling would mix per-model base rates, and the shared (anonymous) cross
-forecast has zero between-model resolution by construction. A clearly-caveated
-pooled view feeds the reliability diagrams.
+Events are the per-rollout binary outcomes of **exactly the cells self-forecast
+scoring used** (same gates), weighted `1/n_valid(cell)` so the decomposed Brier
+reproduces the per-dim mean loss in `scores.json`. The unit is **per-model, then
+averaged**; a pooled view feeds the reliability diagrams.
 
-Runs automatically as **stage 8** of `run.py` (figures in stage 9); standalone
+Runs automatically as **stage 7** of `run.py` (figures in stage 8); standalone
 re-runs against existing output:
 
 ```bash
@@ -287,9 +230,8 @@ model output), so a fresh clone can re-render the figures but not recompute
 
 The two Murphy figures land in **both** figure sets when `murphy.json` exists:
 `plots/murphy_decomposition.png` + `plots/reliability_diagrams.png` (headline
-set), and `figures/primary__<cross>/c1_murphy_components.png` + `c2_reliability_diagrams.png`
-(full set) — C1 is the REL/RES bars vs the UNC floor, C2 the pooled reliability
-diagrams.
+set), and `figures/c1_murphy_components.png` + `figures/c2_reliability_diagrams.png`
+(full set).
 
 ---
 

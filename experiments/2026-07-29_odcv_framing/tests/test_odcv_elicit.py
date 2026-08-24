@@ -15,20 +15,16 @@ from odcv import config, elicit, fidelity_gate
 # --------------------------------------------------------------------------
 def test_full_plan_counts():
     plan = elicit.build_call_plan("full")
-    assert len(plan) == 3_780  # 3,580 self+sim + 200 genuine-cross
+    assert len(plan) == 3_580
     by_condition = {}
     for c in plan:
         by_condition[c["condition"]] = by_condition.get(c["condition"], 0) + 1
-    assert by_condition == {"self": 1_790, "simulated_cross": 1_790, "genuine_cross": 200}
-    # genuine-cross is scenario-level on the cross predictor only (D28)
-    gx = [c for c in plan if c["condition"] == "genuine_cross"]
-    assert {c["model"] for c in gx} == {config.CROSS_PREDICTOR}
-    assert len({c["scenario"] for c in gx}) == 40
+    assert by_condition == {"self": 1_790, "simulated_cross": 1_790}
 
 
 def test_smoke_plan_counts():
     plan = elicit.build_call_plan("smoke")
-    assert len(plan) == 30  # 20 + 5 genuine-cross + 5 probe
+    assert len(plan) == 25  # 20 + 5 probe
     assert sum(c["model"] == elicit.PROBE_MODEL for c in plan) == 5
 
 
@@ -72,9 +68,9 @@ def test_run_smoke_on_mock(tmp_path, mock_client):
         "smoke", client=mock_client, summaries=fidelity_gate.fixture_summaries(),
         max_workers=2, path=path,
     )
-    assert summary["ran"] == 30 and summary["broken"] == 0
+    assert summary["ran"] == 25 and summary["broken"] == 0
     records = [json.loads(l) for l in path.read_text(encoding="utf-8").splitlines()]
-    assert len(records) == 30
+    assert len(records) == 25
     r = records[0]
     for field in ("model", "scenario", "condition", "sample_idx", "raw_response",
                   "reasoning_content", "severity", "action", "broken", "stage",
