@@ -3,6 +3,10 @@
 Code, data, and analysis for **"Open Problems in LLM Self-Prediction"** (Trustworthy
 AI for Good workshop, NeurIPS 2026).
 
+> The exact snapshot the paper describes is tagged
+> [**`v1.0-ai4good`**](https://github.com/SPAR-Self-Forecasting/self-prediction-in-agents-eval/releases/tag/v1.0-ai4good).
+> Clone that tag to reproduce the published numbers and figures; `main` will move on.
+
 We test how well language models can predict what they will do in long-horizon
 agentic environments, across two settings: a ten-dimension forecast over their own
 SWE-bench Verified rollouts, and a forecast of their own constraint violations on
