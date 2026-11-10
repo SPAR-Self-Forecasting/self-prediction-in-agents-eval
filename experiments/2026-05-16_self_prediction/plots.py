@@ -19,12 +19,15 @@ Every figure shows **both forecast conditions together** (`no_thinking` and
 `thinking`); the user reads the thinking effect off the same plot as the
 existence claim. A3 is unchanged (Δloss already encodes both).
 
-MVP scope: the inferential statistics tier is pruned, so the figures render
-**point estimates only** -- no confidence-interval bands, p-value annotations,
-or fitted scaling curves.
+The figures render **point estimates only** -- no confidence-interval bands or
+error bars. A2 additionally takes an optional ``significance`` report
+(``results/significance.json``, written by ``significance.py``) and then
+annotates its title with the permutation p for the scaling trend; without it
+the title just says "descriptive".
 
-Read-only: every figure is built from ``results/scores.json`` and
-``results/analysis.json`` -- no scoring logic, no ``ScoringData`` reconstruction.
+Read-only: every figure is built from ``results/scores.json``,
+``results/analysis.json`` and the optional ``results/significance.json`` -- no
+scoring logic, no ``ScoringData`` reconstruction.
 """
 
 from __future__ import annotations
@@ -459,6 +462,7 @@ def figure_a1_loss_bar(
 # --------------------------------------------------------------------------
 def figure_a2_scaling(
     *, scores: dict, analysis: dict, families_by_model: dict[str, str],
+    significance: dict | None = None,
 ) -> plt.Figure:
     """RQ2 visualisation: equal-dimension mean self loss vs empirical solve rate.
 
@@ -468,6 +472,11 @@ def figure_a2_scaling(
     condition) -- filled = ``no_thinking``, hollow = ``thinking`` -- joined by a
     faint stem so the pair reads as one model. Model names are placed by
     ``_place_point_labels``.
+
+    ``significance`` is the ``significance.json`` report. When supplied, the
+    title carries the permutation p for the trend; the scatter itself stays a
+    plain point estimate, so the figure still renders from ``scores`` +
+    ``analysis`` alone.
     """
     solve_rates = analysis.get("solve_rates") or analysis["rq2_scaling"].get("solve_rates")
     models = sorted(
@@ -519,7 +528,18 @@ def figure_a2_scaling(
 
     ax.set_xlabel("empirical solve rate (mean p_solve)")
     ax.set_ylabel("equal-dimension mean loss (lower = better)")
-    ax.set_title("RQ2 — self-forecast accuracy vs model capability (descriptive)",
+    scaling = (significance or {}).get("scaling")
+    if scaling:
+        fam = scaling["family_level"]
+        subtitle = (
+            f"Spearman ρ = {scaling['spearman_rho']:.2f}; "
+            f"permutation over the {len(scaling['per_model'])} models "
+            f"p = {scaling['permutation_p_models']:.4f}, "
+            f"over the {fam['n_families']} families p = {fam['exact_permutation_p']:.3f}"
+        )
+    else:
+        subtitle = "descriptive"
+    ax.set_title(f"RQ2 — self-forecast accuracy vs model capability\n{subtitle}",
                  fontsize=11.5, pad=12)
     for spine in ax.spines.values():
         spine.set_edgecolor("#d0d0d0")
@@ -951,7 +971,7 @@ _RELIABILITY_LAYOUTS = ("grid_3col", "2x2+1", "1x5")
 
 # Vertical gap between 1x5 panels, as a fraction of panel height. Must stay
 # large enough to clear each panel's xlabel plus the next panel's two-line title.
-_RELIABILITY_1X5_HSPACE = 0.25
+_RELIABILITY_1X5_HSPACE = 0.42
 
 
 def _reliability_panel_title(name: str) -> str:
@@ -1190,7 +1210,8 @@ _NUMERIC_LAYOUTS = ("1x5", "2x3")
 
 #: Axis clip percentile. ``avg_tokens_step`` and ``total_expected_steps`` have
 #: long right tails -- a few runaway rollouts would squash every other cell
-#: into the bottom-left corner. Off-scale cells are counted in the panel note.
+#: into the bottom-left corner. Off-scale cells are counted per axis in the
+#: panel note.
 _NUMERIC_AXIS_PCTL = 99.0
 
 
@@ -1225,6 +1246,23 @@ def _numeric_axis_limits(values: np.ndarray) -> tuple[float, float]:
     return lo - pad, hi + pad
 
 
+def _off_scale_note(
+    n_forecast: int, n_actual: int, n_both: int, *, compact: bool,
+) -> str:
+    """Panel note naming which coordinate ran past the shared upper limit.
+
+    ``_numeric_axis_limits`` only ever clips the top end (``lo`` is at or below
+    the data minimum), so every hidden cell sits above the range on the
+    forecast axis, the actual axis, or both. Wrapped to the panel width so the
+    note stays inside the axes in either layout.
+    """
+    counts = ((n_forecast, "forecast"), (n_actual, "actual"), (n_both, "both"))
+    detail = ", ".join(f"{n} in {label}" for n, label in counts if n)
+    total = n_forecast + n_actual + n_both
+    body = f"{total} cells off scale (not shown): {detail}"
+    return "\n".join(textwrap.wrap(body, 26 if compact else 44))
+
+
 def _draw_numeric_panel(
     ax, name: str, points: dict, report: dict, *, compact: bool, show_xlabel: bool,
 ) -> None:
@@ -1239,14 +1277,17 @@ def _draw_numeric_panel(
     label_fs = 7.5 if compact else 8.5
     title_fs = 8.0 if compact else 9.5
 
-    off_scale = 0
+    off_fore = off_act = off_both = 0
     for cond in _CONDITIONS:
         rec = points.get(cond, {}).get(name)
         if not rec or not rec["forecast"]:
             continue
         fore = np.asarray(rec["forecast"], float)
         act = np.asarray(rec["actual"], float)
-        off_scale += int(((fore > hi) | (act > hi)).sum())
+        hi_fore, hi_act = fore > hi, act > hi
+        off_fore += int((hi_fore & ~hi_act).sum())
+        off_act += int((hi_act & ~hi_fore).sum())
+        off_both += int((hi_fore & hi_act).sum())
         ax.scatter(fore, act, s=8, alpha=0.32, linewidths=0,
                    color=SELF_COLORS[cond], zorder=3)
 
@@ -1258,8 +1299,8 @@ def _draw_numeric_panel(
 
     n_models = len(report["models"])
     note = f"{summary['n_models_beating_baseline']}/{n_models} beat baseline"
-    if off_scale:
-        note += f"\n{off_scale} cells beyond the axis range (not shown)"
+    if off_fore or off_act or off_both:
+        note += "\n" + _off_scale_note(off_fore, off_act, off_both, compact=compact)
     ax.text(0.035, 0.965, note, transform=ax.transAxes, ha="left", va="top",
             fontsize=label_fs - 0.7, color="#333", linespacing=1.3,
             bbox={"facecolor": "white", "alpha": 0.82, "edgecolor": "#ddd",
@@ -1307,11 +1348,7 @@ def _numeric_figure_axes(
 
 _FOOTNOTE_NUMERIC = (
     "Each dot is one (model, task) cell: the model's forecast against that cell's mean "
-    "rollout outcome. The dashed diagonal is a perfect forecast, so a cell's vertical "
-    "distance from it is that cell's bias (forecast minus mean outcome), not the "
-    "per-rollout MAE reported elsewhere. The grey horizontal is "
-    "the constant baseline, the fixed \"this model's own mean outcome\" forecast: a cloud "
-    "that lies flat along it carries no task-level signal."
+    "rollout outcome."
 )
 
 
@@ -1399,12 +1436,15 @@ def render_all(
     dimensions=None,
     formats=("png",),
     murphy: dict | None = None,
+    significance: dict | None = None,
 ) -> list[Path]:
     """Render all figures directly under ``figures_dir``.
 
     The Core 5 always; the two Murphy figures (C1 components, C2 reliability
-    diagrams) additionally when a ``murphy`` report dict is supplied. Returns
-    the list of written file paths in render order.
+    diagrams) additionally when a ``murphy`` report dict is supplied. Passing
+    ``significance`` (the ``significance.json`` report) puts the permutation p
+    in the scaling figure's title. Returns the list of written file paths in
+    render order.
     """
     families_by_model = families_by_model or _default_families_by_model()
     dimensions = dimensions if dimensions is not None else config.DIMENSIONS
@@ -1418,6 +1458,7 @@ def render_all(
         "a2_scaling": figure_a2_scaling(
             scores=scores, analysis=analysis,
             families_by_model=families_by_model,
+            significance=significance,
         ),
         # "a3_delta_loss_forest": figure_a3_delta_loss_forest(
         #     scores=scores, analysis=analysis,
@@ -1484,7 +1525,11 @@ def main(argv: list[str] | None = None) -> int:
     murphy_path = results_dir / "murphy.json"
     murphy = (json.loads(murphy_path.read_text(encoding="utf-8"))
               if murphy_path.exists() else None)
-    written = render_all(scores, analysis, figures_dir, formats=formats, murphy=murphy)
+    sig_path = results_dir / "significance.json"
+    significance = (json.loads(sig_path.read_text(encoding="utf-8"))
+                    if sig_path.exists() else None)
+    written = render_all(scores, analysis, figures_dir, formats=formats, murphy=murphy,
+                         significance=significance)
     print(f"[plots] wrote {len(written)} figure file(s) under {figures_dir}")
     for p in sorted(written):
         print(f"  - {p.name}")

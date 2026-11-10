@@ -47,7 +47,7 @@ _CAVEAT_BOX = (0.008, 0.012, 0.984, 0.170)
 
 
 def _draw_point_estimate_caveat(fig: plt.Figure) -> None:
-    """Spell out "point estimates only" on the figure instead of hinting at it."""
+    """Say on the figure which uncertainty this chart does and does not carry."""
     x0, y0, w, h = _CAVEAT_BOX
     fig.patches.append(plt.Rectangle(
         (x0, y0), w, h, transform=fig.transFigure, zorder=0,
@@ -55,23 +55,22 @@ def _draw_point_estimate_caveat(fig: plt.Figure) -> None:
 
     pad = 0.012
     fig.text(x0 + pad, y0 + h - 0.016,
-             "Point estimates only — why there are no error bars",
+             "Bars are point estimates — the intervals live in significance.json",
              fontsize=9.5, fontweight="bold", color="#222", va="top")
 
     left = (
-        "Every bar is a single computed number, not an estimate with uncertainty around it.\n"
-        "The study's inference tier — hierarchical bootstrap CIs, significance tests and the\n"
-        "robustness battery — was deliberately cut for the MVP, on the logic that uncertainty\n"
-        "isn't worth pricing until the primary signal is known to exist. It was scoped out,\n"
-        "not attempted and abandoned."
+        "Every bar is a single computed number. The inference tier is now run separately by\n"
+        "significance.py, which resamples the 30 tasks to put a 95% CI on each model's bias,\n"
+        "its skill against its own constant baseline, and the thinking contrast, correcting\n"
+        "across models with Benjamini–Hochberg. Read those intervals, not the gaps between\n"
+        "neighbouring bars here."
     )
     right = (
-        "So don't read the small gaps between neighbouring bars as significant. Per-model\n"
-        "loss carries standard error from finite cell counts, and cells cluster within task\n"
-        "and within rollout — nothing here should be quoted with significance language.\n"
-        "Confound W2: loss = bias\u00b2 + forecast variance, so erratic forecasters carry\n"
-        "inflated self-loss and weaker models are noisier — the weak end of this chart is a\n"
-        "lower bound on self-knowledge rather than an estimate of it."
+        "Two cautions survive that inference tier. The 11 models are not an exchangeable\n"
+        "sample — five are Qwen variants — so no interval here treats them as independent\n"
+        "replicates. And confound W2: loss = bias² + forecast variance, so erratic\n"
+        "forecasters carry inflated self-loss and weaker models are noisier, which makes\n"
+        "the weak end of this chart a lower bound on self-knowledge rather than an estimate."
     )
     for x, body in ((x0 + pad, left), (x0 + 0.475, right)):
         fig.text(x, y0 + h - 0.042, body, fontsize=7.6, color="#333",
@@ -155,7 +154,8 @@ def figure_rq2(analysis: dict) -> plt.Figure:
     ax.set_ylabel("equal-dimension mean loss (lower = better)")
     ax.set_title(
         f"RQ2 — Self-forecast accuracy vs capability\n"
-        f"Spearman rho = {rq2['spearman_rho']:.3f}  (descriptive; not a significance test)"
+        f"Spearman rho = {rq2['spearman_rho']:.3f}  "
+        f"(permutation test and per-model CIs in significance.json)"
     )
     fig.tight_layout()
     return fig
@@ -261,8 +261,8 @@ def figure_dimensions(scores: dict, *, condition: str = "no_thinking") -> plt.Fi
         0.008, 0.012,
         "How to read it — each model forecasts its own behaviour on 10 dimensions. "
         "Heights compare only within a dimension (same unit). "
-        "Point estimates only, averaged across models — no confidence intervals; "
-        "noisier forecasters carry inflated self-loss (confound W2).",
+        "Bars are point estimates averaged across models; per-model 95% CIs are in "
+        "significance.json. Noisier forecasters carry inflated self-loss (confound W2).",
         fontsize=8, color="#444", va="bottom", linespacing=1.5)
 
     fig.subplots_adjust(left=0.075, right=0.915, top=0.82, bottom=0.28, wspace=0.10)

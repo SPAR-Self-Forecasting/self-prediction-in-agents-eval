@@ -92,6 +92,15 @@ class ModelSpec:
     ``is_judge``: model also sits on ODCV's 4-judge panel, so its own ground
     truth is a median of the 3 *other* judges (whole numbers, marginally
     noisier) -- recorded heterogeneity, minor caveat for RQ2.
+
+    ``eci``: Epoch Capabilities Index (general), an external composite of 50+
+    benchmarks used purely to order models by capability in figures -- it
+    enters no analysis. None means Epoch publishes no score for the model.
+
+    ``eci_sort_hint``: figure-ordering fallback for models Epoch does not
+    score. It is an operator-chosen slot, NOT an estimated ECI -- it must
+    never be read as a capability measurement, and labels keep saying
+    "no ECI" so the distinction survives into the figure.
     """
 
     name: str
@@ -101,6 +110,8 @@ class ModelSpec:
     expected_cells: int         # usable mandated cells per the spec registry
     reasoning: dict | None = None
     is_judge: bool = False
+    eci: float | None = None
+    eci_sort_hint: float | None = None
 
     @property
     def slug(self) -> str:
@@ -108,25 +119,34 @@ class ModelSpec:
         return self.openrouter_id.replace("/", "__")
 
 
+#: ECI values below are the general Epoch Capabilities Index, retrieved
+#: 2026-08-24 from https://epoch.ai/data/eci_scores.csv (leaderboard:
+#: https://epoch.ai/eci). Epoch's own release dates are used to disambiguate
+#: which entry maps to which executor; they differ from `release_date` here,
+#: which is the OpenRouter listing date (D17). Qwen3.6-27B has no Epoch entry
+#: -- Epoch's Qwen 3.6 lineup is Plus / Max (Preview) / 35B-A3B / Flash, and
+#: none of those is this model, so it is left None rather than approximated.
+#: It carries an `eci_sort_hint` instead, which only fixes where it sits in
+#: figure D2 (between MiniMax M2.7 and gpt-oss-120b, operator call 2026-08-24).
 MODELS: tuple[ModelSpec, ...] = (
     ModelSpec("gpt-oss-20b", "openai/gpt-oss-20b", "gpt-oss-20b",
-              "2025-08-05", 40),
+              "2025-08-05", 40, eci=136.65),
     ModelSpec("gpt-oss-120b", "openai/gpt-oss-120b", "gpt-oss-120b",
-              "2025-08-05", 40),
+              "2025-08-05", 40, eci=140.54),
     ModelSpec("Gemini 3.1 Pro", "google/gemini-3.1-pro-preview", "gemini-3.1-pro-preview",
-              "2026-02-19", 40, is_judge=True),
+              "2026-02-19", 40, is_judge=True, eci=154.62),
     ModelSpec("MiniMax M2.7", "minimax/minimax-m2.7", "minimax-m2.7",
-              "2026-03-18", 39),
+              "2026-03-18", 39, eci=145.91),
     ModelSpec("Grok 4.20", "x-ai/grok-4.20", "grok-4.20",
-              "2026-03-31", 39, reasoning={"enabled": True}, is_judge=True),
+              "2026-03-31", 39, reasoning={"enabled": True}, is_judge=True, eci=152.07),
     ModelSpec("GLM-5.1", "z-ai/glm-5.1", "glm-5.1",
-              "2026-04-07", 40),
+              "2026-04-07", 40, eci=150.86),
     ModelSpec("Kimi K2.6", "moonshotai/kimi-k2.6", "kimi-k2.6",
-              "2026-04-20", 40),
+              "2026-04-20", 40, eci=151.04),
     ModelSpec("Qwen3.6-27B", "qwen/qwen3.6-27b", "qwen3.6-27b",
-              "2026-04-27", 40),
+              "2026-04-27", 40, eci=None, eci_sort_hint=143.0),
     ModelSpec("Qwen3.6-Max", "qwen/qwen3.6-max-preview", "qwen3.6-max-preview",
-              "2026-04-27", 40),
+              "2026-04-27", 40, eci=149.30),
 )
 MODEL_IDS: tuple[str, ...] = tuple(m.openrouter_id for m in MODELS)
 MODEL_BY_ID: dict[str, ModelSpec] = {m.openrouter_id: m for m in MODELS}

@@ -468,6 +468,79 @@ def test_c2_draws_exactly_one_base_rate_line(murphy_report, dims):
 
 
 # --------------------------------------------------------------------------
+# Forecast-vs-outcome panels -- off-scale bookkeeping
+# --------------------------------------------------------------------------
+@pytest.mark.parametrize(("counts", "detail"), [
+    ((4, 0, 0), "4 in forecast"),
+    ((0, 7, 0), "7 in actual"),
+    ((0, 0, 2), "2 in both"),
+    ((4, 7, 2), "4 in forecast, 7 in actual, 2 in both"),
+])
+def test_off_scale_note_names_the_axis_that_ran_off(counts, detail):
+    note = plots._off_scale_note(*counts, compact=False)
+    flat = " ".join(note.split())
+    total = sum(counts)
+    assert flat == f"{total} cells off scale (not shown): {detail}"
+
+
+@pytest.mark.parametrize("compact", [False, True])
+def test_off_scale_note_wraps_to_the_panel_width(compact):
+    note = plots._off_scale_note(4, 7, 2, compact=compact)
+    width = 26 if compact else 44
+    assert max(len(line) for line in note.splitlines()) <= width
+
+
+NUMERIC_DIMS = tuple(d for d in DIMS if d[1] != "binary")
+
+
+def _numeric_points_with_outliers() -> tuple[dict, dict]:
+    """Cells whose 99th-percentile clip hides one of each off-scale kind."""
+    base_f = [float(i % 10) for i in range(300)]
+    base_a = list(base_f)
+    fore = base_f + [900.0, 1.0, 920.0]
+    act = base_a + [1.0, 940.0, 960.0]
+    names = [d[0] for d in NUMERIC_DIMS]
+    points = {
+        cond: {n: {"forecast": fore, "actual": act} for n in names}
+        for cond in plots._CONDITIONS
+    }
+    report = {
+        "models": MODELS,
+        "conditions": {
+            cond: {
+                n: {"mean_actual": 4.5, "n_models_beating_baseline": 2}
+                for n in names
+            }
+            for cond in plots._CONDITIONS
+        },
+    }
+    return points, report
+
+
+@pytest.mark.parametrize("layout", ["2x3", "1x5"])
+def test_c3_off_scale_note_names_axes_and_stays_inside_the_panel(layout):
+    points, report = _numeric_points_with_outliers()
+    fig = plots.figure_c3_numeric_calibration(
+        points=points, report=report, dimensions=NUMERIC_DIMS, layout=layout)
+    try:
+        fig.canvas.draw()
+        panels = [ax for ax in fig.axes if ax.get_ylabel() == "actual"]
+        assert panels
+        for ax in panels:
+            note = next(t for t in ax.texts
+                        if "not shown" in " ".join(t.get_text().split()))
+            flat = " ".join(note.get_text().split())
+            assert flat.endswith("6 cells off scale (not shown): "
+                                 "2 in forecast, 2 in actual, 2 in both")
+            box = ax.get_window_extent()
+            extent = note.get_window_extent()
+            assert extent.x1 <= box.x1, f"note spills right of the {layout} panel"
+            assert extent.y1 <= box.y1, f"note spills above the {layout} panel"
+    finally:
+        plt.close(fig)
+
+
+# --------------------------------------------------------------------------
 # render_all / CLI smoke -- writes flat PNGs under figures_dir
 # --------------------------------------------------------------------------
 def test_render_all_writes_one_png_flat(tmp_path, scores, analysis):

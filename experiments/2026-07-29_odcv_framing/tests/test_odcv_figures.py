@@ -30,6 +30,6 @@ def test_all_figures_render(tmp_path):
         "calibration_proxies": analysis.calibration_proxies(recs, cells),
     }
     made = figures.render_all(result, cells, out_dir=tmp_path)
-    assert len(made) == 9  # A1-A3, B1-B2, C1-C2 + exploratory D1-D2
+    assert len(made) == 10  # A1-A3, B1-B3, C1-C2 + exploratory D1-D2
     for p in made:
         assert p.exists() and p.stat().st_size > 5_000, p.name

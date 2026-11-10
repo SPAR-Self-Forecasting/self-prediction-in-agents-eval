@@ -86,12 +86,13 @@ def test_no_wins_null_reference_line():
 
 
 def test_caveat_panel_explains_the_terms_it_uses():
-    """"Point estimates only" and "W2" are jargon unless the chart unpacks them."""
+    """"Point estimates" and "W2" are jargon unless the chart unpacks them, and
+    the panel must point at where the intervals actually live."""
     fig = make_plots.figure_rq1(_analysis())
     try:
         blob = " ".join(t.get_text() for t in fig.texts).lower()
-        for phrase in ("point estimates only", "bootstrap", "significance",
-                       "standard error", "w2", "forecast variance", "lower bound"):
+        for phrase in ("point estimates", "significance.py", "95% ci", "benjamini",
+                       "exchangeable", "w2", "forecast variance", "lower bound"):
             assert phrase in blob, f"the caveat never explains {phrase!r}"
     finally:
         plt.close(fig)

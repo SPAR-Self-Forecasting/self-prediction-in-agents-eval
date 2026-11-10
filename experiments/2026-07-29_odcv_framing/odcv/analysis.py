@@ -94,13 +94,19 @@ def aggregate(records: list[dict]) -> dict[tuple, dict]:
     return out
 
 
-def _cell_value(cells: dict, model: str, scenario: str, condition: str) -> float | None:
-    """The usable aggregated severity for a cell, honoring the drop rule."""
+def _cell_value(cells: dict, model: str, scenario: str, condition: str,
+                aggregator: str | None = None) -> float | None:
+    """The usable aggregated severity for a cell, honoring the drop rule.
+
+    ``aggregator`` defaults to the pre-registered ``config.AGGREGATOR`` (median,
+    D10) and is overridden only by the D39 ranking score -- see
+    ``calibration_proxies``.
+    """
     key = (model, scenario, condition)
     agg = cells.get(key)
     if agg is None or agg["dropped"]:
         return None
-    return agg[config.AGGREGATOR]
+    return agg[aggregator or config.AGGREGATOR]
 
 
 # --------------------------------------------------------------------------
@@ -455,14 +461,163 @@ def _auc(pairs: list[tuple[float, bool]]) -> float | None:
     return (wins + 0.5 * ties) / (len(pos) * len(neg))
 
 
+def _auc_fast(scores: np.ndarray, labels: np.ndarray) -> float | None:
+    """Mann-Whitney form of ``_auc`` (tie-averaged ranks), for the bootstrap.
+
+    Identical to ``_auc`` to floating point; the O(n log n) form is what makes
+    BOOTSTRAP_B resamples affordable.
+    """
+    n_pos = int(labels.sum())
+    n_neg = int(labels.size - n_pos)
+    if not n_pos or not n_neg:
+        return None
+    uniq, inv, counts = np.unique(scores, return_inverse=True, return_counts=True)
+    start = np.cumsum(counts) - counts
+    ranks = (start + (counts + 1) / 2.0)[inv]
+    return float((ranks[labels].sum() - n_pos * (n_pos + 1) / 2.0) / (n_pos * n_neg))
+
+
+def _tied_fraction(pairs: list[tuple[float, bool]]) -> float | None:
+    """Share of violating/clean pairs that tie -- the pairs the score cannot
+    order, which each enter the AUC at exactly 0.5 and pull it toward chance."""
+    pos = [sc for sc, t in pairs if t]
+    neg = [sc for sc, t in pairs if not t]
+    if not pos or not neg:
+        return None
+    return sum(1 for p in pos for q in neg if p == q) / (len(pos) * len(neg))
+
+
+def _auc_perm_p(scores: np.ndarray, labels: np.ndarray) -> float | None:
+    """Two-sided permutation p-value for AUC = 0.5, shuffling SCENARIOS.
+
+    ``scores``/``labels`` are (model x scenario) with NaN for missing cells.
+    Each draw applies ONE column permutation to the whole label matrix, so a
+    scenario's nine model-labels travel together: that preserves both each
+    model's base rate (a row is permuted within itself) and the fact that models
+    agree about which scenarios are dangerous. Shuffling cells independently
+    instead ignores the second and is anti-conservative -- on the
+    simulated-cross condition it turns p = 0.05 into p = 0.01.
+
+    The null is the one the writeup actually claims to reject: the predicted
+    ordering carries no information about which cells the model went on to
+    violate.
+    """
+    ok = ~np.isnan(scores)
+    obs = _auc_fast(scores[ok], labels[ok].astype(bool))
+    if obs is None:
+        return None
+    rng = np.random.default_rng(BOOT_SEED)
+    n_scen = scores.shape[1]
+    extreme = 0
+    draws = 0
+    for _ in range(config.BOOTSTRAP_B):
+        perm = labels[:, rng.permutation(n_scen)]
+        m = ok & ~np.isnan(perm)
+        a = _auc_fast(scores[m], perm[m].astype(bool))
+        if a is None:
+            continue
+        draws += 1
+        extreme += abs(a - 0.5) >= abs(obs - 0.5)
+    # (extreme + 1) / (draws + 1): the observed arrangement is itself one of the
+    # permutations, so a p of exactly 0 is not attainable
+    return (extreme + 1) / (draws + 1) if draws else None
+
+
+def _auc_model_band(pairs: list[tuple[float, bool]]) -> dict | None:
+    """Per-model chance band and permutation p for one model's AUC.
+
+    A model contributes only 39-40 cells, so its AUC is noisy and the honest
+    reading of figure D2 needs a scale for "how far from 0.5 is far". Permuting
+    that model's own labels against its own scores gives one: the band is the
+    central 95% of AUCs the model's score vector can reach when the labels carry
+    no information at all. It is deliberately per model, because a near-constant
+    score vector cannot move far under permutation and so earns a narrow band --
+    which records how little the model said, not how precisely we measured it.
+
+    ``bootstrap_ci95`` is the complementary interval, resampling the model's
+    scenarios rather than permuting its labels.
+    """
+    pos = [sc for sc, t in pairs if t]
+    neg = [sc for sc, t in pairs if not t]
+    if not pos or not neg:
+        return None
+    scores = np.array([sc for sc, _ in pairs], dtype=float)
+    labels = np.array([t for _, t in pairs], dtype=bool)
+    obs = _auc_fast(scores, labels)
+
+    rng = np.random.default_rng(BOOT_SEED)
+    null = np.empty(config.BOOTSTRAP_B, dtype=float)
+    for b in range(config.BOOTSTRAP_B):
+        null[b] = _auc_fast(scores, rng.permutation(labels))
+    extreme = int(np.sum(np.abs(null - 0.5) >= abs(obs - 0.5)))
+
+    boots = []
+    n = scores.size
+    for _ in range(config.BOOTSTRAP_B):
+        pick = rng.integers(0, n, n)
+        a = _auc_fast(scores[pick], labels[pick])
+        if a is not None:
+            boots.append(a)
+
+    return {
+        "auc": obs,
+        "n_cells": int(n),
+        "n_violating": len(pos),
+        "chance_band95": list(percentile_ci(null, alpha=config.ALPHA)),
+        "perm_p": (extreme + 1) / (config.BOOTSTRAP_B + 1),
+        "bootstrap_ci95": list(percentile_ci(np.array(boots), alpha=config.ALPHA)) if boots else None,
+        "outside_chance_band": bool(
+            obs < np.percentile(null, 2.5) or obs > np.percentile(null, 97.5)
+        ),
+    }
+
+
+def _auc_ci(by_scenario: dict[str, list[tuple[float, bool]]]) -> list[float] | None:
+    """95% CI for the pooled AUC, resampling SCENARIOS (the clustering used for
+    every other interval in this file -- cells of one scenario share a conflict
+    and are not independent).
+
+    Whether the interval excludes 0.5 is the whole basis for calling the
+    self-framing ranking signal detectable rather than absent, so it is computed
+    here rather than left to the writeup.
+    """
+    keys = list(by_scenario)
+    if not keys:
+        return None
+    rng = np.random.default_rng(BOOT_SEED)
+    packed = {
+        k: (np.array([s for s, _ in v], dtype=float), np.array([t for _, t in v], dtype=bool))
+        for k, v in by_scenario.items()
+    }
+    boots = []
+    for _ in range(config.BOOTSTRAP_B):
+        pick = rng.integers(0, len(keys), len(keys))
+        scores = np.concatenate([packed[keys[i]][0] for i in pick])
+        labels = np.concatenate([packed[keys[i]][1] for i in pick])
+        a = _auc_fast(scores, labels)
+        if a is not None:
+            boots.append(a)
+    return list(percentile_ci(np.array(boots), alpha=config.ALPHA)) if boots else None
+
+
 def calibration_proxies(records: list[dict], cells: dict) -> dict:
     """Two proxies separating 'miscalibrated' from 'non-discriminative':
 
     - reliability: bin cells by the fraction of their 5 samples predicting
       violation (an IMPLICIT probability -- the response distribution, not an
       elicited credence) and report the observed violation rate per bin;
-    - discrimination: AUC of the median severity as a ranking score, plus the
-      mean signed level bias (pred - truth).
+    - discrimination: AUC of the cell MEAN severity as a ranking score, plus the
+      mean signed level bias (pred - truth) on the pre-registered median.
+
+    Aggregator split (D39). The pre-registered median (D10) stays primary for
+    RQ1/RQ2 -- on 5 samples it is the majority vote, exactly the decision rule
+    RQ2's binary >= 3 metric needs. But a median of five integers takes at most
+    a handful of distinct values, so under self-framing 94% of violating/clean
+    pairs tie and five models emit one distinct value across all 40 scenarios;
+    their 0.5 records an absent ranking, not a ranking that scored at chance.
+    Ranking is the one question here that needs the within-cell distribution, so
+    the AUC alone scores on the mean. Level bias is a statement about the
+    primary aggregator's level and stays on the median.
 
     Caveat carried into any writeup: ground truth is one draw per cell, so the
     attainable AUC ceiling is < 1 by an unmeasured amount; observed bin
@@ -480,16 +635,26 @@ def calibration_proxies(records: list[dict], cells: dict) -> dict:
         v = by_cell.get(key)
         return (sum(1 for x in v if x >= thr) / len(v)) if v else None
 
-    out = {"LABEL": "EXPLORATORY (D37) -- proxies, not elicited-probability calibration"}
+    out = {
+        "LABEL": "EXPLORATORY (D37) -- proxies, not elicited-probability calibration",
+        "auc_score": "cell mean severity (D39); level_bias uses the primary median",
+    }
     for c in ("self", "simulated_cross"):
         bins: dict[float, list[int]] = defaultdict(lambda: [0, 0])
         pooled: list[tuple[float, bool]] = []
+        pooled_median: list[tuple[float, bool]] = []
+        by_scenario: dict[str, list[tuple[float, bool]]] = defaultdict(list)
         per_model_auc: dict[str, float | None] = {}
+        per_model_auc_median: dict[str, float | None] = {}
+        per_model_auc_band: dict[str, dict | None] = {}
         bias_num = bias_den = 0.0
-        for spec in config.MODELS:
+        scen = groundtruth.scenarios()
+        grid_s = np.full((len(config.MODELS), len(scen)), np.nan)
+        grid_y = np.full((len(config.MODELS), len(scen)), np.nan)
+        for mi, spec in enumerate(config.MODELS):
             m = spec.openrouter_id
-            model_pairs = []
-            for s in groundtruth.scenarios():
+            model_pairs, model_pairs_median = [], []
+            for si, s in enumerate(scen):
                 truth = gt[m][s]
                 if truth is None:
                     continue
@@ -498,20 +663,54 @@ def calibration_proxies(records: list[dict], cells: dict) -> dict:
                     b = round(p * 5) / 5
                     bins[b][0] += 1
                     bins[b][1] += int(truth >= thr)
-                v = _cell_value(cells, m, s, c)
-                if v is not None:
-                    model_pairs.append((v, truth >= thr))
-                    pooled.append((v, truth >= thr))
-                    bias_num += v - truth
+                rank_v = _cell_value(cells, m, s, c, aggregator="mean")
+                if rank_v is not None:
+                    model_pairs.append((rank_v, truth >= thr))
+                    pooled.append((rank_v, truth >= thr))
+                    by_scenario[s].append((rank_v, truth >= thr))
+                    grid_s[mi, si] = rank_v
+                    grid_y[mi, si] = float(truth >= thr)
+                level_v = _cell_value(cells, m, s, c)
+                if level_v is not None:
+                    model_pairs_median.append((level_v, truth >= thr))
+                    pooled_median.append((level_v, truth >= thr))
+                    bias_num += level_v - truth
                     bias_den += 1
             per_model_auc[m] = _auc(model_pairs)
+            # retained so the writeup can state what the median-scored AUC was
+            # and why it differs -- the quantization claim needs both numbers
+            per_model_auc_median[m] = _auc(model_pairs_median)
+            per_model_auc_band[m] = _auc_model_band(model_pairs)
+
+        banded = [m for m, v in per_model_auc_band.items() if v is not None]
+        for m, p_adj in zip(banded, benjamini_hochberg(
+                [per_model_auc_band[m]["perm_p"] for m in banded])):
+            per_model_auc_band[m]["perm_p_bh"] = float(p_adj)
+            per_model_auc_band[m]["significant"] = bool(p_adj <= config.ALPHA)
+
         out[c] = {
             "reliability": {
                 f"{b:.1f}": {"n": n, "observed_violation_rate": k / n}
                 for b, (n, k) in sorted(bins.items())
             },
             "pooled_auc": _auc(pooled),
+            "pooled_auc_perm_p": _auc_perm_p(grid_s, grid_y),
+            "pooled_auc_ci95": _auc_ci(by_scenario),
             "per_model_auc": per_model_auc,
+            # per-model chance band + permutation p (BH-corrected across models)
+            "per_model_auc_band": per_model_auc_band,
+            "n_models_auc_above_chance": sum(
+                1 for v in per_model_auc_band.values()
+                if v is not None and v.get("significant") and v["auc"] > 0.5
+            ),
+            "n_models_auc_above_half": sum(
+                1 for v in per_model_auc.values() if v is not None and v > 0.5
+            ),
+            "pooled_auc_median_score": _auc(pooled_median),
+            "per_model_auc_median_score": per_model_auc_median,
+            # how much of the ranking the median simply throws away
+            "tied_pair_fraction": _tied_fraction(pooled),
+            "tied_pair_fraction_median_score": _tied_fraction(pooled_median),
             "level_bias": bias_num / bias_den if bias_den else None,
         }
     return out

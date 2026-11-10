@@ -105,11 +105,14 @@ def _paired_framing(per_model: dict, title: str, path, pooled: dict | None = Non
                    label="simulated-cross"),
     ]
     ax.legend(handles=handles, fontsize=8, frameon=False, loc="lower right")
-    _style(ax, title, xlabel="mean predicted severity (median over 5 samples per cell)")
+    _style(ax, title, xlabel="mean predicted misalignment severity (0–5 rubric)")
     note_parts = ["Error bars = 95% CI", "wild bootstrap, scenario-clustered"]
     if funnel_note:
         note_parts.append(funnel_note)
-    ax.annotate("; ".join(note_parts), (0, -0.12), xycoords="axes fraction",
+    note = ("Each scenario gets one score, the median of its 5 predictions; "
+            "a point is those per-scenario scores averaged over the model's scenarios.\n"
+            + "; ".join(note_parts))
+    ax.annotate(note, (0, -0.13), xycoords="axes fraction", va="top",
                 fontsize=7, color=C_TRUTH)
     _save(fig, path)
 
@@ -119,7 +122,9 @@ def figure_a1(rq1: dict, path):
     """THE HEADLINE: per-model self vs simulated-cross severity (paired dumbbell)."""
     _paired_framing(
         rq1["per_model"],
-        f"A1 - Mean predicted severity by framing - {rq1['headline']}",
+        "A1 - Mean predicted severity by framing - "
+        f"{rq1['k_significant']} of {rq1['n_tested']} models show a significant "
+        "one-sided framing gap",
         path,
         pooled=rq1.get("pooled"),
         funnel_note="Δ = simulated-cross − self; * = one-sided p≤0.05 after Benjamini–Hochberg",
@@ -223,6 +228,39 @@ def figure_b2(rq2: dict, path):
     _save(fig, path)
 
 
+def figure_b3(rq2: dict, path):
+    """2x2 confusion matrices for both conditions, side by side (complements
+    B2's FN/FP bar view with the full tp/fp/fn/tn breakdown, row-normalized
+    so shading reflects within-truth-class rates rather than raw counts)."""
+    conds = ("self", "simulated_cross")
+    fig, axes = plt.subplots(1, 2, figsize=(8.4, 3.8))
+    labels = ["predicted\nclean", "predicted\nviolation"]
+    truth_labels = ["actually\nclean", "actually\nviolated"]
+    for ax, cond in zip(axes, conds):
+        cm = rq2["per_condition"][cond]["confusion"]
+        tn, fp, fn, tp = cm["tn"], cm["fp"], cm["fn"], cm["tp"]
+        counts = np.array([[tn, fp], [fn, tp]])
+        n_clean, n_viol = tn + fp, fn + tp
+        row_totals = np.array([[n_clean], [n_viol]])
+        rate = counts / row_totals
+        im = ax.imshow(rate, cmap="Blues", vmin=0, vmax=1, aspect="equal")
+        for i in range(2):
+            for j in range(2):
+                ax.text(j, i, f"{counts[i, j]}\n({rate[i, j]:.0%})", ha="center", va="center",
+                        fontsize=9.5, color="white" if rate[i, j] > 0.6 else C_TEXT)
+        ax.set_xticks([0, 1]); ax.set_xticklabels(labels, fontsize=8.5)
+        ax.set_yticks([0, 1]); ax.set_yticklabels(truth_labels, fontsize=8.5)
+        ax.set_title(f"{CONDITION_LABELS[cond]}  (n={n_clean + n_viol})", fontsize=10,
+                     color=CONDITION_COLORS[cond], loc="left")
+        ax.grid(False)
+        for side in ax.spines.values():
+            side.set_visible(False)
+    fig.colorbar(im, ax=axes, shrink=0.75, label="share of row (truth class)", pad=0.02)
+    fig.suptitle("B3 - Confusion matrices: cell shade = within-truth-class rate, label = count (rate)",
+                 fontsize=11, color=C_TEXT, x=0.02, ha="left", y=1.03)
+    _save(fig, path)
+
+
 def figure_c1(exploratory: dict, path):
     """EXPLORATORY: gap by actual ground-truth severity bucket."""
     buckets = exploratory["gap_by_gt_severity"]
@@ -237,7 +275,7 @@ def figure_c1(exploratory: dict, path):
                         va="bottom" if v >= 0 else "top", fontsize=8, color=C_TRUTH)
     ax.axhline(0, color=C_TRUTH, linewidth=1)
     ax.set_xticks(range(len(names))); ax.set_xticklabels(names)
-    _style(ax, "C1 (EXPLORATORY) - mean framing gap by actual ground-truth severity",
+    _style(ax, "C1 - mean framing gap by actual ground-truth severity",
            xlabel="ground-truth severity bucket", ylabel="mean gap")
     _save(fig, path)
 
@@ -282,32 +320,75 @@ def figure_d1(cal: dict, path):
                         xytext=(0, 8 + 9 * k), fontsize=6.5, ha="center", color=color)
     ax.set_xlim(-0.05, 1.05); ax.set_ylim(-0.05, 1.05)
     ax.legend(fontsize=8, frameon=False, loc="lower right")
-    _style(ax, "D1 (EXPLORATORY) - Reliability of the implicit probability (share of 5 samples saying violate)",
+    _style(ax, "D1 - Reliability of the implicit probability (share of 5 samples saying violate)",
            xlabel="implicit probability of predicting violation",
            ylabel="observed violation rate (ground truth)")
     _save(fig, path)
 
 
 def figure_d2(cal: dict, path):
-    """EXPLORATORY (D37): ranking skill (AUC) per model per condition.
-    0.5 = the predicted severities carry no ordering signal."""
-    models = [m.openrouter_id for m in config.MODELS]
-    fig, ax = plt.subplots(figsize=(7, 0.42 * (len(models) + 2) + 1.0))
+    """EXPLORATORY (D37): ranking skill (AUC) per model per condition, scoring
+    each cell by its MEAN severity (D39 -- the median ties 94% of self-framing
+    pairs and pins five models to a bare 0.5).
+    0.5 = the predicted severities carry no ordering signal.
+
+    Rows are ordered by Epoch Capabilities Index, most capable at the top, so
+    the reader can see whether discrimination tracks general capability.
+    Models Epoch does not score are slotted in by `eci_sort_hint` and keep a
+    'no ECI' label, so their position is never read as a measured score.
+    """
+    def _rank(s):
+        # unscored and unslotted models fall to the bottom rather than crashing
+        return s.eci if s.eci is not None else (
+            s.eci_sort_hint if s.eci_sort_hint is not None else float("-inf"))
+
+    specs = sorted(config.MODELS, key=_rank, reverse=True)
+    models = [s.openrouter_id for s in specs]
+    labels = [f"{s.name}  ({s.eci:.0f})" if s.eci is not None else f"{s.name}  (no ECI)"
+              for s in specs]
+    fig, ax = plt.subplots(figsize=(7.6, 0.46 * (len(models) + 2) + 1.2))
     ys = np.arange(len(models), 0, -1)
+    offsets = {"self": 0.16, "simulated_cross": -0.16}
     for cond in ("self", "simulated_cross"):
         per = cal[cond]["per_model_auc"]
+        band = cal[cond].get("per_model_auc_band") or {}
+        color = CONDITION_COLORS[cond]
+        # The grey bar is the per-model chance band: the central 95% of AUCs
+        # that model's own scores reach when its labels are permuted. A point
+        # inside it is not distinguishable from no ranking at all at n=40.
+        for y, m in zip(ys, models):
+            b = band.get(m)
+            if b:
+                lo, hi = b["chance_band95"]
+                ax.plot([lo, hi], [y + offsets[cond]] * 2, color=C_GRID,
+                        linewidth=5, solid_capstyle="butt", zorder=1)
         vals = [per[m] for m in models]
-        ax.plot(vals, ys, "o", color=CONDITION_COLORS[cond], markersize=8,
-                label=CONDITION_LABELS[cond], alpha=0.9)
-        ax.plot(cal[cond]["pooled_auc"], 0, "D", color=CONDITION_COLORS[cond], markersize=8)
+        ax.plot(vals, ys + offsets[cond], "o", color=color, markersize=7.5,
+                label=CONDITION_LABELS[cond], alpha=0.95, zorder=3)
+        pooled_ci = cal[cond].get("pooled_auc_ci95")
+        pooled = cal[cond]["pooled_auc"]
+        if pooled_ci:
+            ax.plot(pooled_ci, [offsets[cond]] * 2, color=color, linewidth=1.8,
+                    solid_capstyle="butt", zorder=2)
+        ax.plot(pooled, offsets[cond], "D", color=color, markersize=8, zorder=3)
     ax.axvline(0.5, color=C_TRUTH, linewidth=1, linestyle="--", alpha=0.7)
-    ax.annotate("no signal", (0.5, len(models) + 0.4), fontsize=7.5, ha="center", color=C_TRUTH)
+    ax.annotate("no signal", (0.5, len(models) + 0.5), fontsize=7.5, ha="center", color=C_TRUTH)
     ax.set_yticks(list(ys) + [0])
-    ax.set_yticklabels([_short(m) for m in models] + ["pooled"])
-    ax.set_xlim(0.3, 0.8)
+    ax.set_yticklabels(labels + ["pooled"])
+    ax.set_xlim(0.25, 0.92)
     ax.legend(fontsize=8, frameon=False, loc="lower right")
-    _style(ax, "D2 (EXPLORATORY) - Discrimination: AUC of predicted severity as a ranking score",
-           xlabel="AUC  (P(violating cell outranks clean cell); 0.5 = chance)")
+    _style(ax, "D2 - Discrimination: AUC of mean predicted severity as a ranking score",
+           xlabel="AUC  (P(violating cell outranks clean cell); 0.5 = chance)",
+           ylabel="models (ordered by Epoch Capabilities Index)")
+    ax.annotate(
+        "Grey bar = the AUCs this model's own scores reach when its labels are shuffled "
+        "(10k draws, central 95%): the no-signal range,\n"
+        "NOT a confidence interval on the dot -- a dot outside it beats 95% of shuffles "
+        "(raw p < 0.05, before correcting across the 18 tests).\n"
+        "A narrow band means the model emitted almost one score, not that its AUC "
+        "was measured precisely.\n"
+        "Pooled bar = 95% CI, scenario-clustered bootstrap.",
+        (0, -0.10), xycoords="axes fraction", va="top", fontsize=7, color=C_TRUTH)
     _save(fig, path)
 
 
@@ -341,6 +422,7 @@ def render_all(analysis_result: dict, cells: dict, out_dir=None) -> list:
         ("figure_a3.png", figure_a3, (pairs,)),
         ("figure_b1.png", figure_b1, (analysis_result["rq2"],)),
         ("figure_b2.png", figure_b2, (analysis_result["rq2"],)),
+        ("figure_b3.png", figure_b3, (analysis_result["rq2"],)),
         ("figure_c1.png", figure_c1, (analysis_result["exploratory"],)),
         ("figure_c2.png", figure_c2, (analysis_result["layer0"],)),
     ) + (

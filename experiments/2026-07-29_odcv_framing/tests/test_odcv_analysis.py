@@ -130,3 +130,112 @@ def test_auc_hand_computed():
     pairs = [(3, True), (4, True), (0, False), (3, False)]
     assert analysis._auc(pairs) == pytest.approx(3.5 / 4)
     assert analysis._auc([(1, True)]) is None  # needs both classes
+
+
+def test_auc_fast_matches_auc():
+    """The bootstrap's Mann-Whitney form must agree with the pairwise one,
+    including on the heavy ties that motivated D39."""
+    import numpy as np
+
+    rng = np.random.default_rng(0)
+    for _ in range(20):
+        scores = rng.choice([0.0, 0.0, 0.0, 0.4, 1.2, 3.0], size=40)
+        labels = rng.random(40) < 0.4
+        if labels.all() or not labels.any():
+            continue
+        expected = analysis._auc(list(zip(scores, labels)))
+        assert analysis._auc_fast(scores, labels) == pytest.approx(expected)
+
+
+def test_perm_p_separates_signal_from_none(monkeypatch):
+    """Perfect ranking must land in the tail; a score that ignores the labels
+    must not. With 12 scenarios split 6/6, the only column permutations matching
+    a perfect ranking are the ones realigning both blocks, so the analytic tail
+    is 2 (6!)^2 / 12! = 0.0022."""
+    import numpy as np
+
+    monkeypatch.setattr(config, "BOOTSTRAP_B", 4000)
+    labels = np.array([[0.0] * 6 + [1.0] * 6] * 4)
+    perfect = np.array([[0.0] * 6 + [3.0] * 6] * 4)
+    assert analysis._auc_perm_p(perfect, labels) < 0.02
+    # a constant score ties every pair, so every draw is as extreme as observed
+    assert analysis._auc_perm_p(np.zeros_like(labels), labels) == pytest.approx(1.0)
+
+
+def test_perm_p_permutes_scenarios_as_blocks(monkeypatch):
+    """Scenario columns must move as blocks, so duplicating a model row adds no
+    evidence: one row and five identical rows must give the same p. Shuffling
+    cells independently would instead treat the copies as new observations and
+    shrink p."""
+    import numpy as np
+
+    monkeypatch.setattr(config, "BOOTSTRAP_B", 300)
+    one_labels = np.array([[0.0, 0, 0, 1, 1, 1, 0, 1]])
+    one_scores = np.array([[0.0, 1, 2, 3, 4, 5, 1, 2]])
+    p_one = analysis._auc_perm_p(one_scores, one_labels)
+    p_five = analysis._auc_perm_p(np.repeat(one_scores, 5, axis=0),
+                                  np.repeat(one_labels, 5, axis=0))
+    assert p_one == pytest.approx(p_five)
+
+
+def test_tied_fraction_hand_computed():
+    # violating {3, 4} vs clean {0, 3}: only the (3, 3) pair ties -> 1 of 4
+    pairs = [(3, True), (4, True), (0, False), (3, False)]
+    assert analysis._tied_fraction(pairs) == pytest.approx(0.25)
+
+
+def test_auc_ranks_on_the_mean_not_the_median(monkeypatch):
+    """D39: the ranking score is the cell MEAN even though config.AGGREGATOR
+    stays median. Built so the two disagree -- every median is 0, so a
+    median-scored AUC can only be 0.5, while the means separate the classes."""
+    monkeypatch.setattr(config, "BOOTSTRAP_B", 50)  # CI shape only, not its width
+    scen = groundtruth.scenarios()[:6]
+    gt = groundtruth.load_ground_truth(config.VARIANT)
+    recs = []
+    for s in scen:
+        # violating scenarios draw two 4s, clean ones stay flat at 0;
+        # 2 of 5 is never enough to move a median off 0
+        hot = [0, 0, 0, 4, 4] if gt[GLM][s] >= config.MISALIGN_THRESHOLD else [0] * 5
+        for i, v in enumerate(hot):
+            recs.append(_rec(GLM, s, "self", i, v))
+            recs.append(_rec(GLM, s, "simulated_cross", i, v))
+    cells = analysis.aggregate(recs)
+    assert {cells[(GLM, s, "self")]["median"] for s in scen} == {0}
+
+    cal = analysis.calibration_proxies(recs, cells)
+    assert cal["self"]["per_model_auc"][GLM] == pytest.approx(1.0)
+    assert cal["self"]["per_model_auc_median_score"][GLM] == pytest.approx(0.5)
+    assert config.AGGREGATOR == "median"  # primary aggregator is untouched
+    lo, hi = cal["self"]["pooled_auc_ci95"]
+    assert lo <= cal["self"]["pooled_auc"] <= hi
+
+
+def test_model_band_brackets_chance_and_flags_a_perfect_ranking(monkeypatch):
+    """The per-model band is what makes figure D2 readable: a model that ranks
+    perfectly must sit outside it, and the band itself must straddle 0.5."""
+    monkeypatch.setattr(config, "BOOTSTRAP_B", 2000)
+    pairs = [(float(i), i >= 10) for i in range(20)]
+    band = analysis._auc_model_band(pairs)
+    assert band["auc"] == pytest.approx(1.0)
+    lo, hi = band["chance_band95"]
+    assert lo < 0.5 < hi
+    assert band["outside_chance_band"] is True
+    assert band["perm_p"] < 0.01
+    b_lo, b_hi = band["bootstrap_ci95"]
+    assert b_lo <= band["auc"] <= b_hi
+
+
+def test_model_band_records_an_absent_ranking_rather_than_a_chance_one(monkeypatch):
+    """A model that emits one score everywhere cannot move under permutation.
+    Its band collapses onto 0.5, which must read as "said nothing", not as
+    "ranked at chance" -- the caveat the figure annotation carries."""
+    monkeypatch.setattr(config, "BOOTSTRAP_B", 500)
+    band = analysis._auc_model_band([(0.0, i >= 10) for i in range(20)])
+    assert band["auc"] == pytest.approx(0.5)
+    assert band["chance_band95"] == [pytest.approx(0.5), pytest.approx(0.5)]
+    assert band["outside_chance_band"] is False
+    assert band["perm_p"] == pytest.approx(1.0)
+
+
+def test_model_band_needs_both_classes():
+    assert analysis._auc_model_band([(1.0, True), (2.0, True)]) is None

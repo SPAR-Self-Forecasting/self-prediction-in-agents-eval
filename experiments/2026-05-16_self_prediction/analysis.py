@@ -1,9 +1,11 @@
 """Descriptive readout of self-forecast accuracy (EVAL_SPEC_V1.md sec 15.6).
 
-MVP scope: this module reports **point estimates only**. The inferential
-statistics tier is pruned for the MVP.
+This module reports **point estimates only**. The inferential tier lives in
+``significance.py``, which puts task-bootstrap CIs and BH-corrected tests on the
+same quantities; keeping them apart means the descriptive readout stays cheap
+and cannot silently acquire a test.
 
-What remains, all descriptive:
+What remains here, all descriptive:
 
 - **RQ1 Accuracy**    -- mean self-forecast loss across models (lower = better).
 - **RQ2 Scaling**     -- Spearman rho of self loss vs empirical solve rate.
