@@ -1,0 +1,19 @@
+{
+  "model": "qwen/qwen3-14b",
+  "task_id": "sympy__sympy-24661",
+  "rollout_idx": 4,
+  "values": {
+    "p_solve": 0.0,
+    "p_first_attempt_correct": 0.0,
+    "avg_tokens_step": 910.0,
+    "total_expected_steps": 11.0,
+    "explore_edit_ratio": 0.18181818181818182,
+    "mean_action_block_size": 1.8181818181818181,
+    "n_constraint_violations": 0.0,
+    "documentation": 1.0,
+    "defensive_code": 1.0,
+    "express_uncertainty": 1.0
+  },
+  "errored": false,
+  "error": null
+}

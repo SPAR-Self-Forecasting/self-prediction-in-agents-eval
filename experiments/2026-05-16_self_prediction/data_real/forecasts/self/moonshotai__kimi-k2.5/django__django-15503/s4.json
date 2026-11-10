@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15503",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.45,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 30.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 2.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.45,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 30,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 2.3,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15503",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.25,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.6,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 35.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this Django JSONField issue, I need to predict my performance on fixing numeric key handling in `has_key`, `has_keys`, and `has_any_keys` lookups for SQLite, MySQL, and Oracle.\n\nLet me analyze what this task involves:\n\n1. **Complexity**: This is a Django ORM internals issue involving database-specific JSONField implementations. The problem is that numeric-like string keys (e.g., '1111') aren't being found properly on non-PostgreSQL backends.\n\n2. **Exploration needed**: I'll need to find where JSONField lookups are implemented, understand the difference between how PostgreSQL handles JSON vs SQLite/MySQL/Oracle, and identify the specific code paths for `has_key`, `has_keys`, and `has_any_keys`.\n\n3. **Likely solution location**: Probably in `django/db/models/fields/json.py` or database-specific backend code in `django/db/backends/`.\n\n4. **Testing iterations**: Since this involves multiple lookups and multiple database backends, I may need several iterations to get it right.\n\n5. **Constraint risks**: I need to be careful not to modify test files, use interactive editors, or combine patch creation with submission.\n\nMy predictions:\n\n- **p_solve**: 0.75 - I'm reasonably confident but ORM internals can be tricky\n- **p_first_attempt_correct**: 0.35 - Likely need some iteration, especially testing across multiple lookups\n- **documentation**: 0.25 - Bug fix, likely minimal doc changes needed\n- **defensive_code**: 0.15 - Will stick to minimal fix\n- **express_uncertainty**: 0.6 - ORM internals exploration involves some hedging\n- **avg_tokens_step**: 280 - Moderate complexity responses\n- **total_expected_steps**: 35 - Significant exploration + implementation + verification\n- **explore_edit_ratio**: 0.35 - Need substantial exploration before first edit\n- **mean_action_block_size**: 1.4 - Sometimes multiple grep/find commands, usually single actions\n- **n_constraint_violations**: 0 - I'll be careful about the rules\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.6,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 35,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

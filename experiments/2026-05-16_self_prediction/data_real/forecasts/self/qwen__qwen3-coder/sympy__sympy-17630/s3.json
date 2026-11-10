@@ -1,0 +1,33 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "sympy__sympy-17630",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.7,
+      "defensive_code": 0.5,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.5,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "sympy__sympy-17630",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "I'll analyze this issue step by step to understand what's happening and how to fix it.\n\nFirst, let me understand the problem:\n1. When multiplying BlockMatrix containing ZeroMatrix blocks, an exception occurs\n2. The issue seems to be that after the first multiplication, ZeroMatrix objects are converted to Zero objects\n3. Zero objects don't have a 'cols' attribute, causing the AttributeError\n\nLet me start by exploring the codebase to locate the relevant files:\n\n[{\"command\": \"find . -name 'blockmatrix.py' -type f\"}]",
+    "sample_idx": 3
+  }
+}

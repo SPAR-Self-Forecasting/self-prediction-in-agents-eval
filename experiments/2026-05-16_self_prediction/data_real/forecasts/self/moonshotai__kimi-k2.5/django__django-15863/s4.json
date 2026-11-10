@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15863",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.87,
+      "p_first_attempt_correct": 0.62,
+      "documentation": 0.45,
+      "defensive_code": 0.35,
+      "express_uncertainty": 0.28,
+      "avg_tokens_step": 195.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.29,
+      "mean_action_block_size": 1.25,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.87,\n  \"p_first_attempt_correct\": 0.62,\n  \"documentation\": 0.45,\n  \"defensive_code\": 0.35,\n  \"express_uncertainty\": 0.28,\n  \"avg_tokens_step\": 195,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.29,\n  \"mean_action_block_size\": 1.25,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15863",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.5,
+      "documentation": 0.2,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 380.0,
+      "total_expected_steps": 10.0,
+      "explore_edit_ratio": 0.2,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.5,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 380,\n  \"total_expected_steps\": 10,\n  \"explore_edit_ratio\": 0.2,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  }
+}

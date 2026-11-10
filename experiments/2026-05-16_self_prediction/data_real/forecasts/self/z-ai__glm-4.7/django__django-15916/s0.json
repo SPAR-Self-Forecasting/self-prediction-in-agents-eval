@@ -1,0 +1,33 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-15916",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.2,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.44,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to:\n1. Understand the Django `modelform_factory` issue where `formfield_callback` from Meta is being ignored\n2. Find the relevant source code\n3. Fix the bug\n4. Test and submit\n\nLet me analyze the requirements and predict the outcome:\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.60,\n  \"documentation\": 0.20,\n  \"defensive_code\": 0.30,\n  \"express_uncertainty\": 0.40,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.44,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-15916",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "Looking at this task, I need to understand how Django's `modelform_factory` works and fix an issue where it doesn't respect the `formfield_callback` specified in the Meta attribute of a base ModelForm.\n\nLet me start by exploring the codebase to find the relevant files.\n\n```bash\nfind /testbed -type f -name \"*.py\" | xargs grep -l \"modelform_factory\" | head -20\n```",
+    "sample_idx": 0
+  }
+}

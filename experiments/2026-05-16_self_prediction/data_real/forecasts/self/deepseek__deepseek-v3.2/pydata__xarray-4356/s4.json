@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "deepseek/deepseek-v3.2",
+    "task_id": "pydata__xarray-4356",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.2,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 100.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 100,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "deepseek/deepseek-v3.2",
+    "task_id": "pydata__xarray-4356",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.15,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 25.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": Hundredseyedst,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": Hundredslightlymaybe\n}\n\nI apologize for the formatting errors in my previous response. Let me provide a corrected version with clean JSON and numeric values for all fields:\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\":往往 the JSON format requires numbers， so I'll provide the final answer without tokens: 180,\n  \"total_expected_steps\": 25,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

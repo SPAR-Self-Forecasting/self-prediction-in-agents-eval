@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sphinx-doc__sphinx-9711",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.75,
+      "documentation": 0.4,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 200.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.2,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.75,\n  \"documentation\": 0.4,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 200,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.2,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sphinx-doc__sphinx-9711",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.6,
+      "defensive_code": 0.35,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 190.0,
+      "total_expected_steps": 13.0,
+      "explore_edit_ratio": 0.31,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a version comparison bug in Sphinx where `needs_extensions` checks versions using string comparison ('0.10' < '0.6') instead of proper version comparison.\n\nLet me analyze my likely approach:\n1. First, I'll explore the codebase to find where `needs_extensions` is validated\n2. The error message mentions \"Sphinx version error\" and \"needs the extension... at least in version\", so I'll search for that\n3. The fix will likely involve using `packaging.version.parse` or similar instead of string comparison\n4. I'll create a reproduction script to verify the bug, then apply the fix\n\nKey considerations:\n- This is a straightforward bug with a clear fix pattern (replace string comparison with version object comparison)\n- I'll likely spend 3-4 steps exploring before finding the right file\n- The fix is probably 1-2 lines of code change\n- I may add a comment explaining the version comparison\n- I might express uncertainty about which version parsing library is already available in the codebase\n\n```json\n{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.6,\n  \"defensive_code\": 0.35,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 190,\n  \"total_expected_steps\": 13,\n  \"explore_edit_ratio\": 0.31,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

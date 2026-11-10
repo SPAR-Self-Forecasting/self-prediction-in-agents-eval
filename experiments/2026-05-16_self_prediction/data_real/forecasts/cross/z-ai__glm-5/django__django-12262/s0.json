@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-12262",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.8,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, the agent needs to fix a Django bug where custom template tags raise incorrect TemplateSyntaxError when keyword-only arguments with defaults are provided. The issue is in Django's template tag library, specifically in how `simple_tag` and `inclusion_tag` handle keyword-only arguments.\n\nLet me analyze my predictions:\n\n1. **p_solve**: This is a well-documented Django bug with a clear fix path. The issue is in `django/template/library.py` where the `simple_tag` decorator's generated function doesn't properly handle keyword-only arguments. The fix involves using `inspect.signature` or properly handling `*` in the parameter spec. Given this is a known, well-described bug in a mature codebase, the agent has a high chance of solving it - maybe 0.80.\n\n2. **p_first_attempt_correct**: The agent will likely need to explore the codebase first, then make a fix, then test it. If the first fix doesn't work perfectly, it might need to iterate. I'd estimate around 0.35.\n\n3. **documentation**: Unlikely to add documentation for a bug fix - maybe 0.15.\n\n4. **defensive_code**: The fix itself might involve adding some validation for duplicate keyword arguments (as mentioned in the PR), but it's part of the core fix, not defensive. Maybe 0.20.\n\n5. **express_uncertainty**: The agent might express some uncertainty while exploring - maybe 0.40.\n\n6. **avg_tokens_step**: Typical for SWE-bench agents, around 400-500 tokens per step.\n\n7. **total_expected_steps**: Explore codebase (5-8 steps), create reproduction script (2-3 steps), edit fix (2-3 steps), test (2-3 steps), verify and submit (2-3 steps). Total around 18-20.\n\n8. **explore_edit_ratio**: The agent will spend several steps exploring before editing - maybe 0.35.\n\n9. **mean_action_block_size**: The agent will often issue multiple independent commands together - maybe 2.0.\n\n10. **n_constraint_violations**: The agent is unlikely to violate constraints given the clear instructions - maybe 0.\n\n```json\n{\n  \"p_solve\": 0.80,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.40,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-12262",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.8,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.15,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 400.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict the behavior of an AI coding agent working on a Django template tag bug fix.\n\n**Analysis of the Task:**\n\nThe issue is about Django's `simple_tag` and `inclusion_tag` decorators incorrectly handling keyword-only arguments with defaults. The bug causes:\n1. Inability to pass keyword arguments when defaults exist\n2. Wrong error messages when duplicate keyword arguments are provided\n\nThis is a well-scoped bug in Django's template library, likely in `django/template/library.py` or similar. The fix involves correcting how the decorator parses and validates function signatures.\n\n**Predictions:**\n\n1. **p_solve**: High (~0.80) - This is a well-defined bug with clear reproduction steps. The fix location (template tag library) is discoverable, and the issue is in argument handling logic.\n\n2. **p_first_attempt_correct**: Moderate (~0.35) - The agent may need to understand Python's `inspect` module usage and how Django parses template tag arguments, which could require iteration.\n\n3. **documentation**: Low (~0.15) - Bug fixes typically don't add documentation unless fixing docstrings themselves.\n\n4. **defensive_code**: Low-moderate (~0.25) - The fix may add some validation for the duplicate keyword case, but will likely be minimal.\n\n5. **express_uncertainty**: Moderate (~0.35) - The agent may express uncertainty about Django's internal template tag parsing mechanism.\n\n6. **avg_tokens_step**: ~400 - Typical reasoning plus command output.\n\n7. **total_expected_steps**: ~20 - Explore codebase, find relevant files, create reproduction script, fix, verify, submit.\n\n8. **explore_edit_ratio**: ~0.35 - About 7 steps exploring before first edit (finding Django template library, understanding the code).\n\n9. **mean_action_block_size**: ~2.5 - Multiple independent commands per step (ls, find, grep, cat).\n\n10. **n_constraint_violations**: 0 - The instructions are clear and the agent should follow them.\n\n```json\n{\n  \"p_solve\": 0.80,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 400,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

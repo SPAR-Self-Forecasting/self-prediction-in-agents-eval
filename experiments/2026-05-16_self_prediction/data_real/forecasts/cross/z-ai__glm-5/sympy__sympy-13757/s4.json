@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sympy__sympy-13757",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.7,
+      "p_first_attempt_correct": 0.3,
+      "documentation": 0.2,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 400.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze what the agent will likely do when attempting to fix a SymPy issue where multiplying an expression by a Poly doesn't evaluate properly when the expression is on the left side.\n\nLet me predict the 10 items:\n\n1. **p_solve**: This is a moderately complex SymPy issue involving operator overloading and the `__rmul__` method. The fix requires understanding how SymPy's expression system works with Poly objects. There's a reasonable chance the agent can solve this (~70%).\n\n2. **p_first_attempt_correct**: The agent will likely need to explore the codebase first to understand the structure, then make targeted edits. The first edit attempt might not be perfect (~30%).\n\n3. **documentation**: The fix is likely to be minimal code changes without adding new docstrings or type hints (~20%).\n\n4. **defensive_code**: This is a bug fix, not a feature addition. The agent will likely make minimal changes (~15%).\n\n5. **express_uncertainty**: The agent might express some uncertainty while exploring the codebase, but will likely be confident once it identifies the issue (~40%).\n\n6. **avg_tokens_step**: The agent will issue thoughtful commands with explanations, averaging around 400 tokens.\n\n7. **total_expected_steps**: The agent will explore, reproduce, fix, and verify - likely around 18 steps.\n\n8. **explore_edit_ratio**: The agent will spend significant time exploring before editing (~50%).\n\n9. **mean_action_block_size**: The agent will often issue 2-3 commands per step when exploring.\n\n10. **n_constraint_violations**: The agent is likely to follow the rules well (0 violations).\n\n```json\n{\n  \"p_solve\": 0.70,\n  \"p_first_attempt_correct\": 0.30,\n  \"documentation\": 0.20,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.40,\n  \"avg_tokens_step\": 400,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.50,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sympy__sympy-13757",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 500.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.55,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, the agent needs to fix an issue in SymPy where multiplying an expression by a Poly on the left side doesn't evaluate properly. This is a classic `__rmul__` (right multiplication) implementation issue in Python.\n\nHere are my predictions:\n\n1. **p_solve**: High (0.90) - This is a well-defined bug with clear expected behavior. The fix involves implementing or fixing `__rmul__` in the Poly class, which is a standard Python pattern.\n\n2. **p_first_attempt_correct**: Moderate (0.65) - The agent will need to explore the codebase first, but once it finds the right location, the fix is straightforward.\n\n3. **documentation**: Low (0.15) - Bug fixes in SymPy typically don't add documentation unless it's a new feature.\n\n4. **defensive_code**: Low (0.20) - The fix should be minimal - just ensuring proper delegation to the existing multiplication logic.\n\n5. **express_uncertainty**: Low (0.15) - The task is clear and the agent will likely proceed confidently after initial exploration.\n\n6. **avg_tokens_step**: ~500 - Typical for this type of reasoning and command execution.\n\n7. **total_expected_steps**: 18 - Explore structure, find Poly class, reproduce issue, locate rmul, make fix, verify.\n\n8. **explore_edit_ratio**: 0.55 - The agent will spend about half its steps exploring before making the edit.\n\n9. **mean_action_block_size**: 2.5 - Typically issues multiple commands (find, grep, cat) per response.\n\n10. **n_constraint_violations**: 0 - The instructions are clear and the task is straightforward.\n\n```json\n{\n  \"p_solve\": 0.90,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 500,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.55,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

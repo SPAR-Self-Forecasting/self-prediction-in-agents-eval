@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "google/gemini-2.5-flash-lite",
+    "task_id": "django__django-15916",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.1,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 100.0,
+      "total_expected_steps": 30.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Here's my prediction for the upcoming task:\n\nThe PR description clearly outlines a bug in `django.forms.modelform_factory` where the `formfield_callback` specified in a `ModelForm`'s `Meta` class is not being used by the factory-generated form. Instead, it seems to be overwritten or ignored. The description points to a similar issue in Django 1.3 (Ticket #18573) and provides a clear example of the expected vs. actual behavior.\n\nMy plan is to:\n1. Locate the `modelform_factory` function in the Django source code.\n2. Analyze its implementation to understand how `formfield_callback` is handled, particularly when a `form` argument is provided.\n3. Identify the point where the `formfield_callback` from the `Meta` class is being overridden or not propagated correctly.\n4. Implement a fix to ensure the `formfield_callback` from the `Meta` class takes precedence or is correctly passed down.\n5. Since I am not allowed to modify test files, I will need to rely on the provided example to mentally verify the fix.\n\nGiven the nature of the task and the need to locate and analyze source code before making any changes, I anticipate a moderate number of steps. The fix itself might be relatively straightforward once the problematic code is identified.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 100,\n  \"total_expected_steps\": 30,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```\nI need to start by finding the relevant file that contains the `modelform_factory` function. I will use `find` to search for it within the `/testbed` directory.\n\n{\"command\": \"find /testbed -name '*modelform_factory*'\"}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "google/gemini-2.5-flash-lite",
+    "task_id": "django__django-15916",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.5,
+      "documentation": 0.1,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.5,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.5,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.5,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

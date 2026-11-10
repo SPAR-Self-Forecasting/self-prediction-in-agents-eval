@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "google/gemini-3.1-flash-lite",
+    "task_id": "django__django-15916",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.4,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 600.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.4,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 600,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "google/gemini-3.1-flash-lite",
+    "task_id": "django__django-15916",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.8,
+      "documentation": 0.2,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 2000.0,
+      "total_expected_steps": 10.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "To address the issue where `modelform_factory` ignores the `formfield_callback` defined in a `ModelForm`'s `Meta` class, I will first locate the relevant code within the Django codebase, create a reproduction script to confirm the behavior, analyze the `modelform_factory` implementation, apply the necessary fix, and verify it.\n\nThe plan is as follows:\n1.  Locate `modelform_factory` in `django/forms/models.py`.\n2.  Create a reproduction script `reproduce_issue.py` based on the example provided in the PR description.\n3.  Analyze `modelform_factory` to see how it handles `formfield_callback`.\n4.  Modify `modelform_factory` to check for `formfield_callback` in the `Meta` class if it's not provided as an argument.\n5.  Verify the fix with `reproduce_issue.py`.\n6.  Create the patch and submit.\n\n{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.8,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 2000,\n  \"total_expected_steps\": 10,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  }
+}

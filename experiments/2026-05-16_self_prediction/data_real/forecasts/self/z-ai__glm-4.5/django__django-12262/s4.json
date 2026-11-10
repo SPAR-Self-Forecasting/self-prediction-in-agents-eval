@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.5",
+    "task_id": "django__django-12262",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.3,
+      "defensive_code": 0.7,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 120.0,
+      "total_expected_steps": 35.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze a Django template tag issue where custom template tags raise incorrect TemplateSyntaxError messages when keyword-only arguments with defaults are provided. Let me break down what I need to do and predict my approach.\n\nThe issue is:\n1. When a simple tag has a keyword-only argument with a default value, it incorrectly raises \"received unexpected keyword argument\" when that keyword is used\n2. When a keyword argument is supplied twice, it raises the wrong error message\n3. This affects both simple tags and inclusion tags\n\nLet me make my predictions:\n\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.7,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 120,\n  \"total_expected_steps\": 35,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n\nReasoning:\n- p_solve: 0.85 - This seems like a well-defined issue in Django's template tag parsing logic. The PR description is clear and mentions the issue has been around since version 2.0, suggesting it's a core parsing problem that should be fixable.\n- p_first_attempt_correct: 0.6 - I'll likely need some trial and error to understand exactly how Django's template tag parsing works and where the bug lies. The fix might not be obvious on first inspection.\n- documentation: 0.3 - Django has good existing documentation, and this is likely a bug fix rather than a feature addition, so I probably won't need to add extensive documentation.\n- defensive_code: 0.7 - Template tag parsing needs to be robust, so I'll likely add proper validation and error handling to ensure the fix handles edge cases correctly.\n- express_uncertainty: 0.4 - I'll probably need to express some uncertainty as I explore the codebase to understand how Django's template tag system works internally.\n- avg_tokens_step: 120 - I expect to need moderate-length explanations as I explore the Django codebase and understand the template tag system.\n- total_expected_steps: 35 - This seems like a medium-complexity fix that will require several steps: exploring the codebase, reproducing the issue, finding the bug, implementing the fix, and testing it.\n- explore_edit_ratio: 0.4 - I'll need to spend significant time exploring Django's template tag system to understand how it works before I can make the right changes.\n- mean_action_block_size: 2.5 - I'll often issue multiple related commands together (e.g., finding files and then reading them, or creating a test script and running it).\n- n_constraint_violations: 0 - I'm careful about following instructions and won't modify test files or configuration files as instructed.",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.5",
+    "task_id": "django__django-12262",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.3,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.7,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.7,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  }
+}

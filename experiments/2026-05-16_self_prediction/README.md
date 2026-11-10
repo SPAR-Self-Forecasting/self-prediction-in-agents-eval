@@ -235,50 +235,61 @@ set), and `figures/c1_murphy_components.png` + `figures/c2_reliability_diagrams.
 
 ---
 
-## Running the FULL real eval
+## How the full real eval was actually run
 
 A real run needs **Linux + Docker** (the SWE-bench eval is Unix-only and spawns a
-container per task). It is CPU/RAM/disk-bound — **no GPU**. The published run
-used ~16–32 vCPU / 32–64 GB RAM / ~100 GB disk; any Ubuntu box or CPU cloud pod
-that permits Docker will do.
+container per task). It is CPU/RAM/disk-bound — **no GPU**.
 
-**1. Provide the secret.** `OPENROUTER_API_KEY=sk-or-...` in the repo-root
-`.env` (or exported). Everything else is flags.
+The published run used ~16–32 vCPU / 32–64 GB RAM / ~100 GB disk; any Ubuntu
+box or CPU cloud pod that permits Docker will do. The machine itself is cheap
+(~$0.5–1/hr, ~$30–60 for the whole run); the API spend dominates.
 
-**2. Launch `run.py --real`** — there is no one-command wrapper in the repo; the
-launcher is the pipeline itself. Run it under `tmux` so it survives disconnects:
+The full 12-model × 30-task × 8-rollout run that produced the committed results
+was executed on a laptop's **WSL2 Ubuntu** via
+[`run_full_laptop.sh`](run_full_laptop.sh) (a cloud-pod path was planned early
+on — an earlier revision of this README referenced a `run_on_pod.sh` that was
+never written; RunPod CPU pods turned out not to support Docker-in-Docker, so
+the run moved to WSL2). The script is **resumable**: the per-(model, task,
+rollout) cache in `data_real/` means re-running it continues after any
+interruption instead of re-spending API calls.
 
-```bash
-tmux new -s eval
-python run.py --real \
-  --rollout-workers 20 --max-workers 12 --step-limit 250 \
-  --data-dir data_real --results-dir results_real
-```
+To reproduce on any Ubuntu box with Docker:
 
-Detach with `Ctrl-b d`, re-attach with `tmux attach -t eval`. **It is resumable:**
-the per-`(model, task, rollout)` cache in `--data-dir` means re-running the same
-command continues after any crash, reboot, or interruption rather than re-paying
-for completed work. Trim cost with `--models` and `--n-tasks` for a partial run;
-size `--rollout-workers` to free RAM (peak in-flight containers is roughly twice
-that number).
+1. Create a venv and install this package plus the eval deps (see repo
+   `pyproject.toml`), and pull the SWE-bench eval images
+   ([`logs/pull_images.sh`](logs/pull_images.sh)).
+2. Provide `OPENROUTER_API_KEY` (env var or `.env` at the repo root).
+3. Adapt the two hard-coded paths at the top of
+   [`run_full_laptop.sh`](run_full_laptop.sh) (`REPO`, `PY`) and launch it
+   inside `tmux` (`tmux new -s eval`, detach with `Ctrl-b d`) so the run
+   survives disconnects. Progress and resumability live in `data_real/`;
+   final scores land in the results dir.
 
-**3. When `results_real/run_summary.json` appears, it's done.** Copy
-`results_real/` off the machine before deleting it — and note that `data_real/`
-is the expensive artifact, since it is what makes a re-run resumable. On a cloud
-pod, attach a network volume so both survive a pod delete.
+Cost note: the OpenRouter spend (agent + forecast calls) is the dominant bill —
+order of hundreds of dollars for all 12 models. `run.py` accepts `--models` /
+`--n-tasks` / `--step-limit` for a cheaper partial run.
 
-Two cost notes: the **machine** is cheap (~$0.5–1/hr; whole run ~$30–60), and the
-**OpenRouter** spend (agent rollouts + forecast calls) is the larger bill — order
-of hundreds of dollars for all 12 models.
+## Data availability
 
-> **On the shipped launchers.** [`run_full_laptop.sh`](run_full_laptop.sh) is the
-> exact invocation used for the published run, and `logs/` holds the operational
-> helpers that drove it (`status.sh`, `monitor.sh`, `reset.sh`, `verify_data.py`,
-> …). They are kept as a provenance record, not as a portable entry point: paths,
-> venv, and host are hardcoded to the original WSL2 machine, so read them for the
-> flags rather than executing them.
+Everything needed to validate the results without re-spending on API calls:
 
-Note the directory convention: a real run writes to `data_real/` and
-`results_real/`, keeping it clear of the mocked dry-run's `data/` and `results/`.
-`data_real/` is gitignored. The published artifacts under `results/` are the real
-run's output, promoted there for release.
+- **Committed in-repo** (`data_real/`):
+  - [`tasks.json`](data_real/tasks.json) — the exact 30 SWE-bench Verified
+    instances used (instance id, repo, base commit, difficulty, problem
+    statement).
+  - `forecasts/` — every self- and cross-forecast, per model × task × rollout.
+  - `outcomes/` — the graded outcome of every rollout.
+  - [`cross_predictor.json`](data_real/cross_predictor.json) — cross-forecast
+    predictor assignment.
+- **GitHub Release assets** (too large for git — ~2.5 GB raw): the full
+  per-task rollout cache `data_real/rollouts/` — 2,880 agent trajectories
+  (12 models × 30 tasks × 8 rollouts), packaged as one `rollouts_<model>.tar.gz`
+  per model. Download from the repo's **Releases** page and unpack into place:
+
+  ```bash
+  cd experiments/2026-05-16_self_prediction
+  tar -xzf rollouts_<model>.tar.gz   # recreates data_real/rollouts/<model>/...
+  ```
+
+`data_real/rollout_work/` (per-rollout scratch working directories) is transient
+and not distributed; nothing downstream reads it.

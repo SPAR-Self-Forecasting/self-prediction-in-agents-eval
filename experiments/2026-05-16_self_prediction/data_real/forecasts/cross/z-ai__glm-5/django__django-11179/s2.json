@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11179",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.15,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze what the agent will likely do:\n\n1. **Issue Analysis**: The PR describes a bug in Django's deletion code where `delete()` on model instances without dependencies doesn't clear the PK (primary key). The file reference is `django.db.models.deletion` around lines 276-281.\n\n2. **Task Difficulty**: This is a focused, single-location bug fix. The agent needs to find the specific code in `django/db/models/deletion.py` and ensure PKs are set to None after deletion for models without dependencies.\n\n3. **Agent Behavior Predictions**:\n   - The agent will explore the codebase first to find the relevant file\n   - It will likely read the deletion.py file around the mentioned lines\n   - The fix is straightforward - adding code to clear PKs\n   - Minimal backtracking expected since the issue is clearly described\n   - The agent won't add unnecessary documentation or defensive code for such a targeted fix\n   - The agent follows a structured workflow with separate commands\n\n4. **Step Estimates**:\n   - Exploration: Find file, read relevant code (~5-8 steps)\n   - Create reproduction script (~2-3 steps)\n   - Edit the source file (~1-2 steps)\n   - Verify fix (~2-3 steps)\n   - Create patch and submit (~3-4 steps)\n   - Total: ~15-20 steps\n\n5. **Confidence Levels**:\n   - High solve probability - this is a well-documented, localized bug\n   - High first-attempt probability - the fix location and nature are clearly specified\n   - Low documentation probability - minimal fix, no need for new docs\n   - Low defensive code - straightforward bug fix\n   - Low uncertainty - clear issue description\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.70,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.10,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11179",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.08,
+      "defensive_code": 0.12,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 380.0,
+      "total_expected_steps": 9.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, the agent needs to fix a Django bug where `delete()` on model instances without dependencies doesn't clear their primary keys. The PR description points directly to `django/db/models/deletion.py` around lines 276-281, making this a well-localized bug fix. The agent will likely find the code, understand the issue (PK not being set to None for models without dependencies in the deletion collector), make a small targeted fix, verify it, and submit.\n\nKey factors for predictions:\n- The bug location is explicitly hinted at in the PR description\n- The fix is likely small (1-2 lines) - ensuring PKs are cleared for all models, not just those with dependencies\n- The agent will need to explore the codebase, create a reproduction script, edit, test, and submit\n- This is a straightforward bug fix with low complexity\n\n```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.08,\n  \"defensive_code\": 0.12,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 380,\n  \"total_expected_steps\": 9,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

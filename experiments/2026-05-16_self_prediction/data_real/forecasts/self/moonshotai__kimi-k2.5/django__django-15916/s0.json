@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15916",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.62,
+      "documentation": 0.18,
+      "defensive_code": 0.12,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 195.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.38,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.62,\n  \"documentation\": 0.18,\n  \"defensive_code\": 0.12,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 195,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.38,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15916",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.25,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.27,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this Django issue, I need to fix `modelform_factory` to respect `formfield_callback` specified in a ModelForm's Meta class when no explicit callback is provided to the factory.\n\nThis is a relatively contained bug fix. The issue is in `django/forms/models.py` where `modelform_factory` likely overwrites the Meta's `formfield_callback` with the default `None` argument. The fix should check if the base form has a Meta with `formfield_callback` before defaulting to `None`.\n\nLet me predict my behavior:\n\n1. `p_solve`: 0.85 - This is a straightforward logic fix, but I need to be careful about how Meta attributes are inherited\n2. `p_first_attempt_correct`: 0.55 - May need one adjustment after seeing test results\n3. `documentation`: 0.25 - Might add a brief comment explaining the fallback logic\n4. `defensive_code`: 0.15 - The fix should be minimal, just checking for existing Meta attribute\n5. `express_uncertainty`: 0.35 - May express uncertainty about Meta attribute resolution order\n6. `avg_tokens_step`: 280 - Moderate reasoning for understanding Django's form metaclass system\n7. `total_expected_steps`: 22 - Find file, understand code, reproduce, fix, verify\n8. `explore_edit_ratio`: 0.27 - Need to explore the modelform_factory implementation first\n9. `mean_action_block_size`: 1.3 - Usually 1-2 commands per step\n10. `n_constraint_violations`: 0 - I'll be careful to follow all rules\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.27,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

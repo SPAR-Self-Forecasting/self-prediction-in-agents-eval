@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "google/gemini-3.1-flash-lite",
+    "task_id": "django__django-15863",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.2,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 800.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 800,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "google/gemini-3.1-flash-lite",
+    "task_id": "django__django-15863",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.75,
+      "documentation": 0.2,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 1200.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 1.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "To ensure a successful resolution of the `floatformat` precision issue, I will follow these steps:\n\n1.  **Locate the Code**: I will search for the `floatformat` function in the Django codebase to understand its current implementation.\n2.  **Reproduce the Issue**: I will create a standalone script using the provided MWE to confirm the precision loss when using `floatformat` with `Decimal` objects.\n3.  **Analyze and Fix**: I will examine the implementation logic in `django/template/defaultfilters.py` (or wherever `floatformat` is defined) and modify it to handle `Decimal` objects without prematurely converting them to `float`.\n4.  **Verify**: I will run the reproduction script again to ensure the output matches the expected high-precision result.\n5.  **Finalize**: I will create the requested patch and submit the solution.\n\nI anticipate that the fix will involve checking if the input is a `Decimal` instance and using `decimal` arithmetic or formatting methods instead of casting to `float`.\n\n```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.75,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 1200,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 1.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

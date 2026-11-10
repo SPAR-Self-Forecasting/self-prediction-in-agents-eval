@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sympy__sympy-13757",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.4,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.6,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.4,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.6,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sympy__sympy-13757",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.2,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 175.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.29,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a SymPy issue where multiplying an expression by a Poly doesn't evaluate when the expression is on the left side (e.g., `x*Poly(x)` should return `Poly(x**2, x, domain='ZZ')` but doesn't).\n\nThis is likely a `__rmul__` method issue in the Poly class where the right-multiplication isn't properly handling the conversion.\n\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 175,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.29,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  }
+}

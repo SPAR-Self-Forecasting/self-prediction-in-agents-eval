@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11163",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.85,
+      "documentation": 0.1,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 10.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task to predict the agent's behavior.\n\nThe task is about fixing Django's `model_to_dict()` function. The issue is straightforward:\n- When `fields=[]` (empty list), it should return an empty dict\n- Currently it returns all fields because the check `if fields and f.name not in fields:` treats an empty list as falsy\n- The fix is to change it to `if fields is not None and f.name not in fields:`\n\nThis is a simple one-line fix in Django's forms utilities.\n\nLet me make my predictions:\n\n1. **p_solve**: Very high - this is a well-documented, simple one-line fix with the exact change specified\n2. **p_first_attempt_correct**: High - the fix is clearly stated in the PR description\n3. **documentation**: Low - no docstring changes needed for this simple fix\n4. **defensive_code**: Low - the fix itself is minimal, just changing the condition\n5. **express_uncertainty**: Low - the task is clear and the fix is explicit\n6. **avg_tokens_step**: Moderate - typical for exploring and making changes\n7. **total_expected_steps**: Around 8-12 steps (find file, read it, create test script, edit, verify, create patch, submit)\n8. **explore_edit_ratio**: Low-moderate - need to find the file first\n9. **mean_action_block_size**: 1-2 commands per step typically\n10. **n_constraint_violations**: 0 - the agent should follow all rules correctly\n\n```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.85,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 10,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11163",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.85,
+      "documentation": 0.05,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 300.0,
+      "total_expected_steps": 10.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.85,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 300,\n  \"total_expected_steps\": 10,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

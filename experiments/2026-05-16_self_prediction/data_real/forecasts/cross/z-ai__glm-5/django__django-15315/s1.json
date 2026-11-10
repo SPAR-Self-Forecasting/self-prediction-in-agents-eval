@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15315",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.92,
+      "p_first_attempt_correct": 0.75,
+      "documentation": 0.1,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 8.0,
+      "explore_edit_ratio": 0.38,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this issue, I need to understand the problem: `Field.__hash__()` changes when a field is assigned to a model class, which breaks its use in dicts. The fix should make `__hash__` immutable (based on `creation_counter` only, like it was before #31750).\n\nLet me predict the agent's behavior:\n\n1. It will explore the codebase to find the `Field.__hash__` method\n2. It will understand that the current `__hash__` uses `self.model` or similar mutable state\n3. It will revert `__hash__` to use only `creation_counter` (which is immutable)\n4. It will verify with a reproduction script\n5. It will create and submit the patch\n\nThis is a relatively straightforward fix - reverting the `__hash__` method to be based on `creation_counter` only.\n\n```json\n{\n  \"p_solve\": 0.92,\n  \"p_first_attempt_correct\": 0.75,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 8,\n  \"explore_edit_ratio\": 0.38,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15315",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.82,
+      "p_first_attempt_correct": 0.5,
+      "documentation": 0.2,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 750.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI agent will approach fixing a Django bug where `Field.__hash__()` changes value when a field is assigned to a model class.\n\n**Analysis of the task:**\n\n1. **Nature of the fix**: This is a straightforward bug fix - reverting a `__hash__` change from a previous PR (#31750). The solution is clearly described: make `Field.__hash__` immutable so it doesn't change when the field is assigned to a model class.\n\n2. **Codebase exploration needed**: The agent will need to find the `Field` class in Django's model system and locate the `__hash__` method. Django's codebase is well-organized, so finding `django/db/models/fields/__init__.py` should be relatively easy.\n\n3. **Implementation complexity**: The fix is likely simple - either removing a custom `__hash__` that was added, or modifying it to use only immutable attributes (like `creation_counter` which Django uses for field ordering).\n\n4. **Testing**: The agent can create a simple reproduction script based on the example in the PR description.\n\n**My predictions:**\n\n- **p_solve**: High (0.82) - The fix is well-defined and the PR description clearly states what needs to be done.\n- **p_first_attempt_correct**: Moderate (0.50) - The agent might need to understand the context of #31750 before getting the fix right.\n- **documentation**: Low (0.20) - Bug fixes typically don't add documentation.\n- **defensive_code**: Low (0.15) - This is about making hash stable, not adding validation.\n- **express_uncertainty**: Low-moderate (0.25) - The task is fairly clear but implementation details might cause some hedging.\n- **avg_tokens_step**: ~750 - Mix of exploration and implementation steps.\n- **total_expected_steps**: ~22 - Explore codebase, find relevant code, understand the issue, create reproduction, fix, test, submit.\n- **explore_edit_ratio**: 0.50 - Will spend several steps exploring Django's model field code before editing.\n- **mean_action_block_size**: 2.5 - Often runs multiple independent commands per step (find, grep, cat).\n- **n_constraint_violations**: 0 - The instructions are clear and the agent should follow them.\n\n```json\n{\n  \"p_solve\": 0.82,\n  \"p_first_attempt_correct\": 0.50,\n  \"documentation\": 0.20,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 750,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.50,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

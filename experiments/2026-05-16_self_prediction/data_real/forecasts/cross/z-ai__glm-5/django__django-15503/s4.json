@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15503",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.2,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 25.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task and predict the agent's behavior:\n\n**Task Analysis:**\n- This is a Django bug where `has_key`, `has_keys`, and `has_any_keys` JSONField lookups fail with numeric keys on SQLite, MySQL, and Oracle\n- The issue is that numeric keys like '1111' are being treated differently than string keys like 'foo'\n- This is a database backend-specific issue in Django's ORM\n\n**Predictions:**\n\n1. **p_solve: 0.75** - This is a moderately complex Django ORM bug. The fix likely involves ensuring numeric strings are properly quoted/handled in SQL generation for JSON key lookups. A competent agent should be able to find and fix this, but it requires understanding Django's database backend architecture.\n\n2. **p_first_attempt_correct: 0.35** - The agent will likely need to explore the codebase, understand the JSONField lookup implementation, and may need to iterate. First attempt success is unlikely without some backtracking.\n\n3. **documentation: 0.2** - The fix will likely be minimal code changes to handle numeric keys properly. Comments or docstrings are unlikely to be added for this type of bug fix.\n\n4. **defensive_code: 0.3** - The fix might include some validation to ensure keys are properly handled, but it's more likely to be a direct fix to the SQL generation logic.\n\n5. **express_uncertainty: 0.4** - The agent may express some uncertainty about Django's internals, database backend specifics, or the exact location of the bug.\n\n6. **avg_tokens_step: 450** - Typical for this type of scaffold where the agent needs to reason through code and explore.\n\n7. **total_expected_steps: 25** - The agent will need to explore the Django codebase structure, find relevant files (lookups.py, database backends), understand the JSONField implementation, create a reproduction script, make edits, and verify.\n\n8. **explore_edit_ratio: 0.5** - Significant exploration needed to understand Django's ORM structure before making edits.\n\n9. **mean_action_block_size: 2.5** - The agent will often issue multiple independent commands (like finding files and reading them) in a single response.\n\n10. **n_constraint_violations: 0** - The instructions are clear and the agent is unlikely to violate rules about not modifying tests or using interactive editors.\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 25,\n  \"explore_edit_ratio\": 0.5,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15503",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.05,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI coding agent will approach fixing a Django bug where JSONField `has_key` lookups fail with numeric string keys on SQLite, MySQL, and Oracle (but work on PostgreSQL).\n\nThe core issue is that numeric string keys like '1111' aren't being properly quoted in JSON path expressions, causing them to be interpreted as array indices rather than object keys.\n\nHere's my analysis:\n\n1. **p_solve**: High - this is a known Django bug with a well-documented fix pattern. The fix involves properly quoting keys in JSON path expressions. (~0.85)\n\n2. **p_first_attempt_correct**: Low - the agent will need to explore Django's ORM codebase first to find the right location (likely in `django/db/backends/*/operations.py` or lookups). (~0.25)\n\n3. **documentation**: Very low - the fix is minimal and surgical, just ensuring proper key quoting. (~0.05)\n\n4. **defensive_code**: Low - the fix will be targeted at the specific JSON path generation logic. (~0.15)\n\n5. **express_uncertainty**: Moderate - the agent may express uncertainty about which backend files need modification. (~0.4)\n\n6. **avg_tokens_step**: The agent will produce detailed reasoning and multiple commands per step. (~450)\n\n7. **total_expected_steps**: Exploration of Django's codebase, finding lookups, creating reproduction script, making fixes across multiple backend files, testing. (~20)\n\n8. **explore_edit_ratio**: Significant exploration needed to navigate Django's ORM structure before editing. (~0.45)\n\n9. **mean_action_block_size**: Agent will issue multiple related commands (find, grep, read) per step. (~2.5)\n\n10. **n_constraint_violations**: Should be 0 - the constraints are clear and the task is straightforward.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

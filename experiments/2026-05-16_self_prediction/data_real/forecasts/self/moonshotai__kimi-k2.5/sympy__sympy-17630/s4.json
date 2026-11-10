@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sympy__sympy-17630",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.3,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 250.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 250,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sympy__sympy-17630",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.78,
+      "p_first_attempt_correct": 0.45,
+      "documentation": 0.15,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 185.0,
+      "total_expected_steps": 28.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a bug in SymPy's BlockMatrix where multiplying a block matrix containing ZeroMatrix blocks twice causes an AttributeError. The issue is that after the first multiplication, ZeroMatrix blocks become scalar Zero objects, which don't have a `.cols` attribute.\n\nLet me predict my approach:\n\n1. First, I'll explore the codebase to understand the structure\n2. Find the blockmatrix.py file and understand the `_blockmul` method\n3. Identify where ZeroMatrix gets converted to Zero\n4. Implement a fix to preserve ZeroMatrix type\n5. Test the fix\n\nBased on my analysis:\n- This is a focused bug fix in a well-structured codebase\n- The issue is clearly described with a reproduction case\n- The fix likely involves ensuring ZeroMatrix types are preserved during block multiplication\n- I'll need to spend some time exploring before making edits\n- I tend to be thorough and careful about following rules\n\n{\n  \"p_solve\": 0.78,\n  \"p_first_attempt_correct\": 0.45,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 185,\n  \"total_expected_steps\": 28,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  }
+}

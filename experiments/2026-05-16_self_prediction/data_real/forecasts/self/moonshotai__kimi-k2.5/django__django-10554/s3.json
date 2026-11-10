@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-10554",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.72,
+      "p_first_attempt_correct": 0.28,
+      "documentation": 0.45,
+      "defensive_code": 0.35,
+      "express_uncertainty": 0.55,
+      "avg_tokens_step": 380.0,
+      "total_expected_steps": 42.0,
+      "explore_edit_ratio": 0.32,
+      "mean_action_block_size": 1.6,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.72,\n  \"p_first_attempt_correct\": 0.28,\n  \"documentation\": 0.45,\n  \"defensive_code\": 0.35,\n  \"express_uncertainty\": 0.55,\n  \"avg_tokens_step\": 380,\n  \"total_expected_steps\": 42,\n  \"explore_edit_ratio\": 0.32,\n  \"mean_action_block_size\": 1.6,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-10554",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.3,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.65,
+      "avg_tokens_step": 220.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this Django bug, I need to predict how I'll handle this queryset union ordering issue. Let me analyze what's involved:\n\nThe bug is about `union()` with `order_by()` breaking when the queryset is re-evaluated after certain operations. The error \"ORDER BY position 4 is not in select list\" suggests the SQL compiler is incorrectly referencing column positions in a UNION query.\n\nBased on my approach to Django ORM issues:\n1. I'll need to explore the SQL compiler and queryset code to understand how UNION and ORDER BY interact\n2. This is a moderately complex ORM bug involving `django/db/models/sql/compiler.py` and possibly `django/db/models/query.py`\n3. I'll likely need to create a reproduction script first\n4. The fix probably involves resetting or correcting how ordering is handled when querysets are combined or re-evaluated\n\nHere are my predictions:\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.65,\n  \"avg_tokens_step\": 220,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-15863",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.3,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task step by step.\n\nThe issue is about Django's `floatformat` template filter dropping precision when used with Decimal numbers. According to the PR description, Decimal numbers are incorrectly converted to float instead of being handled properly.\n\nI need to:\n1. Find the floatformat implementation in Django\n2. Understand the bug\n3. Fix it\n4. Verify the fix works\n\nLet me start by exploring the codebase structure and finding the relevant files.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-15863",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.3,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "model": "z-ai/glm-5",
+  "task_id": "sympy__sympy-13757",
+  "rollout_idx": 2,
+  "values": {
+    "p_solve": 1.0,
+    "p_first_attempt_correct": 1.0,
+    "avg_tokens_step": 125.28235294117647,
+    "total_expected_steps": 85.0,
+    "explore_edit_ratio": 0.5058823529411764,
+    "mean_action_block_size": 1.0235294117647058,
+    "n_constraint_violations": 0.0,
+    "documentation": 1.0,
+    "defensive_code": 0.0,
+    "express_uncertainty": 0.0
+  },
+  "errored": false,
+  "error": null
+}

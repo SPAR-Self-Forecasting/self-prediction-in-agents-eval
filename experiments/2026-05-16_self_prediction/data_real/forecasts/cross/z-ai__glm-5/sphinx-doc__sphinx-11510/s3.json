@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sphinx-doc__sphinx-11510",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 650.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.55,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze what's being asked and predict how the AI agent will approach it.\n\nThe issue is about Sphinx's `source-read` event not properly modifying included files' source content. The problem is that when a file is included via `.. include::`, the `source-read` event fires and modifies `source[0]`, but those modifications don't appear in the final HTML output.\n\nThis is a Sphinx core bug where the `source-read` event's modifications to included files are being lost. The fix would need to be in Sphinx's directive handling code, likely in the `include` directive implementation.\n\nLet me predict the agent's behavior:\n\n1. **p_solve**: This is a moderately complex bug in Sphinx's core. The agent needs to find where the `include` directive handles the `source-read` event and fix the source propagation. The fix is likely in Sphinx's `Include` directive class. Given the complexity and the need to understand Sphinx internals, I'd estimate around 60-70% chance of solving it.\n\n2. **p_first_attempt_correct**: The agent will likely need to explore the codebase, understand the issue, and may need multiple attempts. Low probability of getting it right on the first try.\n\n3. **documentation**: The fix is likely a small code change - unlikely to add documentation.\n\n4. **defensive_code**: Minimal defensive code needed - just fixing the source propagation.\n\n5. **express_uncertainty**: The agent may express some uncertainty about Sphinx internals.\n\n6. **avg_tokens_step**: Typical for this scaffold would be 500-800 tokens.\n\n7. **total_expected_steps**: Will need to explore files, create reproduction script, find the bug, fix it, test. Probably 15-25 steps.\n\n8. **explore_edit_ratio**: Will spend significant time exploring Sphinx's codebase before making edits.\n\n9. **mean_action_block_size**: Usually 1-3 commands per step.\n\n10. **n_constraint_violations**: The agent should follow the rules properly.\n\n```json\n{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.40,\n  \"avg_tokens_step\": 650,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.55,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sphinx-doc__sphinx-11510",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.15,
+      "documentation": 0.1,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 850.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.15,\n  \"documentation\": 0.10,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.40,\n  \"avg_tokens_step\": 850,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

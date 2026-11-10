@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sphinx-doc__sphinx-8638",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.45,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 50.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.45,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 50,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sphinx-doc__sphinx-8638",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.25,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 45.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a Sphinx issue where instance variables in classes are incorrectly auto-linking to global variables or other variables with the same name in different scopes. This is a subtle issue in how autodoc handles cross-references.\n\nLet me analyze what I need to do:\n\n1. **Explore the codebase** - Understand the Sphinx structure, particularly the autodoc extension\n2. **Reproduce the issue** - Set up a test case showing the cross-reference problem\n3. **Find the root cause** - Likely in how Python domain handles variable references or how autodoc documents instance variables\n4. **Implement a fix** - Prevent auto-linking of instance variables to unrelated variables with the same name\n5. **Verify the fix** - Test that it works correctly\n\nThe issue is that Sphinx is being too aggressive with cross-references - when it sees a variable name in documentation, it links to any matching target in the project, even when they're completely unrelated (different classes, different modules).\n\nBased on my experience with similar documentation bugs and the complexity of Sphinx's reference resolution, here are my predictions:\n\n{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.40,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 45,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  }
+}

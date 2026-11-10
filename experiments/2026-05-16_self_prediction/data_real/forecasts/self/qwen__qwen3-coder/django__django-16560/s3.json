@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "django__django-16560",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.7,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "django__django-16560",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.8,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.7,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "I'll analyze this task step by step to predict what my approach will be.\n\nFirst, let me understand what's being requested:\n1. The issue is about allowing customization of the `code` attribute of `ValidationError` raised by `BaseConstraint.validate`\n2. Currently, you can customize `violation_error_message` but not the `code`\n3. The request is to add a new parameter to allow customizing this code\n\nLet me predict my approach:\n\n**1. p_solve**: I expect to be able to solve this with high probability since it's a well-defined feature addition that involves adding a parameter and modifying the validation logic.\n\n**2. p_first_attempt_correct**: This is more challenging since I'll need to understand the existing codebase structure and make sure my changes are consistent. I might need to adjust my approach after seeing how the code is structured.\n\n**3. documentation**: Since this is adding a new parameter to an existing API, I'll likely need to add docstrings or comments to explain the new functionality.\n\n**4. defensive_code**: I'll probably add some validation to ensure the code parameter is handled properly, but this is a relatively straightforward addition.\n\n**5. express_uncertainty**: Given that I don't have the full codebase context yet, I'll likely express some uncertainty as I explore.\n\n**6. avg_tokens_step**: I expect my responses to be moderately verbose since I'll be explaining my reasoning and showing code changes.\n\n**7. total_expected_steps**: This will involve exploring the codebase, making changes, testing, and creating the patch, so I expect around 15-25 steps.\n\n**8. explore_edit_ratio**: I'll spend a good portion of time exploring before making edits to understand the codebase structure.\n\n**9. mean_action_block_size**: I'll likely run multiple commands per step when searching and exploring.\n\n**10. n_constraint_violations**: I should be able to avoid violating constraints by carefully following the instructions.\n\n{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.8,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.7,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  }
+}

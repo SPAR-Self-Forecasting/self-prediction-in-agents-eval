@@ -1,0 +1,19 @@
+{
+  "model": "moonshotai/kimi-k2.5",
+  "task_id": "sympy__sympy-18211",
+  "rollout_idx": 2,
+  "values": {
+    "p_solve": 1.0,
+    "p_first_attempt_correct": 1.0,
+    "avg_tokens_step": 117.29230769230769,
+    "total_expected_steps": 65.0,
+    "explore_edit_ratio": 1.0,
+    "mean_action_block_size": 1.123076923076923,
+    "n_constraint_violations": 0.0,
+    "documentation": 1.0,
+    "defensive_code": 1.0,
+    "express_uncertainty": 0.0
+  },
+  "errored": false,
+  "error": null
+}

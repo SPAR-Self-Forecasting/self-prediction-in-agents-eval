@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-14631",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.45,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 1.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze a Django-related PR that involves refactoring `BaseForm._clean_fields()` and `changed_data` to access values through `BoundField` objects instead of directly.\n\nLet me predict the agent's behavior:\n\n1. **p_solve**: This is a moderate difficulty refactoring task in Django's forms code. The changes are well-specified but require understanding of Django's BoundField class. The agent should be able to solve it, but there's complexity in getting the implementation right. I'll estimate 0.65.\n\n2. **p_first_attempt_correct**: Given the complexity and the need to understand Django's internals, backtracking is likely. The agent will probably need to see test failures or explore the code more before getting it right. Estimate: 0.25.\n\n3. **documentation**: The PR description mentions adding a new method like `bf.did_change()`. This would likely need docstrings. Also, the refactoring is about consistency, which might warrant comments. Estimate: 0.45.\n\n4. **defensive_code**: This is primarily a refactoring for consistency, not a bug fix requiring validation. The agent is unlikely to add guard clauses beyond what's needed. Estimate: 0.15.\n\n5. **express_uncertainty**: The task involves understanding Django's internal form handling, which is complex. The agent may express some uncertainty about implementation details. Estimate: 0.35.\n\n6. **avg_tokens_step**: The agent will be doing code exploration and reading files. Each step will have moderate reasoning. Estimate: 450 tokens.\n\n7. **total_expected_steps**: This requires finding files, understanding BoundField, implementing changes in multiple places, testing. Estimate: 18 steps.\n\n8. **explore_edit_ratio**: The agent needs to understand the existing code structure before making changes. Significant exploration needed. Estimate: 0.45.\n\n9. **mean_action_block_size**: The agent will often run multiple grep/find commands together for exploration. Estimate: 2.2.\n\n10. **n_constraint_violations**: The agent should follow the rules - not modify tests, not use interactive editors, submit properly. Might make one minor violation (e.g., combining commands or modifying a test file briefly). Estimate: 1.\n\n```json\n{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.45,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 1\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-14631",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.55,
+      "p_first_attempt_correct": 0.15,
+      "documentation": 0.25,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 420.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.55,\n  \"p_first_attempt_correct\": 0.15,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 420,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.3,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  }
+}

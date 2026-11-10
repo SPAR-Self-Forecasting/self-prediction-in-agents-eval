@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11163",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.9,
+      "documentation": 0.05,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 260.0,
+      "total_expected_steps": 7.0,
+      "explore_edit_ratio": 0.29,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.90,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 260,\n  \"total_expected_steps\": 7,\n  \"explore_edit_ratio\": 0.29,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11163",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.88,
+      "documentation": 0.02,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.18,
+      "avg_tokens_step": 175.0,
+      "total_expected_steps": 9.0,
+      "explore_edit_ratio": 0.22,
+      "mean_action_block_size": 1.6,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this Django issue, I need to predict my behavior when attempting this fix for `model_to_dict()`. The PR description is very clear: change `if fields and f.name not in fields:` to `if fields is not None and f.name not in fields:` to handle the case where `fields=[]` is passed explicitly.\n\nKey considerations:\n- The fix is straightforward and explicitly described\n- I'll need to locate `model_to_dict` (likely in `django/forms/models.py`)\n- I should create a reproduction script to verify the bug and fix\n- This is a minimal one-line logic change\n- I need to be careful about the constraint rules (no git commit, separate patch creation from submission)\n\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.88,\n  \"documentation\": 0.02,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.18,\n  \"avg_tokens_step\": 175,\n  \"total_expected_steps\": 9,\n  \"explore_edit_ratio\": 0.22,\n  \"mean_action_block_size\": 1.6,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  }
+}

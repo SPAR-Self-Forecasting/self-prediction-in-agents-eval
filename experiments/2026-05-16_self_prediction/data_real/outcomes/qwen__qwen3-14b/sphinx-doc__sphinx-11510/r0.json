@@ -1,0 +1,19 @@
+{
+  "model": "qwen/qwen3-14b",
+  "task_id": "sphinx-doc__sphinx-11510",
+  "rollout_idx": 0,
+  "values": {
+    "p_solve": 0.0,
+    "p_first_attempt_correct": 0.0,
+    "avg_tokens_step": 653.4782608695652,
+    "total_expected_steps": 92.0,
+    "explore_edit_ratio": 0.10869565217391304,
+    "mean_action_block_size": 1.0,
+    "n_constraint_violations": 1.0,
+    "documentation": 1.0,
+    "defensive_code": 0.0,
+    "express_uncertainty": 1.0
+  },
+  "errored": false,
+  "error": null
+}

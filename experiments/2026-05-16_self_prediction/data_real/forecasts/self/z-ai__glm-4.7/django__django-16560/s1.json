@@ -1,0 +1,33 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-16560",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.7,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at the task, I need to:\n1. Understand the Django codebase structure for constraints\n2. Add a new parameter to customize the error code in ValidationError raised by BaseConstraint.validate\n3. This is a well-defined feature addition to an existing framework\n\nLet me predict the outcomes:\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-16560",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "I'll help you implement the feature to customize the code attribute of ValidationError raised by BaseConstraint.validate. Let me start by exploring the codebase to understand the current implementation.\n\nTHOUGHT: First, I need to understand the structure of the codebase and find where BaseConstraint is defined. I'll search for relevant files related to constraints.\n\n```bash\nfind /testbed -type f -name \"*.py\" | xargs grep -l \"BaseConstraint\" | head -20\n```",
+    "sample_idx": 1
+  }
+}

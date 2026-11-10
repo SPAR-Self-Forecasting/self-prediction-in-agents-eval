@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sympy__sympy-13757",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.82,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.25,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.82,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sympy__sympy-13757",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.25,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 140.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.6,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a SymPy issue where multiplying an expression by a `Poly` doesn't evaluate when the expression is on the left side (e.g., `x*Poly(x)` stays unevaluated while `Poly(x)*x` works correctly).\n\nThis is likely a `__rmul__` or `__mul__` method issue in the Poly class where the reverse multiplication isn't properly handling basic SymPy expressions.\n\nLet me predict my approach and outcomes:\n\n1. First I'll explore the SymPy codebase structure to find where Poly is defined\n2. Look at how `__mul__` and `__rmul__` are implemented\n3. The fix likely involves ensuring Poly's `__rmul__` properly converts the result to a Poly when multiplied by basic expressions\n4. Test the fix with the examples from the issue\n\nBased on the complexity of SymPy and the specificity of this issue:\n\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 140,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.6,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  }
+}

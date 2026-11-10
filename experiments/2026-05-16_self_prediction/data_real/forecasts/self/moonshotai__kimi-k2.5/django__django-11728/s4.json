@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11728",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.25,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 140.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 140,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11728",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.82,
+      "p_first_attempt_correct": 0.48,
+      "documentation": 0.18,
+      "defensive_code": 0.28,
+      "express_uncertainty": 0.38,
+      "avg_tokens_step": 185.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.27,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a bug in Django REST Framework where `replace_named_groups()` (and `simplify_regexp()`) fails to replace the final named group in URL patterns that are missing a trailing '/'.\n\nLet me predict my performance on this task:\n\n```json\n{\n  \"p_solve\": 0.82,\n  \"p_first_attempt_correct\": 0.48,\n  \"documentation\": 0.18,\n  \"defensive_code\": 0.28,\n  \"express_uncertainty\": 0.38,\n  \"avg_tokens_step\": 185,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.27,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

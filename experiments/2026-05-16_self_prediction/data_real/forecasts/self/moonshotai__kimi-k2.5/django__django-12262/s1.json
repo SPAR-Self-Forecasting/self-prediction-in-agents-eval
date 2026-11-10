@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-12262",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.3,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 25.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.60,\n  \"documentation\": 0.30,\n  \"defensive_code\": 0.40,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 25,\n  \"explore_edit_ratio\": 0.40,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-12262",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.05,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 25.0,
+      "explore_edit_ratio": 0.28,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this Django template tags issue, I need to predict my approach and outcomes:\n\n**Task Analysis:**\n- This is a Django issue with custom template tags (`simple_tag`, `inclusion_tag`)\n- Problem: keyword-only arguments with defaults cause TemplateSyntaxError\n- The issue mentions the offending code is from Django 2.0 and affects the same code for both tag types\n- Likely location: `django/template/library.py`\n\n**Predicted Approach:**\n1. Explore codebase structure (3-5 steps)\n2. Find relevant template tag code (2-3 steps)\n3. Create reproduction script (2-3 steps)\n4. Analyze the bug and implement fix (3-5 steps)\n5. Verify fix works (2-3 steps)\n6. Check edge cases (2-3 steps)\n7. Submit patch (2 steps)\n\n**Predictions:**\n\n- `p_solve`: 0.85 - This appears to be a straightforward parameter parsing bug in template tag compilation\n- `p_first_attempt_correct`: 0.55 - I may need one iteration to get the exact parameter handling right\n- `documentation`: 0.05 - Minimal doc changes expected; this is a bugfix\n- `defensive_code`: 0.15 - Will likely be a targeted fix without extensive guards\n- `express_uncertainty`: 0.25 - May express uncertainty during initial exploration\n- `avg_tokens_step`: 180 - Moderate reasoning per step\n- `total_expected_steps`: 25 - Exploration, reproduction, fix, verification, submission\n- `explore_edit_ratio`: 0.28 - About 7 exploration steps before first edit\n- `mean_action_block_size`: 1.4 - Often 1 command, sometimes 2-3 for parallel searches\n- `n_constraint_violations`: 0 - Careful to follow rules\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 25,\n  \"explore_edit_ratio\": 0.28,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

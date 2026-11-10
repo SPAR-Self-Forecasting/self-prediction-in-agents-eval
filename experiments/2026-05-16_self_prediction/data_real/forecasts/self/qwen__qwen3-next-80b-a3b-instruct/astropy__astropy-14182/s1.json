@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-next-80b-a3b-instruct",
+    "task_id": "astropy__astropy-14182",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.7,
+      "defensive_code": 0.5,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.5,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "qwen/qwen3-next-80b-a3b-instruct",
+    "task_id": "astropy__astropy-14182",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.7,
+      "defensive_code": 0.5,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.5,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  }
+}

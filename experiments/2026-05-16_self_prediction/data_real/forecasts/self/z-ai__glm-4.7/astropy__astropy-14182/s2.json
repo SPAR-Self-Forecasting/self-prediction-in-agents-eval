@@ -1,0 +1,33 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "astropy__astropy-14182",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.6,
+      "defensive_code": 0.5,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 400.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to:\n1. Understand how the RST writer works in astropy\n2. Add support for `header_rows` parameter similar to `fixed_width` format\n3. Ensure the implementation is consistent with the codebase\n\nLet me start by exploring the codebase structure and finding relevant files.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.6,\n  \"defensive_code\": 0.5,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 400,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "astropy__astropy-14182",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "Looking at this PR description, I need to add support for `header_rows` parameter in the RST (reStructuredText) output format for astropy tables. The error shows that `RST.__init__()` doesn't accept the `header_rows` keyword argument, while `FixedWidth` does.\n\nLet me start by exploring the codebase to understand the structure and find the relevant files.\n\n```bash\nfind /testbed -type f -name \"*.py\" | xargs grep -l \"class RST\" 2>/dev/null | head -20\n```",
+    "sample_idx": 2
+  }
+}

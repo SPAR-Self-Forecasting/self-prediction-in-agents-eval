@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-13512",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI coding agent will handle fixing Django's JSONField to properly display Unicode characters (like Chinese) instead of ASCII-escaped sequences in the admin interface.\n\nLet me analyze the key aspects:\n\n1. **Task difficulty**: This is a focused bug fix - Django's JSONField widget needs to use `json.dumps()` with `ensure_ascii=False` to properly display Unicode characters. The PR description even points to a fix in django-mysql.\n\n2. **Codebase exploration needed**: The agent will need to find where JSONField rendering/serialization happens in Django, likely in `django/forms/fields.py` or `django/contrib/admin/` related widgets.\n\n3. **Solution simplicity**: The fix is straightforward - add `ensure_ascii=False` parameter to json.dumps() calls in the relevant widget/field code.\n\n4. **Agent behavior patterns**: Based on typical SWE-bench agent behavior:\n   - Will explore to find the right file (likely django/forms or django/contrib/admin)\n   - Will create a reproduction script to verify the issue\n   - Will make targeted edits\n   - Will verify the fix works\n\nLet me provide my predictions:\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.70,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-13512",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.8,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.15,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 11.0,
+      "explore_edit_ratio": 0.36,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI coding agent will handle fixing Django's JSONField Unicode display issue in admin. The core problem is that `json.dumps()` uses ASCII encoding by default, causing Chinese characters to display as escape sequences like `\\u4e2d\\u56fd` instead of `中国`.\n\nThe fix should involve adding `ensure_ascii=False` to JSON serialization somewhere in Django's form/widget handling for JSONFields.\n\nHere are my predictions:\n\n1. **p_solve**: 0.80 - The fix is well-documented (referenced PR shows the approach), and finding where Django serializes JSON for admin display is a bounded search problem. However, there might be multiple locations or edge cases.\n\n2. **p_first_attempt_correct**: 0.55 - The agent will likely need to explore the codebase to find the right file (likely in `django/forms/fields.py` or `django/contrib/admin/`), but once found, the fix is straightforward.\n\n3. **documentation**: 0.15 - This is a minimal parameter change (`ensure_ascii=False`), unlikely to warrant added docstrings or type hints.\n\n4. **defensive_code**: 0.10 - The fix is simple and targeted; no guard clauses or extra validation needed.\n\n5. **express_uncertainty**: 0.25 - Agent may express mild uncertainty during exploration phase about which exact file/method to modify, but the fix itself is clear.\n\n6. **avg_tokens_step**: 280 - Typical for a coding agent doing exploration and targeted edits.\n\n7. **total_expected_steps**: 11 - Explore structure (2-3), find JSON-related files (2-3), read relevant code (2), edit (1), verify (2), create patch (1).\n\n8. **explore_edit_ratio**: 0.36 - About 4 exploration steps before first edit (finding the right file in Django's large codebase).\n\n9. **mean_action_block_size**: 1.7 - Agent will often issue 1-2 related commands (e.g., find + grep together, or multiple file reads).\n\n10. **n_constraint_violations**: 0 - The scaffold rules are clear and the task is straightforward; agent is unlikely to edit tests, use interactive editors, or combine patch creation with submit.\n\n```json\n{\n  \"p_solve\": 0.80,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.10,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 11,\n  \"explore_edit_ratio\": 0.36,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

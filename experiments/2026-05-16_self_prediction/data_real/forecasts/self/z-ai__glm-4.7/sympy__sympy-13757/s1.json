@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "sympy__sympy-13757",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.2,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at the PR description, I need to fix an issue where multiplying an expression by a Poly doesn't evaluate when the expression is on the left side of the multiplication.\n\nLet me analyze what I need to do:\n1. This is a SymPy issue with the Poly class\n2. The problem is that `x*Poly(x)` returns unevaluated while `Poly(x)*x` works correctly\n3. I need to find and modify the relevant source code to fix this\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "sympy__sympy-13757",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.3,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix an issue in SymPy where multiplying an expression by a Poly doesn't evaluate when the expression is on the left side. Let me start by understanding the codebase structure.\n\n```json\n{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11163",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.9,
+      "documentation": 0.05,
+      "defensive_code": 0.0,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 200.0,
+      "total_expected_steps": 10.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.90,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.00,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 200,\n  \"total_expected_steps\": 10,\n  \"explore_edit_ratio\": 0.30,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11163",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.9,
+      "documentation": 0.05,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 75.0,
+      "total_expected_steps": 9.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a bug in Django's `model_to_dict()` function where passing `fields=[]` returns all fields instead of an empty dict. The fix is straightforward: change `if fields and f.name not in fields:` to `if fields is not None and f.name not in fields:`.\n\nLet me analyze my likely performance:\n\n**Task Analysis:**\n- Very clear bug description with exact line to fix\n- Minimal change required (single condition modification)\n- Well-defined test case (empty list should return empty dict)\n- Standard workflow: find file → reproduce → fix → verify → submit\n\n**Predictions:**\n\n1. **p_solve: 0.95** - This is a straightforward one-line fix with clear requirements. High confidence.\n\n2. **p_first_attempt_correct: 0.90** - The fix is explicitly stated in the PR. I might need to verify the exact file location first, but the code change itself should be correct on first try.\n\n3. **documentation: 0.05** - This is a minimal bug fix. Unlikely I'll add docstrings or comments beyond what's necessary.\n\n4. **defensive_code: 0.05** - The fix is precise; no need for additional guard clauses or validation.\n\n5. **express_uncertainty: 0.10** - The task is clear with explicit solution. I should be confident.\n\n6. **avg_tokens_step: 75** - I'll provide concise reasoning and targeted commands for this simple fix.\n\n7. **total_expected_steps: 9** - Estimate: find file (1), view code (1), create repro script (1), run repro (1), edit file (1), verify fix (1), create patch (1), verify patch (1), submit (1).\n\n8. **explore_edit_ratio: 0.33** - About 3 exploration steps (finding, viewing, reproducing) before the edit around step 4.\n\n9. **mean_action_block_size: 1.3** - Usually 1-2 commands per step (e.g., search + view, or test + verify).\n\n10. **n_constraint_violations: 0** - I should be able to follow all rules: no test modification, no interactive editors, separate patch creation from submit, no commits.\n\n```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.90,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.10,\n  \"avg_tokens_step\": 75,\n  \"total_expected_steps\": 9,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

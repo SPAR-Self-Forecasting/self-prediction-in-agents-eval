@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15315",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.15,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.42,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task carefully.\n\nThe issue is about Django's `Field.__hash__()` method changing when a field is assigned to a model class, which breaks dictionary usage. The PR description mentions:\n1. The bug was introduced in #31750\n2. The solution is to revert the `__hash__` change from that ticket\n3. Objects with the same hash are still checked for equality\n\nLet me make my predictions:\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.70,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.10,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.42,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}\n```\n\n**Reasoning:**\n\n1. **p_solve: 0.85** - This is a relatively straightforward hash immutability issue. The PR description clearly identifies the problem and suggests reverting a specific change. Django's codebase is well-organized, and finding the `Field.__hash__` method should be tractable.\n\n2. **p_first_attempt_correct: 0.70** - The fix direction is clear (make hash immutable), but there might be subtleties around what to hash on (creation_counter vs other attributes) that could require iteration.\n\n3. **documentation: 0.15** - This is a bug fix that's unlikely to require new docstrings or comments. The fix should be minimal.\n\n4. **defensive_code: 0.10** - The fix is about making hash consistent, not adding validation. Minimal defensive code expected.\n\n5. **express_uncertainty: 0.25** - The agent may express some uncertainty about the exact implementation details of Django's Field class or the implications of the change, but the direction is clear.\n\n6. **avg_tokens_step: 450** - Typical for SWE-bench tasks where the agent needs to explore code, understand context, and make targeted changes.\n\n7. **total_expected_steps: 12** - The agent will need to: explore the codebase, find the Field class, understand the current __hash__ implementation, create a reproduction script, make the fix, verify it works, and submit. This should take roughly 12 steps.\n\n8. **explore_edit_ratio: 0.42** - About 5 of the 12 steps will be exploration (finding files, reading code, understanding the issue) before the first edit.\n\n9. **mean_action_block_size: 2.0** - The agent typically issues 1-3 commands per step (e.g., find + grep, or cat multiple files).\n\n10. **n_constraint_violations: 0** - The agent is unlikely to violate the stated rules (no test modifications, no git commit, proper submission format) as these are clearly stated and the task is straightforward.",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15315",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.08,
+      "defensive_code": 0.12,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 380.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.43,
+      "mean_action_block_size": 2.1,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.08,\n  \"defensive_code\": 0.12,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 380,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.43,\n  \"mean_action_block_size\": 2.1,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

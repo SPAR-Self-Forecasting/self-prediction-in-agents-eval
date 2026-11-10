@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-15863",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.3,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task and predict the outcomes.\n\nLooking at the PR description:\n- The issue is about the `floatformat` template filter in Django\n- When used with Decimal numbers, it drops precision\n- The bug is in the conversion to Decimal within the floatformat implementation\n- Decimal numbers are incorrectly converted to float\n\nThis is a well-defined bug with a clear reproduction case. I'll need to:\n1. Find the floatformat filter implementation\n2. Understand how it currently handles Decimal numbers\n3. Fix the conversion issue\n4. Verify the fix works\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-15863",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.3,
+      "defensive_code": 0.5,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix Django's `floatformat` template filter which incorrectly converts Decimal numbers to float, causing precision loss. Let me analyze the codebase and implement the fix.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.5,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

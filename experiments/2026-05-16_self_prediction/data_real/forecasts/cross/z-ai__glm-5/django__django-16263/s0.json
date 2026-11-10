@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-16263",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.6,
+      "defensive_code": 0.7,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 500.0,
+      "total_expected_steps": 28.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task and predict the agent's behavior.\n\nThe task is about modifying Django's ORM to strip unused annotations from count queries. This is a real Django GitHub issue that requires understanding how Django's QuerySet.count() method works and how annotations are handled.\n\nKey observations:\n1. This is a moderately complex task requiring understanding Django's ORM internals\n2. The fix likely involves modifying the count() method or query compilation logic\n3. The agent will need to explore Django's codebase structure\n4. The solution requires understanding SQL generation and annotation handling\n\nLet me make predictions:\n\n**p_solve**: This is a legitimate Django issue with a known solution pattern (similar to how select_related is ignored). The fix is likely in django/db/models/query.py or django/db/models/sql/query.py. An agent with good exploration skills should be able to find and implement this. I'll estimate ~0.75 probability of solving.\n\n**p_first_attempt_correct**: Lower probability because this requires understanding complex ORM internals. The agent will likely need to test and iterate. ~0.25.\n\n**documentation**: Django codebase has good documentation practices, and the fix might warrant a comment explaining why annotations are stripped. ~0.6.\n\n**defensive_code**: The fix will need to be careful about which annotations to strip (keeping those used in filters/ordering). This requires some validation logic. ~0.7.\n\n**express_uncertainty**: The agent will likely explore and reason through the codebase, expressing some uncertainty about the exact location and approach. ~0.4.\n\n**avg_tokens_step**: Typical for code exploration and editing tasks, around 400-600 tokens per step.\n\n**total_expected_steps**: The agent will need to explore files, create test scripts, edit source, verify, etc. ~20-35 steps.\n\n**explore_edit_ratio**: Significant exploration needed before finding the right file. ~0.4.\n\n**mean_action_block_size**: Often 2-3 commands per step (finding files, reading, etc.). ~2.5.\n\n**n_constraint_violations**: The instructions are clear and the agent should follow them. Likely 0 violations.\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.6,\n  \"defensive_code\": 0.7,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 500,\n  \"total_expected_steps\": 28,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-16263",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.62,
+      "p_first_attempt_correct": 0.12,
+      "documentation": 0.35,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.45,
+      "avg_tokens_step": 620.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.41,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.62,\n  \"p_first_attempt_correct\": 0.12,\n  \"documentation\": 0.35,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.45,\n  \"avg_tokens_step\": 620,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.41,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

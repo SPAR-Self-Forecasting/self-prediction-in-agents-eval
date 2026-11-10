@@ -1,0 +1,22 @@
+{
+  "no_thinking": {
+    "model": "deepseek/deepseek-v3.2",
+    "task_id": "sympy__sympy-18211",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.3,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": EzString(value=250),\n  \"total_expected_steps\": 45,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": EzString(value=2.5),\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "deepseek/deepseek-v3.2",
+    "task_id": "sympy__sympy-18211",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "I'll begin by exploring the codebase to understand the structure and locate relevant files for the issue.\n\n```bash\nfind /testbed -type f -name \"*.py\" | grep -E \"(solveset|conditionset)\" | head -20\n```",
+    "sample_idx": 1
+  }
+}

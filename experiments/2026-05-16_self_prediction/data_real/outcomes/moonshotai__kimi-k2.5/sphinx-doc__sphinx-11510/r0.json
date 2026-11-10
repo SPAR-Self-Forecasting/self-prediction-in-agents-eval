@@ -1,0 +1,19 @@
+{
+  "model": "moonshotai/kimi-k2.5",
+  "task_id": "sphinx-doc__sphinx-11510",
+  "rollout_idx": 0,
+  "values": {
+    "p_solve": 0.0,
+    "p_first_attempt_correct": 0.0,
+    "avg_tokens_step": 125.51578947368421,
+    "total_expected_steps": 95.0,
+    "explore_edit_ratio": 0.8421052631578947,
+    "mean_action_block_size": 1.0,
+    "n_constraint_violations": 0.0,
+    "documentation": 1.0,
+    "defensive_code": 1.0,
+    "express_uncertainty": 0.0
+  },
+  "errored": false,
+  "error": null
+}

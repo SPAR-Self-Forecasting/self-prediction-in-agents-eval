@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "django__django-14631",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.7,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 35.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 35,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "django__django-14631",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.7,
+      "defensive_code": 0.5,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 25.0,
+      "explore_edit_ratio": 0.6,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "I'll analyze this task step by step to predict my approach and outcomes.\n\nLet me first understand what's being asked:\n1. The issue is about making BaseForm's _clean_fields() and changed_data access values via BoundField objects for consistency\n2. There's a specific issue where form._clean_fields() can return a different value from form[name].initial when they should be the same\n3. The solution involves moving per-field logic of changed_data() into a BoundField method called something like bf.did_change()\n4. This would simplify the changed_data method to use a list comprehension with the new BoundField method\n\nLet me predict my approach:\n\n1. First, I'll need to explore the Django codebase to find the relevant files (BaseForm, BoundField)\n2. I'll examine the current implementation of _clean_fields() and changed_data methods\n3. I'll look at how BoundField currently works to understand the proper way to access values\n4. I'll implement the changes as described, moving logic from BaseForm to BoundField\n5. I'll create tests to verify the changes work correctly\n6. Finally, I'll submit the patch\n\nNow for my predictions:\n\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.5,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 25,\n  \"explore_edit_ratio\": 0.6,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 0
+  }
+}

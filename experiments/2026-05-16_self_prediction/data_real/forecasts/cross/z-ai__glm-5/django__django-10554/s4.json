@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-10554",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.55,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.15,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 850.0,
+      "total_expected_steps": 28.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI coding agent will handle fixing a Django ORM bug related to union querysets and ordering.\n\nThe issue is about `ORDER BY position 4 is not in select list` error when:\n1. Creating a union queryset with `.order_by('order')`\n2. Then calling `.order_by().values_list('pk', flat=True)` on it\n3. Then trying to evaluate the original queryset again\n\nThis is a Django ORM bug in how the SQL compiler handles ordering for union queries. The fix likely involves changes to `django/db/models/sql/compiler.py` or related query handling code.\n\nLet me make my predictions:\n\n```json\n{\n  \"p_solve\": 0.55,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 850,\n  \"total_expected_steps\": 28,\n  \"explore_edit_ratio\": 0.40,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-10554",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.7,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.4,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 28.0,
+      "explore_edit_ratio": 0.55,
+      "mean_action_block_size": 2.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.7,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.4,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 28,\n  \"explore_edit_ratio\": 0.55,\n  \"mean_action_block_size\": 2.3,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  }
+}

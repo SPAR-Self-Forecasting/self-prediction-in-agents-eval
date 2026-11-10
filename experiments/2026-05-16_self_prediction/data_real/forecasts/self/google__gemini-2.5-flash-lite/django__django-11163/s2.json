@@ -1,0 +1,33 @@
+{
+  "no_thinking": {
+    "model": "google/gemini-2.5-flash-lite",
+    "task_id": "django__django-11163",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.8,
+      "documentation": 0.1,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.05,
+      "avg_tokens_step": 100.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "I need to fix a bug in the `model_to_dict` function where it incorrectly returns all fields when an empty list of fields is provided. The PR description suggests the problem is in a conditional check.\n\nMy plan is to:\n1. Locate the `model_to_dict` function in the codebase.\n2. Examine the relevant conditional logic based on the PR description.\n3. Apply the suggested fix to the code.\n4. Verify the fix by attempting to reproduce the issue.\n\nLet's start by finding the `model_to_dict` function. I'll use `find` and `grep` for this.\n\n```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.8,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.05,\n  \"avg_tokens_step\": 100,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```\n```bash\ngit ls-files | xargs grep -l 'def model_to_dict('\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "google/gemini-2.5-flash-lite",
+    "task_id": "django__django-11163",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "THOUGHT\nThe task is to fix a bug in Django's `model_to_dict` function. The description states that when `fields=[]` is passed, the function should return an empty dictionary, but it currently returns all fields. The PR description also provides the exact line to modify and the proposed fix: change `if fields and f.name not in fields:` to `if fields is not None and f.name not in fields:`. The PR link points to `django/forms/models.py`.\n\nMy plan is to:\n1.  Locate the `django/forms/models.py` file.\n2.  Read the file to find the problematic line.\n3.  Apply the suggested fix using `sed`.\n4.  Generate a patch file.\n5.  Submit the patch.\n\nFirst, I will confirm the existence of `django/forms/models.py` and examine its content to find the specific line.\n\n[tool_code]\nprint(os.getcwd())\nls -la django/forms/models.py\n[/tool_code]\n",
+    "sample_idx": 2
+  }
+}

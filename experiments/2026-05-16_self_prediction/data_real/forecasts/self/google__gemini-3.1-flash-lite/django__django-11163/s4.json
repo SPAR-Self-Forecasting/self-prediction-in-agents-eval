@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "google/gemini-3.1-flash-lite",
+    "task_id": "django__django-11163",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.85,
+      "documentation": 0.2,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 8.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.85,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 8,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "google/gemini-3.1-flash-lite",
+    "task_id": "django__django-11163",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.9,
+      "documentation": 0.1,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.0,
+      "avg_tokens_step": 800.0,
+      "total_expected_steps": 8.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "To solve this task, I will follow these steps:\n\n1.  **Locate the code**: I will search for the `model_to_dict` function in the Django codebase. Based on typical Django structure, it is likely in `django/forms/models.py`.\n2.  **Create a reproduction script**: I will create a Python script that uses `model_to_dict` with `fields=[]` and asserts that it returns an empty dictionary (or whatever the expected behavior is).\n3.  **Analyze the current implementation**: Once found, I will read the code to verify the bug described.\n4.  **Apply the fix**: I will modify the condition as suggested.\n5.  **Verify**: I will run the reproduction script to confirm the fix works.\n6.  **Submit**: I will create a patch file and output the submission command.\n\nI will be careful to only modify the source file and not touch tests or configuration files.\n\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.9,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.0,\n  \"avg_tokens_step\": 800,\n  \"total_expected_steps\": 8,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  }
+}

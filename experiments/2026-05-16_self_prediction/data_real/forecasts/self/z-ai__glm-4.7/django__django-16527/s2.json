@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-16527",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.9,
+      "documentation": 0.1,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 8.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to:\n1. Understand the issue - \"show_save_as_new\" in admin should require add permission\n2. Find and read the relevant file\n3. Make the fix\n4. Verify it works\n\nThis is a straightforward Django admin permission fix. The issue is clearly described with the exact location and the fix needed. I'll need to add `has_add_permission` check to the condition.\n\n```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.9,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 8,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-16527",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.9,
+      "documentation": 0.1,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 6.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a permission issue in Django's admin interface where `show_save_as_new` doesn't check for `has_add_permission`. Let me start by exploring the codebase to understand the context.\n\n```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.90,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 6,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

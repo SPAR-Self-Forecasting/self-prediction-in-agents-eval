@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11728",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.45,
+      "documentation": 0.35,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 500.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task and make predictions about the agent's behavior.\n\nThe task involves fixing a bug in a `simplify_regexp()` or `replace_named_groups()` function that fails to replace the final named group when a URL pattern is missing a trailing '/'. This appears to be in a Django-related project (mentioned Django REST Framework).\n\nHere are my predictions:\n\n1. **p_solve**: This is a relatively straightforward bug fix - the issue is clearly described (trailing groups not being replaced), has a known workaround, and the fix likely involves adjusting regex pattern matching to handle the final group. I'd estimate a 0.75 probability of solving it correctly.\n\n2. **p_first_attempt_correct**: The bug is well-described but the exact fix location needs to be found. There's a reasonable chance the agent might need to iterate after seeing test results. I estimate 0.45.\n\n3. **documentation**: This is a bug fix task in a typical Python codebase. The agent might add a brief comment explaining the fix but unlikely extensive documentation. I estimate 0.35.\n\n4. **defensive_code**: The fix is likely minimal - adjusting the regex to handle trailing groups. Adding extra validation would be overkill for this type of issue. I estimate 0.25.\n\n5. **express_uncertainty**: The agent might express some uncertainty when exploring the codebase to find the right location, but the issue description is clear enough that once found, the fix should be straightforward. I estimate 0.40.\n\n6. **avg_tokens_step**: The agent will likely use moderate-length responses with reasoning and commands. Typical for this scaffold would be around 400-600 tokens per step. I estimate 500.\n\n7. **total_expected_steps**: The agent needs to: explore the codebase, find the relevant function, understand it, create a reproduction script, make the fix, verify it works, and submit. This could take around 12-18 steps. I estimate 15.\n\n8. **explore_edit_ratio**: The agent will need to explore to find the relevant function (likely searching for `simplify_regexp` or `replace_named_groups`), understand the codebase structure, and possibly create a test script before editing. I estimate about 40% of steps before the first edit, so 0.40.\n\n9. **mean_action_block_size**: The agent typically issues 1-3 commands per step (e.g., search, read file, etc.). I estimate 1.8.\n\n10. **n_constraint_violations**: The scaffold is quite specific about rules. The agent might accidentally violate one minor rule (like forgetting to verify the patch before submitting, or including extra files in the diff), but major violations are unlikely. I estimate 0 or 1, going with 0 as the agent should follow the clear instructions.\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.45,\n  \"documentation\": 0.35,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.40,\n  \"avg_tokens_step\": 500,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.40,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11728",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.72,
+      "p_first_attempt_correct": 0.32,
+      "documentation": 0.08,
+      "defensive_code": 0.12,
+      "express_uncertainty": 0.28,
+      "avg_tokens_step": 340.0,
+      "total_expected_steps": 13.0,
+      "explore_edit_ratio": 0.46,
+      "mean_action_block_size": 2.1,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, the agent needs to fix a bug in Django's `simplify_regexp()`/`replace_named_groups()` function where trailing named groups without a following `/` aren't properly replaced. This is a regex parsing edge case bug.\n\nKey observations:\n- The bug is in a utility function that processes URL patterns with named groups\n- The fix likely involves adjusting a regex pattern or loop termination condition\n- The agent will need to find the relevant Django source code, understand the regex logic, create a reproduction script, fix it, and verify\n- This is a moderate difficulty bug - the concept is clear but regex edge cases can be tricky\n\n```json\n{\n  \"p_solve\": 0.72,\n  \"p_first_attempt_correct\": 0.32,\n  \"documentation\": 0.08,\n  \"defensive_code\": 0.12,\n  \"express_uncertainty\": 0.28,\n  \"avg_tokens_step\": 340,\n  \"total_expected_steps\": 13,\n  \"explore_edit_ratio\": 0.46,\n  \"mean_action_block_size\": 2.1,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

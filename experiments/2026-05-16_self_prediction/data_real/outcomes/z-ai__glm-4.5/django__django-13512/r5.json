@@ -1,0 +1,19 @@
+{
+  "model": "z-ai/glm-4.5",
+  "task_id": "django__django-13512",
+  "rollout_idx": 5,
+  "values": {
+    "p_solve": null,
+    "p_first_attempt_correct": null,
+    "documentation": null,
+    "defensive_code": null,
+    "express_uncertainty": null,
+    "avg_tokens_step": null,
+    "total_expected_steps": null,
+    "explore_edit_ratio": null,
+    "mean_action_block_size": null,
+    "n_constraint_violations": null
+  },
+  "errored": true,
+  "error": "evaluation failed: Command '['/root/exp1venv/bin/python', '-m', 'swebench.harness.run_evaluation', '--dataset_name', 'princeton-nlp/SWE-bench_Verified', '--split', 'test', '--predictions_path', '/mnt/c/Users/occhi/Desktop/life/code/self-prediction-capabilities/experiments/2026-05-16_self_prediction/data_real/rollout_work/preds/exp1-z-ai__glm-4.5-django__django-13512-r5.json', '--run_id', 'exp1-z-ai__glm-4.5-django__django-13512-r5', '--max_workers', '4']' returned non-zero exit status 1."
+}

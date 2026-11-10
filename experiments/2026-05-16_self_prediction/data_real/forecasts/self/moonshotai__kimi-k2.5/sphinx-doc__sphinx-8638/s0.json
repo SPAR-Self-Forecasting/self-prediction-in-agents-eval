@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sphinx-doc__sphinx-8638",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.55,
+      "p_first_attempt_correct": 0.15,
+      "documentation": 0.25,
+      "defensive_code": 0.35,
+      "express_uncertainty": 0.45,
+      "avg_tokens_step": 950.0,
+      "total_expected_steps": 45.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.6,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.55,\n  \"p_first_attempt_correct\": 0.15,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.35,\n  \"express_uncertainty\": 0.45,\n  \"avg_tokens_step\": 950,\n  \"total_expected_steps\": 45,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.6,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sphinx-doc__sphinx-8638",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.2,
+      "documentation": 0.4,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.7,
+      "avg_tokens_step": 400.0,
+      "total_expected_steps": 40.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict my behavior while fixing a Sphinx autodoc issue where instance variables incorrectly link to other variables with the same name in different scopes. This involves understanding Sphinx's Python domain, cross-reference resolution, and autodoc extension.\n\nBased on the complexity of reference resolution heuristics in Sphinx, the need to explore a large codebase, and the iterative nature of debugging cross-reference issues, here are my predictions:\n\n```json\n{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.2,\n  \"documentation\": 0.4,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.7,\n  \"avg_tokens_step\": 400,\n  \"total_expected_steps\": 40,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

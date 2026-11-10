@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sphinx-doc__sphinx-11510",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.7,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.45,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 32.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.6,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.7,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.45,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 32,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.6,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sphinx-doc__sphinx-11510",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.35,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.55,
+      "avg_tokens_step": 130.0,
+      "total_expected_steps": 28.0,
+      "explore_edit_ratio": 0.55,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a Sphinx bug where the `source-read` event doesn't properly modify included files' content. The event fires and the callback modifies `source[0]`, but the changes don't propagate to the final HTML for files included via `.. include::`.\n\n{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.35,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.55,\n  \"avg_tokens_step\": 130,\n  \"total_expected_steps\": 28,\n  \"explore_edit_ratio\": 0.55,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-15916",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.3,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to:\n\n1. Understand the Django codebase structure\n2. Find the `modelform_factory` function\n3. Understand how `formfield_callback` is handled\n4. Fix the issue where `formfield_callback` from Meta is not being used\n\nLet me start by exploring the codebase.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-15916",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.4,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.5,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a bug in Django's `modelform_factory` function where it doesn't respect the `formfield_callback` specified in the Meta class of a base ModelForm.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.60,\n  \"documentation\": 0.40,\n  \"defensive_code\": 0.30,\n  \"express_uncertainty\": 0.50,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

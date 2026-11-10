@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-16527",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.93,
+      "p_first_attempt_correct": 0.85,
+      "documentation": 0.1,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 250.0,
+      "total_expected_steps": 7.0,
+      "explore_edit_ratio": 0.29,
+      "mean_action_block_size": 1.1,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.93,\n  \"p_first_attempt_correct\": 0.85,\n  \"documentation\": 0.10,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 250,\n  \"total_expected_steps\": 7,\n  \"explore_edit_ratio\": 0.29,\n  \"mean_action_block_size\": 1.1,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-16527",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.9,
+      "documentation": 0.05,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 175.0,
+      "total_expected_steps": 10.0,
+      "explore_edit_ratio": 0.2,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to analyze a Django admin permission bug. The issue is clear: in `django/contrib/admin/templatetags/admin_modify.py`, line 102, the `show_save_as_new` tag needs to also check `has_add_permission` because \"save_as_new\" is an add operation.\n\nLet me predict my attempt:\n\n1. **p_solve (0.95)**: This is a straightforward one-line fix with a very clear PR description. The change location and exact modification are specified.\n\n2. **p_first_attempt_correct (0.90)**: The fix is simple - add `and has_add_permission` to an existing boolean expression. I'll verify the context first, but it's unlikely I'll need to backtrack.\n\n3. **documentation (0.05)**: This is a permission check fix, not a documentation task. I might add a brief comment but probably won't.\n\n4. **defensive_code (0.10)**: The fix itself adds validation (has_add_permission), but I won't add extra guards beyond the minimal fix.\n\n5. **express_uncertainty (0.10)**: The issue is very clear, but I might briefly verify my understanding of the context.\n\n6. **avg_tokens_step (175)**: Moderate reasoning per step for exploring, understanding context, and implementing the fix.\n\n7. **total_expected_steps (10)**: Simple workflow: explore files (2-3 steps), verify understanding (1-2 steps), apply fix (1 step), verify/test (2-3 steps), create/submit patch (2 steps).\n\n8. **explore_edit_ratio (0.20)**: Only 2 steps of exploration (viewing the file and understanding context) before editing.\n\n9. **mean_action_block_size (1.4)**: Mix of single commands (cat, grep) and occasional multiple commands per step.\n\n10. **n_constraint_violations (0)**: I'm aware of the constraints (no test edits, no interactive editors, separate patch/submit commands) and will follow them carefully.\n\n```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.90,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.10,\n  \"express_uncertainty\": 0.10,\n  \"avg_tokens_step\": 175,\n  \"total_expected_steps\": 10,\n  \"explore_edit_ratio\": 0.20,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

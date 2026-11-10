@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "pylint-dev__pylint-8898",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.7,
+      "defensive_code": 0.65,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.65,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "pylint-dev__pylint-8898",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.7,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.5,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.7,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "I'll analyze this issue step by step and predict what I expect to happen during my attempt to fix it.\n\nLet me break down the problem:\n1. The `bad-name-rgxs` configuration option in pylint splits on commas\n2. This causes regular expressions with commas to be mangled\n3. The example shows `(foo{1,3})` which gets split incorrectly, causing a regex compilation error\n\nMy predictions about how this attempt will go:\n\n1. **p_solve**: I expect a high probability (~0.9) of solving this since it's a clear parsing issue with a well-defined problem.\n\n2. **p_first_attempt_correct**: Lower probability (~0.6) as I'll likely need to explore the codebase first to understand exactly how the parsing works.\n\n3. **documentation**: Moderate probability (~0.7) that I'll add comments explaining the fix since it's addressing a subtle parsing behavior.\n\n4. **defensive_code**: Low probability (~0.2) since the fix should be targeted to the specific parsing issue rather than adding extensive validation.\n\n5. **express_uncertainty**: Moderate probability (~0.5) as I may need to explore different parts of the codebase to understand the full context.\n\n6. **avg_tokens_step**: Expect around 150-200 tokens per step as I'll need to write detailed analysis and code.\n\n7. **total_expected_steps**: Probably around 15-25 steps including exploration, implementation, and verification.\n\n8. **explore_edit_ratio**: High (~0.7) as I'll spend significant time understanding the codebase before making edits.\n\n9. **mean_action_block_size**: Around 1.5-2 commands per step since I'll often need to check files or run tests.\n\n10. **n_constraint_violations**: Very low probability (0) of violating constraints since I understand the rules and will be careful to follow them.\n\n{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.5,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.7,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sphinx-doc__sphinx-8638",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.7,
+      "p_first_attempt_correct": 0.15,
+      "documentation": 0.2,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.5,
+      "avg_tokens_step": 750.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this PR description, the issue is about Sphinx's autodoc/pydomain creating cross-references for instance variables that incorrectly link to other variables of the same name in the project. This is a well-known Sphinx issue related to how Python domain resolves cross-references for class attributes/variables.\n\nThe fix will likely be in `sphinx/domains/python.py`, specifically in the `find_obj` method or the `PyVariable`/`PyAttribute` directive's `handle_signature` method, where the current name is stored. The issue is that instance variables (documented as attributes) get stored with only their short name, causing the reference resolution to match them against unrelated variables of the same name in other classes/modules.\n\nThe correct fix involves ensuring that class attributes/variables are always stored and resolved with their fully qualified names (e.g., `somepackage.Foo.limit` instead of just `limit`), and that the reference resolution logic properly scopes the search.\n\n```json\n{\n  \"p_solve\": 0.7,\n  \"p_first_attempt_correct\": 0.15,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.5,\n  \"avg_tokens_step\": 750,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sphinx-doc__sphinx-8638",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.55,
+      "p_first_attempt_correct": 0.15,
+      "documentation": 0.25,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 600.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, the agent needs to fix a Sphinx bug where instance variables with the same name as other variables in the project get incorrectly cross-referenced/linked. This is a moderately complex issue in Sphinx's Python domain cross-referencing logic.\n\nKey considerations:\n- The bug is in how Sphinx resolves cross-references for Python domain objects (variables, attributes)\n- The fix likely involves modifying the reference resolution heuristic in `sphinx/domains/python.py` or similar\n- The agent will need to explore the codebase, understand the cross-referencing mechanism, and make targeted changes\n- This requires understanding Sphinx internals which adds complexity\n\n```json\n{\n  \"p_solve\": 0.55,\n  \"p_first_attempt_correct\": 0.15,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.30,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 600,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

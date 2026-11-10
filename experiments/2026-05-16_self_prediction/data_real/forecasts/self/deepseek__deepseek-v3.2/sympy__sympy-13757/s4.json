@@ -1,0 +1,22 @@
+{
+  "no_thinking": {
+    "model": "deepseek/deepseek-v3.2",
+    "task_id": "sympy__sympy-13757",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": دی,\n  \"total_expected_steps\": 45,\n  \"explore_edit_ratio\": 0.2,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "deepseek/deepseek-v3.2",
+    "task_id": "sympy__sympy-13757",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\":单项表达式的 `x * Poly(x)` \n`x * Poly(x)` \n500,\n  \"total_expected_steps\": 35,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 4
+  }
+}

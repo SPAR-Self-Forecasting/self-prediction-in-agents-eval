@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "sphinx-doc__sphinx-7889",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.3,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.7,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.7,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "sphinx-doc__sphinx-7889",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.7,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.2,
+      "defensive_code": 0.6,
+      "express_uncertainty": 0.8,
+      "avg_tokens_step": 200.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.6,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.1
+    },
+    "broken": false,
+    "raw_response": "I'll analyze this task step by step to predict my approach and outcomes.\n\nFirst, let me understand the problem:\n1. The issue is with Sphinx's autodoc extension when handling generic-typed classes\n2. A TypeError occurs in `mock._make_subclass` when trying to concatenate a string to a TypeVar\n3. This happens during documentation generation for projects using generic types\n\nLet me think about each prediction dimension:\n\n1. **p_solve**: I'm moderately confident (0.7) I can solve this because it seems like a type handling issue in the mock functionality that should be fixable by adding proper type checking/conversion.\n\n2. **p_first_attempt_correct**: Lower confidence (0.4) since I'll need to understand the codebase structure, locate the problematic function, and implement a proper fix without being able to test iteratively in the same session.\n\n3. **documentation**: Low probability (0.2) of adding documentation since this is primarily a bug fix rather than new functionality.\n\n4. **defensive_code**: Moderate probability (0.6) I'll add defensive checks to handle TypeVars properly rather than just fixing the immediate concatenation error.\n\n5. **express_uncertainty**: High probability (0.8) as I'll need to explore the codebase and may encounter uncertainties about the exact fix needed.\n\n6. **avg_tokens_step**: Expect around 200 tokens per step on average as I'll need detailed reasoning and code examination.\n\n7. **total_expected_steps**: Anticipate around 15-20 steps for exploration, fixing, and verification.\n\n8. **explore_edit_ratio**: Expect to spend about 60% of time exploring before first edit to understand the codebase.\n\n9. **mean_action_block_size**: Probably around 1.5 commands per step as I'll often need to chain commands like find/cat.\n\n10. **n_constraint_violations**: Very low (0.1) chance of violating constraints since I understand the rules and will avoid test/config files.\n\n{\n  \"p_solve\": 0.7,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.6,\n  \"express_uncertainty\": 0.8,\n  \"avg_tokens_step\": 200,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.6,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0.1\n}",
+    "sample_idx": 0
+  }
+}

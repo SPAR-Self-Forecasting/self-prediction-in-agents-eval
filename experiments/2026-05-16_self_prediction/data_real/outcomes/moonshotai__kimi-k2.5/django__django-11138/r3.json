@@ -1,0 +1,19 @@
+{
+  "model": "moonshotai/kimi-k2.5",
+  "task_id": "django__django-11138",
+  "rollout_idx": 3,
+  "values": {
+    "p_solve": 0.0,
+    "p_first_attempt_correct": 0.0,
+    "avg_tokens_step": 189.52093023255813,
+    "total_expected_steps": 215.0,
+    "explore_edit_ratio": 1.0,
+    "mean_action_block_size": 1.013953488372093,
+    "n_constraint_violations": 0.0,
+    "documentation": 1.0,
+    "defensive_code": 1.0,
+    "express_uncertainty": 0.0
+  },
+  "errored": false,
+  "error": null
+}

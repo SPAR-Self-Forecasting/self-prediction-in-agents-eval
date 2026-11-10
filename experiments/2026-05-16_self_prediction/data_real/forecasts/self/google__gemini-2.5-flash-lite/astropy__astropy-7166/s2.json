@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "google/gemini-2.5-flash-lite",
+    "task_id": "astropy__astropy-7166",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.2,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.05,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Here's my prediction for the upcoming task:\n\nThe core of the problem lies in the `InheritDocstrings` metaclass incorrectly identifying properties. The description explicitly states `inspect.isfunction` returns `False` for properties. This suggests that the metaclass needs to be updated to recognize properties as valid callable-like objects for docstring inheritance, or at least to handle them differently.\n\nMy plan is to:\n1. Locate the `InheritDocstrings` metaclass and the relevant code that uses `inspect.isfunction`.\n2. Understand how properties are handled (or not handled) in this context.\n3. Modify the code to correctly identify and process properties.\n4. Potentially, I might need to create a small reproduction case to test the fix before applying it to the main codebase, although the instructions discourage modifying test files. I'll try to avoid that if possible and rely on my understanding of the code and the provided description.\n\nGiven the focused nature of the problem and the clear indication of the cause, I expect to find the solution relatively quickly. The main challenge will be ensuring the fix is robust and doesn't break existing functionality.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.05,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "google/gemini-2.5-flash-lite",
+    "task_id": "astropy__astropy-7166",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.75,
+      "documentation": 0.1,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 300.0,
+      "total_expected_steps": 8.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.1,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.75,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 300,\n  \"total_expected_steps\": 8,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.1,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

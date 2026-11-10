@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sympy__sympy-24661",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.78,
+      "p_first_attempt_correct": 0.42,
+      "documentation": 0.12,
+      "defensive_code": 0.18,
+      "express_uncertainty": 0.58,
+      "avg_tokens_step": 380.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 1.9,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.78,\n  \"p_first_attempt_correct\": 0.42,\n  \"documentation\": 0.12,\n  \"defensive_code\": 0.18,\n  \"express_uncertainty\": 0.58,\n  \"avg_tokens_step\": 380,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 1.9,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "sympy__sympy-24661",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.45,
+      "documentation": 0.25,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 125.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a SymPy issue where `parse_expr('1 < 2', evaluate=False)` returns `True` instead of the unevaluated `Lt(1, 2, evaluate=False)`.\n\nLet me analyze what I expect:\n\n1. **Issue complexity**: This involves SymPy's parsing logic. The `parse_expr` function likely evaluates relationals during parsing before the `evaluate=False` flag can take effect. This is probably in `sympy/parsing/` directory.\n\n2. **Exploration pattern**: I'll need to find the parsing code, understand how it handles relationals vs other expressions, identify where the evaluation happens, and fix it to respect the flag.\n\n3. **First attempt success**: There's a decent chance I'll find the right location quickly, but parsing code can be tricky with AST transformations. I might need one iteration to get it right.\n\n4. **Constraint adherence**: I need to be careful not to accidentally edit test files or use interactive tools like vi.\n\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.45,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.20,\n  \"express_uncertainty\": 0.40,\n  \"avg_tokens_step\": 125,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 0
+  }
+}

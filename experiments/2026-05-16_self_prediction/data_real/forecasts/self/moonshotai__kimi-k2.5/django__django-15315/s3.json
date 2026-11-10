@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15315",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.72,
+      "documentation": 0.25,
+      "defensive_code": 0.08,
+      "express_uncertainty": 0.18,
+      "avg_tokens_step": 165.0,
+      "total_expected_steps": 16.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.72,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.08,\n  \"express_uncertainty\": 0.18,\n  \"avg_tokens_step\": 165,\n  \"total_expected_steps\": 16,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15315",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.75,
+      "documentation": 0.05,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 120.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a Django issue where `Field.__hash__()` changes when a field is assigned to a model class, breaking its use in dictionaries.\n\nLet me analyze what I'll need to do:\n\n1. Find the Field class implementation (likely in `django/db/models/fields/`)\n2. Understand the current `__hash__` implementation\n3. Revert or fix the `__hash__` change from #31750 to make it immutable\n4. Test the fix with the reproduction case\n\nThis seems like a straightforward issue - the PR description already identifies the solution (revert the __hash__ change). The fix should be minimal and targeted.\n\n```json\n{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.75,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 120,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

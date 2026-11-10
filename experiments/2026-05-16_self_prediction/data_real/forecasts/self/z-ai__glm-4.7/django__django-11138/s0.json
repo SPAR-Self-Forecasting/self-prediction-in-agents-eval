@@ -1,0 +1,33 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-11138",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.3,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task step by step.\n\nThe issue is about TIME_ZONE settings in DATABASES not being used when making dates timezone-aware on MySQL, SQLite, and Oracle backends. Specifically, when using `__date` lookup, the conversion is hardcoded from 'UTC' instead of using the database's TIME_ZONE setting.\n\nLet me start by exploring the codebase to understand the structure and find the relevant files.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-11138",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "I'll analyze this issue step by step. Let me start by exploring the codebase structure and understanding the problem.\n\n<thought>\nThe issue is about TIME_ZONE value in DATABASES settings not being used when making dates timezone-aware on MySQL, SQLite, and Oracle. The problem is in the date lookup where 'UTC' is hardcoded instead of using the database TIME_ZONE setting.\n\nLet me first explore the codebase structure and find the relevant files.\n</thought>\n\n```bash\nfind /testbed -type f -name \"*.py\" | grep -E \"(mysql|sqlite|oracle)\" | head -30\n```",
+    "sample_idx": 0
+  }
+}

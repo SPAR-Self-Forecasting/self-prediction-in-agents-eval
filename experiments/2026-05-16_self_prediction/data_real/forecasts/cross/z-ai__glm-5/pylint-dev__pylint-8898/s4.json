@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "pylint-dev__pylint-8898",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.3,
+      "documentation": 0.1,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.3,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "pylint-dev__pylint-8898",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.7,
+      "p_first_attempt_correct": 0.15,
+      "documentation": 0.2,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict the behavior of an AI coding agent attempting to fix a pylint bug where the `bad-names-rgxs` option incorrectly splits regex patterns on commas, breaking patterns like `(foo{1,3})`.\n\nThe fix involves understanding pylint's configuration parsing system, specifically the `_regexp_csv_transfomer` function mentioned in the traceback. The agent will need to explore the codebase, understand how the option is parsed, and modify the parsing to handle commas within regex patterns properly.\n\nKey observations:\n- This is a focused bug fix in a specific area (config/argument parsing)\n- The traceback clearly points to `_regexp_csv_transfomer` in `pylint/config/argument.py`\n- The fix requires understanding how pylint handles CSV-style config options\n- The solution likely involves not naively splitting on commas, or providing an escape mechanism\n\n```json\n{\n  \"p_solve\": 0.70,\n  \"p_first_attempt_correct\": 0.15,\n  \"documentation\": 0.20,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.40,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

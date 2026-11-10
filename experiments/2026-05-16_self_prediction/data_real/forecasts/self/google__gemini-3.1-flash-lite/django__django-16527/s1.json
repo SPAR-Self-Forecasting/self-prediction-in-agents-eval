@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "google/gemini-3.1-flash-lite",
+    "task_id": "django__django-16527",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.8,
+      "documentation": 0.2,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.05,
+      "avg_tokens_step": 600.0,
+      "total_expected_steps": 8.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.8,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.05,\n  \"avg_tokens_step\": 600,\n  \"total_expected_steps\": 8,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "google/gemini-3.1-flash-lite",
+    "task_id": "django__django-16527",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.8,
+      "documentation": 0.2,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 1500.0,
+      "total_expected_steps": 10.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "I will start by exploring the codebase to locate the relevant file `django/contrib/admin/templatetags/admin_modify.py` and understand the context of the `show_save_as_new` logic.\n\n{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.8,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 1500,\n  \"total_expected_steps\": 10,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1,\n  \"n_constraint_violations\": 0\n}\n\n{\n  \"command\": \"find . -name admin_modify.py\"\n}",
+    "sample_idx": 1
+  }
+}

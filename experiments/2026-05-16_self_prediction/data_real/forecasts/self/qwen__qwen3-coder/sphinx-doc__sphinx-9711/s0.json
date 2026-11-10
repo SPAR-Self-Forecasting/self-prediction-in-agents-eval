@@ -1,0 +1,33 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "sphinx-doc__sphinx-9711",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.3,
+      "defensive_code": 0.6,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.6,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "sphinx-doc__sphinx-9711",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "I'll work through this task step by step to fix the version comparison issue in Sphinx's extension checking.\n\nFirst, let me understand the bug:\n- The `needs_extensions` check compares versions as strings instead of as semantic versions\n- This causes \"0.10\" to be treated as less than \"0.6\" because string comparison goes character by character\n- The fix needs to implement proper semantic version comparison\n\nLet me start by exploring the codebase to find where this version checking happens.\n\n[{\"command\": \"find . -name '*.py' | xargs grep -l 'needs_extensions'\"}]",
+    "sample_idx": 0
+  }
+}

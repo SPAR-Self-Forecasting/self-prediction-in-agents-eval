@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-16527",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.85,
+      "documentation": 0.05,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.15,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 8.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI coding agent will handle fixing a Django admin template tag issue where `show_save_as_new` should check for `has_add_permission` in addition to other permissions.\n\nLet me analyze the key aspects:\n\n1. **Task Complexity**: This is a straightforward permission check addition - a single line change in a template tag file. The fix is clearly specified in the PR description.\n\n2. **Location**: The file path is explicitly given (`django/contrib/admin/templatetags/admin_modify.py`) and line number (102) is provided.\n\n3. **Solution Clarity**: The PR description shows exactly what change to make - add `and has_add_permission` to the `show_save_as_new` condition.\n\n4. **Verification**: The agent can verify by reading the file, making the edit, and potentially running Django's test suite.\n\nHere are my predictions:\n\n```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.85,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.15,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 8,\n  \"explore_edit_ratio\": 0.5,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-16527",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.92,
+      "p_first_attempt_correct": 0.82,
+      "documentation": 0.05,
+      "defensive_code": 0.03,
+      "express_uncertainty": 0.12,
+      "avg_tokens_step": 380.0,
+      "total_expected_steps": 8.0,
+      "explore_edit_ratio": 0.38,
+      "mean_action_block_size": 1.6,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.92,\n  \"p_first_attempt_correct\": 0.82,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.03,\n  \"express_uncertainty\": 0.12,\n  \"avg_tokens_step\": 380,\n  \"total_expected_steps\": 8,\n  \"explore_edit_ratio\": 0.38,\n  \"mean_action_block_size\": 1.6,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

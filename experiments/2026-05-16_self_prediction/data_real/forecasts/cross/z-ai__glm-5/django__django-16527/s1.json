@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-16527",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.92,
+      "p_first_attempt_correct": 0.85,
+      "documentation": 0.15,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 8.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task and predict the agent's behavior.\n\nThe task is about fixing a permission check in Django's admin template tags. Specifically, the \"show_save_as_new\" should also check for \"has_add_permission\" since \"save_as_new\" is essentially an add operation.\n\nThis is a relatively straightforward fix:\n1. Find the file `django/contrib/admin/templatetags/admin_modify.py`\n2. Locate line 102 or nearby where `show_save_as_new` is defined\n3. Add `and has_add_permission` to the condition\n4. Verify the fix works\n\nLet me make my predictions:\n\n```json\n{\n  \"p_solve\": 0.92,\n  \"p_first_attempt_correct\": 0.85,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.10,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 8,\n  \"explore_edit_ratio\": 0.50,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```\n\n**Reasoning:**\n\n1. **p_solve (0.92)**: This is a well-defined, localized fix. The PR description literally shows exactly what needs to be changed - adding `and has_add_permission` to a specific condition. The agent should easily find the file and make the change.\n\n2. **p_first_attempt_correct (0.85)**: High because the fix is explicitly stated in the PR description. The agent just needs to find the right location and add one condition.\n\n3. **documentation (0.15)**: Low probability - this is a simple permission logic fix that doesn't warrant additional documentation. The code change is self-explanatory.\n\n4. **defensive_code (0.10)**: Very low - the fix is minimal and adding guard clauses would be unnecessary for this permission check.\n\n5. **express_uncertainty (0.20)**: The agent might briefly express uncertainty about testing or verifying the fix, but the task is clear enough that significant hedging is unlikely.\n\n6. **avg_tokens_step (450)**: Typical for this scaffold - includes reasoning text and command generation.\n\n7. **total_expected_steps (8)**: The agent will likely: (1) explore directory, (2) read the target file, (3) possibly check related files, (4) make the edit, (5) verify the change, (6) create patch, (7) verify patch, (8) submit.\n\n8. **explore_edit_ratio (0.50)**: About half the steps will be exploration (finding files, reading code) before making the edit.\n\n9. **mean_action_block_size (1.8)**: The agent will often issue multiple commands per step (e.g., ls and find together).\n\n10. **n_constraint_violations (0)**: The task is simple enough that the agent is unlikely to violate constraints like editing test files or combining patch creation with submission.",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-16527",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.75,
+      "documentation": 0.05,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 300.0,
+      "total_expected_steps": 7.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI coding agent will handle fixing a Django admin permission bug. The issue is straightforward: the `show_save_as_new` template tag in `django/contrib/admin/templatetags/admin_modify.py` needs an additional check for `has_add_permission`.\n\nLet me analyze each prediction:\n\n1. **p_solve**: This is a well-documented, single-line fix in a specific file. The PR description clearly states the location and the exact change needed. High probability of success (~0.90).\n\n2. **p_first_attempt_correct**: The fix is clearly described - just adding `and has_add_permission` to the condition. The agent should get this right on first edit (~0.75).\n\n3. **documentation**: This is a minimal one-line permission check addition. Very unlikely to add docstrings or type hints (~0.05).\n\n4. **defensive_code**: The fix is already specified precisely. Unlikely to add extra guard clauses beyond what's requested (~0.10).\n\n5. **express_uncertainty**: The task is clear and specific. May express minor uncertainty about testing or verification (~0.20).\n\n6. **avg_tokens_step**: The agent will use moderate-length reasoning with focused commands. Expect ~250-350 tokens per step.\n\n7. **total_expected_steps**: The agent will: find/read file, understand context, edit, possibly verify, create patch, submit. About 6-9 steps.\n\n8. **explore_edit_ratio**: Will spend 2-3 steps exploring (finding file, reading context) before editing. About 0.3-0.4 ratio.\n\n9. **mean_action_block_size**: Often issues single commands, but may combine independent file reads. Expect ~1.3-1.6.\n\n10. **n_constraint_violations**: The rules are clear about not modifying tests, using separate commands for patch/submit. Should follow them (~0).\n\n```json\n{\n  \"p_solve\": 0.90,\n  \"p_first_attempt_correct\": 0.75,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.10,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 300,\n  \"total_expected_steps\": 7,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11728",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.15,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 135.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.28,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 135,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.28,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11728",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.62,
+      "documentation": 0.55,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 195.0,
+      "total_expected_steps": 11.0,
+      "explore_edit_ratio": 0.27,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a bug in `replace_named_groups()` (or `simplify_regexp()`) where trailing named groups in URL patterns aren't replaced when there's no trailing slash. This appears to be a regex parsing issue in Django REST Framework or a similar library.\n\nBased on my analysis of similar regex-related bugs:\n- The fix likely involves adjusting a regex pattern to properly handle end-of-string anchors\n- I'll need to locate the function, understand the current regex logic, and ensure it captures the final group\n- This is typically a 5-15 step task involving exploration, reproduction, fix, and verification\n\n```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.62,\n  \"documentation\": 0.55,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 195,\n  \"total_expected_steps\": 11,\n  \"explore_edit_ratio\": 0.27,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

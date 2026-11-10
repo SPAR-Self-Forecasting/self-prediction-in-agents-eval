@@ -1,0 +1,33 @@
+{
+  "no_thinking": {
+    "model": "google/gemini-3.1-flash-lite",
+    "task_id": "sphinx-doc__sphinx-9711",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.3,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 600.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 600,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 2,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "google/gemini-3.1-flash-lite",
+    "task_id": "sphinx-doc__sphinx-9711",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "I will start by listing the files in the current directory to understand the project structure and then search for `needs_extensions` to see how it is used.\n\n<thought>\nI need to understand the project structure and locate the problematic code. I'll start by listing the files and searching for `needs_extensions`.\n</thought>\n\n{\n  \"command\": \"ls -R\"\n}\n\n{\n  \"command\": \"grep -r 'needs_extensions' .\"\n}",
+    "sample_idx": 1
+  }
+}

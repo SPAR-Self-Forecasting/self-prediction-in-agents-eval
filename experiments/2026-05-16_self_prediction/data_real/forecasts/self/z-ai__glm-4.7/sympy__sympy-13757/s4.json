@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "sympy__sympy-13757",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.3,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix an issue where multiplying an expression by a Poly doesn't evaluate when the expression is on the left side of the multiplication.\n\nLet me analyze the problem:\n1. `Poly(x)*x` works correctly, returning `Poly(x**2, x, domain='ZZ')`\n2. `x*Poly(x)` doesn't evaluate, returning `x*Poly(x, x, domain='ZZ')`\n3. Similar issues with `-2*Poly(x)` vs `S(-2)*Poly(x)`\n\nThis suggests that the `__rmul__` method isn't properly handling multiplication when a non-Poly object is on the left side.\n\nHere are my predictions:\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "sympy__sympy-13757",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.15,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 320.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix an issue where multiplying a Poly object by an expression doesn't evaluate correctly when the Poly is on the right side of the multiplication. This is likely a missing or incorrect `__rmul__` implementation in the Poly class.\n\nLet me start by exploring the codebase to understand the structure and find the relevant files.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 320,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

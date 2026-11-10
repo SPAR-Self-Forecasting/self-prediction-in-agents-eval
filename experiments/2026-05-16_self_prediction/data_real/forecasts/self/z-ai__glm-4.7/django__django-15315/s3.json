@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-15315",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.92,
+      "p_first_attempt_correct": 0.85,
+      "documentation": 0.3,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.1,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze the task and make predictions about my upcoming attempt.\n\nThe task is to fix a bug where `Field.__hash__()` changes value when a field is assigned to a model class, breaking its use in dictionaries. The bug was introduced in PR #31750, and the fix involves reverting the `__hash__` change from that PR while keeping the equality fix.\n\nLooking at the codebase structure and the nature of the bug:\n1. This is a Django ORM issue related to Field hashing\n2. The fix is likely straightforward - reverting a `__hash__` method change\n3. I'll need to find the Field class and understand the previous implementation\n\nHere are my predictions:\n\n```json\n{\n  \"p_solve\": 0.92,\n  \"p_first_attempt_correct\": 0.85,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.1,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-15315",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.3,
+      "defensive_code": 0.2,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 200.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.2,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 200,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  }
+}

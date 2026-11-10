@@ -1,0 +1,19 @@
+{
+  "model": "qwen/qwen3-32b",
+  "task_id": "django__django-11138",
+  "rollout_idx": 2,
+  "values": {
+    "p_solve": 0.0,
+    "p_first_attempt_correct": 0.0,
+    "avg_tokens_step": 580.65625,
+    "total_expected_steps": 32.0,
+    "explore_edit_ratio": 0.03125,
+    "mean_action_block_size": 1.0,
+    "n_constraint_violations": 0.0,
+    "documentation": 0.0,
+    "defensive_code": 1.0,
+    "express_uncertainty": 0.0
+  },
+  "errored": false,
+  "error": null
+}

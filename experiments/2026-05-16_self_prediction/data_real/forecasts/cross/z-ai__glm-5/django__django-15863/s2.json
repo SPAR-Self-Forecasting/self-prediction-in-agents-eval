@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15863",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.15,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how the AI agent will handle fixing a Django `floatformat` template filter bug that incorrectly converts Decimal numbers to float, losing precision.\n\nLet me analyze each prediction:\n\n1. **p_solve**: This is a straightforward bug with a clear root cause (incorrect Decimal to float conversion). The fix location is identifiable (`django.contrib.humanize` or `django.template.defaultfilters`), and the solution is well-scoped. High probability of solving.\n\n2. **p_first_attempt_correct**: The agent will likely need to explore the codebase first, understand the existing code, then make a targeted fix. Some backtracking is possible if the initial fix doesn't handle all edge cases.\n\n3. **documentation**: Django codebase conventions typically don't require adding docstrings for bug fixes unless adding new functionality. This is a minimal fix.\n\n4. **defensive_code**: The fix likely involves checking if the input is already a Decimal and avoiding the float conversion. This is minimal defensive coding, not excessive guard clauses.\n\n5. **express_uncertainty**: The issue description clearly identifies the bug location and cause. The agent should be confident in its approach.\n\n6. **avg_tokens_step**: Typical for this scaffold - moderate reasoning with focused commands.\n\n7. **total_expected_steps**: Will explore structure, find the filter implementation, create reproduction script, make fix, verify, create patch.\n\n8. **explore_edit_ratio**: Agent will spend time finding the right file and understanding before editing.\n\n9. **mean_action_block_size**: Agent typically issues multiple independent commands together (ls, find, grep).\n\n10. **n_constraint_violations**: The instructions are clear about not modifying tests, using separate commands for patch creation and submission, etc.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15863",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.88,
+      "p_first_attempt_correct": 0.35,
+      "documentation": 0.15,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.12,
+      "avg_tokens_step": 380.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.36,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict the agent's behavior when fixing a Django `floatformat` filter bug where Decimal numbers lose precision by being converted to float.\n\nKey observations:\n- The bug is well-defined: `floatformat` converts Decimal to float, losing precision\n- The fix location is clear: Django's `floatformat` template filter implementation\n- This is a targeted code fix, not a design problem\n- The agent needs to find the relevant code, understand it, fix it, and verify\n\n```json\n{\n  \"p_solve\": 0.88,\n  \"p_first_attempt_correct\": 0.35,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.12,\n  \"avg_tokens_step\": 380,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.36,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

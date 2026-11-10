@@ -1,0 +1,19 @@
+{
+  "model": "z-ai/glm-5",
+  "task_id": "pydata__xarray-4356",
+  "rollout_idx": 3,
+  "values": {
+    "p_solve": 1.0,
+    "p_first_attempt_correct": 0.0,
+    "avg_tokens_step": 211.0,
+    "total_expected_steps": 59.0,
+    "explore_edit_ratio": 0.11864406779661017,
+    "mean_action_block_size": 1.0169491525423728,
+    "n_constraint_violations": 0.0,
+    "documentation": 1.0,
+    "defensive_code": 1.0,
+    "express_uncertainty": 1.0
+  },
+  "errored": false,
+  "error": null
+}

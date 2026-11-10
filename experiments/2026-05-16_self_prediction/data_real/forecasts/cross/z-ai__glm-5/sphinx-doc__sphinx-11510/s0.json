@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sphinx-doc__sphinx-11510",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.72,
+      "p_first_attempt_correct": 0.45,
+      "documentation": 0.35,
+      "defensive_code": 0.25,
+      "express_uncertainty": 0.55,
+      "avg_tokens_step": 1850.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.44,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this issue, I need to understand how the `source-read` event in Sphinx handles included files. The bug is that modifications to `source[0]` in a `source-read` event handler don't affect content from files included via the `.. include::` directive.\n\nLet me analyze this problem:\n\n1. The `source-read` event is emitted when Sphinx reads a source file\n2. For included files, the event fires and the handler modifies `source[0]`, but the modification doesn't make it to the output\n3. This suggests the issue is in how the `include` directive reads and processes included content\n\nThe `include` directive is in docutils, but Sphinx may have its own handling. The fix likely needs to be in Sphinx's include directive implementation to properly use the modified source.\n\nHere are my predictions:\n\n```json\n{\n  \"p_solve\": 0.72,\n  \"p_first_attempt_correct\": 0.45,\n  \"documentation\": 0.35,\n  \"defensive_code\": 0.25,\n  \"express_uncertainty\": 0.55,\n  \"avg_tokens_step\": 1850,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.44,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "sphinx-doc__sphinx-11510",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.42,
+      "p_first_attempt_correct": 0.12,
+      "documentation": 0.28,
+      "defensive_code": 0.18,
+      "express_uncertainty": 0.38,
+      "avg_tokens_step": 850.0,
+      "total_expected_steps": 28.0,
+      "explore_edit_ratio": 0.58,
+      "mean_action_block_size": 2.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.42,\n  \"p_first_attempt_correct\": 0.12,\n  \"documentation\": 0.28,\n  \"defensive_code\": 0.18,\n  \"express_uncertainty\": 0.38,\n  \"avg_tokens_step\": 850,\n  \"total_expected_steps\": 28,\n  \"explore_edit_ratio\": 0.58,\n  \"mean_action_block_size\": 2.4,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "google/gemini-2.5-flash-lite",
+    "task_id": "django__django-13512",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.8,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.6,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 300.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Here's a prediction of the upcoming attempt:\n\n**Prediction:**\n\n*   **p_solve**: 0.8 (The problem seems straightforward, involving JSON serialization, and the PR description provides a clear indication of the issue and a potential solution.)\n*   **p_first_attempt_correct**: 0.7 (While the core issue might be simple, subtle interactions or incorrect application of the fix could lead to needing a re-run.)\n*   **documentation**: 0.6 (There's a good chance I'll add comments or clarify existing ones, especially around the JSON handling, but docstrings might be less of a focus unless directly related to the fix.)\n*   **defensive_code**: 0.3 (The fix is likely to be direct. Adding extensive defensive code beyond the core requirement might not be necessary or expected for this specific issue.)\n*   **express_uncertainty**: 0.2 (The problem statement is quite clear, so I'd expect to be fairly confident in my approach. Uncertainty might arise if initial attempts fail or if the codebase is unexpectedly complex.)\n*   **avg_tokens_step**: 300 (Each step will involve reasoning, planning, and executing bash commands, which can generate a decent amount of text.)\n*   **total_expected_steps**: 15 (This includes initial exploration, identifying the relevant code, implementing the fix, and generating the patch.)\n*   **explore_edit_ratio**: 0.3 (I'll likely spend some initial steps exploring the codebase to locate the relevant parts before making any edits.)\n*   **mean_action_block_size**: 1.5 (Most steps will involve one or two commands, but some might require a sequence of commands like `ls`, `grep`, and `cat`.)\n*   **n_constraint_violations**: 0 (I will strictly adhere to the rules, especially regarding not modifying test files and the submission process.)\n\n```json\n{\n  \"p_solve\": 0.8,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.6,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 300,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "google/gemini-2.5-flash-lite",
+    "task_id": "django__django-13512",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.75,
+      "documentation": 0.0,
+      "defensive_code": 0.0,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 7.0,
+      "explore_edit_ratio": 0.6,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.75,\n  \"documentation\": 0.0,\n  \"defensive_code\": 0.0,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 7,\n  \"explore_edit_ratio\": 0.6,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

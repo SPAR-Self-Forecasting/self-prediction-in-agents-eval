@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11163",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.85,
+      "documentation": 0.05,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 9.0,
+      "explore_edit_ratio": 0.55,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI coding agent will handle fixing Django's `model_to_dict()` function where passing an empty list for `fields` should return an empty dict, but currently returns all fields.\n\nThe issue is clearly specified: the condition `if fields and f.name not in fields:` needs to change to `if fields is not None and f.name not in fields:`. This is a straightforward one-line fix in Django's forms utilities.\n\nLet me analyze what the agent will likely do:\n\n1. **p_solve**: Very high - the fix is explicitly stated in the PR description, just needs to find and apply it\n2. **p_first_attempt_correct**: High - the solution is literally given, minimal exploration needed\n3. **documentation**: Low - this is a bug fix with no need for documentation changes\n4. **defensive_code**: Low - the fix itself is already defensive (handling the None vs empty list case)\n5. **express_uncertainty**: Low - the task is clear and solution is provided\n6. **avg_tokens_step**: Moderate - will need to explore, then make the fix\n7. **total_expected_steps**: About 8-10 steps (find file, read it, create test script, edit, verify, submit)\n8. **explore_edit_ratio**: About 0.5 - will explore first to find the file\n9. **mean_action_block_size**: 2-3 - agent will likely combine independent commands\n10. **n_constraint_violations**: 0 - the task is straightforward and rules are clear\n\n```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.85,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 9,\n  \"explore_edit_ratio\": 0.55,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11163",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.85,
+      "documentation": 0.05,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 300.0,
+      "total_expected_steps": 8.0,
+      "explore_edit_ratio": 0.375,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how the AI coding agent will handle fixing Django's `model_to_dict()` function where an empty list of fields should return an empty dict.\n\nThe issue is straightforward: change `if fields and f.name not in fields:` to `if fields is not None and f.name not in fields:` because an empty list `[]` is falsy in Python, causing the condition to be skipped and all fields to be returned.\n\nHere are my predictions:\n\n1. **p_solve**: 0.95 - This is a very simple one-line fix explicitly described in the PR description. The agent should easily find and fix it.\n\n2. **p_first_attempt_correct**: 0.85 - The fix is literally specified in the PR. The agent just needs to find the right file and make the exact change.\n\n3. **documentation**: 0.05 - This is a minimal bug fix with no need for type hints, comments, or docstrings.\n\n4. **defensive_code**: 0.05 - The fix is already specified exactly; no extra validation or guard clauses needed.\n\n5. **express_uncertainty**: 0.10 - The task is extremely clear with the exact fix stated in the PR description.\n\n6. **avg_tokens_step**: 300 - Typical reasoning and command generation for this scaffold type.\n\n7. **total_expected_steps**: 8 - Find file, read file, edit file, create test script, run test, create patch, verify patch, submit.\n\n8. **explore_edit_ratio**: 0.375 - About 3 exploration steps (finding and reading the file) before the first edit.\n\n9. **mean_action_block_size**: 1.5 - Often issues single commands but may combine independent searches.\n\n10. **n_constraint_violations**: 0 - The task is simple enough that the agent should follow all rules correctly.\n\n```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.85,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.10,\n  \"avg_tokens_step\": 300,\n  \"total_expected_steps\": 8,\n  \"explore_edit_ratio\": 0.375,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

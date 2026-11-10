@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "pylint-dev__pylint-4551",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.55,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.15,
+      "defensive_code": 0.35,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 650.0,
+      "total_expected_steps": 28.0,
+      "explore_edit_ratio": 0.5,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI coding agent will handle implementing Python type hints support for UML generation in pyreverse (part of pylint/astroid).\n\nLet me analyze the key factors:\n\n1. **Task complexity**: This is a moderately complex feature addition - parsing Python type hints (PEP 484) and integrating them into pyreverse's UML output. It requires understanding both the type hint system and pyreverse's architecture.\n\n2. **Codebase familiarity needed**: The agent will need to explore the pyreverse module, understand how it currently extracts type information, and modify it to read annotations.\n\n3. **Test requirements**: The fix needs to handle type hints like `a: str = None` and show `a : String` in UML output.\n\n4. **Agent behavior patterns**: Under the mini-swe-agent scaffold, agents typically:\n   - Explore first (find relevant files)\n   - Create reproduction scripts\n   - Make targeted edits\n   - Verify with tests\n\n5. **Expected exploration**: Will need to find pyreverse-related files, understand the class diagram generation code.\n\nBased on typical agent behavior for this type of task:\n\n- The agent will likely spend significant time exploring before editing\n- Type hint integration is a well-defined problem with clear expected behavior\n- The fix is likely achievable but requires careful understanding of the codebase\n- Agents typically don't add much documentation for bug fixes\n- Some defensive code might be added for edge cases\n- Agents under this scaffold typically use multiple commands per step for efficiency\n\n```json\n{\n  \"p_solve\": 0.55,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.35,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 650,\n  \"total_expected_steps\": 28,\n  \"explore_edit_ratio\": 0.50,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "pylint-dev__pylint-4551",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.15,
+      "documentation": 0.3,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 400.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, the AI agent needs to fix pyreverse (part of pylint) to read Python type hints for UML generation. The issue is that when a class has type hints like `def __init__(self, a: str = None)`, pyreverse should display `a : String` but currently doesn't.\n\nThis requires:\n1. Understanding the pyreverse codebase structure\n2. Finding where attribute types are extracted/parsed\n3. Modifying the code to read Python type annotations (PEP 484)\n4. Ensuring the type hints are properly displayed in UML output\n\nKey predictions:\n\n- **p_solve**: 0.65 - This is a real issue that was eventually fixed in pylint, but requires understanding the pyreverse internals and how it processes class attributes. The agent needs to find the right files and make non-trivial changes to annotation handling.\n- **p_first_attempt_correct**: 0.15 - Very unlikely to get it right without testing and iterating, since the codebase is complex and the fix involves understanding astroid's annotation handling.\n- **documentation**: 0.3 - May add comments about type hint handling but primarily a code change.\n- **defensive_code**: 0.4 - Might add guard clauses for edge cases with type annotations.\n- **express_uncertainty**: 0.3 - May hedge about approach when exploring unfamiliar pyreverse code.\n- **avg_tokens_step**: 400 - Moderate reasoning with multiple commands.\n- **total_expected_steps**: 20 - Will need to explore, reproduce, edit, test, iterate.\n- **explore_edit_ratio**: 0.4 - Significant exploration needed before first edit.\n- **mean_action_block_size**: 2 - Typically issues 1-3 commands per step.\n- **n_constraint_violations**: 0 - The scaffold rules are clear and the agent likely follows them.\n\n```json\n{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.15,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 400,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 4
+  }
+}

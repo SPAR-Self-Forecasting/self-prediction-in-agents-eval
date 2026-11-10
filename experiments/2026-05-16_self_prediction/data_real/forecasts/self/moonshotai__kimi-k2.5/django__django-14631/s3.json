@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-14631",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.5,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 200.0,
+      "total_expected_steps": 25.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.5,\n  \"defensive_code\": 0.1,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 200,\n  \"total_expected_steps\": 25,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-14631",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.65,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.3,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 200.0,
+      "total_expected_steps": 50.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this Django issue, I need to refactor `BaseForm._clean_fields()` and `BaseForm.changed_data` to access values through `BoundField` objects rather than directly. This involves:\n\n1. Understanding the current implementation of `BaseForm._clean_fields()`, `changed_data`, and `BoundField`\n2. Moving per-field logic of `changed_data` into a new `BoundField._did_change()` method\n3. Making similar changes to `_clean_fields()`\n4. Ensuring consistency with `form[name].initial`\n\nThis is a moderate-complexity refactoring task requiring understanding Django's form internals.\n\n```json\n{\n  \"p_solve\": 0.65,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.30,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.40,\n  \"avg_tokens_step\": 200,\n  \"total_expected_steps\": 50,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

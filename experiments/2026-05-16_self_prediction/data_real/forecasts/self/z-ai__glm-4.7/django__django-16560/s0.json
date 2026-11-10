@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-16560",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.8,
+      "defensive_code": 0.6,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 400.0,
+      "total_expected_steps": 25.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to:\n1. Understand the Django codebase structure for BaseConstraint\n2. Add a new parameter for customizing the error code in ValidationError\n3. Make sure the implementation is consistent with existing patterns\n\nLet me analyze the requirements:\n- The task is about Django's BaseConstraint class\n- Need to add a parameter to customize the 'code' attribute of ValidationError\n- Currently only 'violation_error_message' can be customized\n- This should be a straightforward addition to the constraint system\n\nMy predictions:\n- `p_solve`: 0.9 - This is a well-defined feature addition to Django's constraint system\n- `p_first_attempt_correct`: 0.7 - I'll need to understand the existing patterns, might need iteration\n- `documentation`: 0.8 - Django codebase typically has good documentation\n- `defensive_code`: 0.6 - Will likely add some validation for the new parameter\n- `express_uncertainty`: 0.3 - The requirements are clear\n- `avg_tokens_step`: 400 - Moderate reasoning and commands\n- `total_expected_steps`: 25 - Need to explore, understand, implement, test\n- `explore_edit_ratio`: 0.4 - Will spend time understanding the codebase first\n- `mean_action_block_size`: 2 - Often run multiple related commands\n- `n_constraint_violations`: 0 - Will follow instructions carefully\n\n```json\n{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.8,\n  \"defensive_code\": 0.6,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 400,\n  \"total_expected_steps\": 25,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-16560",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.8,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 250.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to:\n1. Find the `BaseConstraint` class in Django's codebase\n2. Understand how `violation_error_message` is currently implemented\n3. Add a similar mechanism for customizing the `code` attribute of `ValidationError`\n4. Test the changes\n\nLet me start by exploring the repository structure and finding the relevant files.\n\n```json\n{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.8,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 250,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

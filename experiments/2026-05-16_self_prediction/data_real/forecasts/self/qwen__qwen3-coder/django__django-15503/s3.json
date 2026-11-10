@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "django__django-15503",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.3,
+      "defensive_code": 0.6,
+      "express_uncertainty": 0.7,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 25.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.3,\n  \"defensive_code\": 0.6,\n  \"express_uncertainty\": 0.7,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 25,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "django__django-15503",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.7,
+      "defensive_code": 0.6,
+      "express_uncertainty": 0.5,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 25.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 1.8,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "I'll predict the 10 aspects of my upcoming attempt to fix this Django JSONField lookup issue:\n\n1. **p_solve**: 0.85 - I expect a high probability of solving this because it's a well-defined database lookup issue, and I can examine the Django source code to understand how JSONField lookups are implemented across different database backends.\n\n2. **p_first_attempt_correct**: 0.4 - This is lower because database backend issues often require iterative testing and debugging. I'll likely need to examine how different databases handle numeric keys in JSON queries and adjust the implementation accordingly.\n\n3. **documentation**: 0.7 - I expect to add some comments or docstrings to explain the fix, especially if it involves database-specific handling of numeric keys that might not be immediately obvious to other developers.\n\n4. **defensive_code**: 0.6 - I may add some validation or guard clauses to ensure numeric keys are properly handled across different database backends, particularly for edge cases.\n\n5. **express_uncertainty**: 0.5 - Given that this involves database-specific behavior and I'll need to understand how each backend (SQLite, MySQL, Oracle) handles JSON path expressions, I expect to express some uncertainty during my analysis.\n\n6. **avg_tokens_step**: 150 - My reasoning steps will likely be moderately detailed as I analyze code, debug issues, and implement fixes, with each step containing substantial explanation.\n\n7. **total_expected_steps**: 25 - I expect to take around 25 steps including: exploring the codebase (5), reproducing the issue (5), implementing the fix (8), testing (5), and creating/submitting the patch (2).\n\n8. **explore_edit_ratio**: 0.4 - I'll spend about 40% of my time exploring the codebase and understanding the problem before making any edits, as this is a complex issue involving multiple database backends.\n\n9. **mean_action_block_size**: 1.8 - I'll typically run 1-3 commands per step, sometimes running multiple related commands to search files or test different aspects of the issue.\n\n10. **n_constraint_violations**: 0 - I'll carefully follow all the rules: not editing test files, not using interactive editors, not committing changes, and separating patch creation from submission.\n\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.6,\n  \"express_uncertainty\": 0.5,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 25,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 1.8,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  }
+}

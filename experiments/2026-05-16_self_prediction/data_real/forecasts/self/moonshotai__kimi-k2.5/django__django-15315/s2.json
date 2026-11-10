@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15315",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.9,
+      "p_first_attempt_correct": 0.7,
+      "documentation": 0.1,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 170.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.3,
+      "mean_action_block_size": 1.25,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.9,\n  \"p_first_attempt_correct\": 0.7,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 170,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.3,\n  \"mean_action_block_size\": 1.25,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15315",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.25,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 185.0,
+      "total_expected_steps": 18.0,
+      "explore_edit_ratio": 0.44,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this Django bug, I need to predict my behavior fixing a `Field.__hash__()` immutability issue. The bug is that a field's hash changes when assigned to a model class, breaking dict usage.\n\n**Analysis:**\n- This is a focused bug fix in Django's model fields\n- The fix involves making `__hash__()` stable (likely reverting a change from issue #31750)\n- The codebase is Django, so fields are likely in `django/db/models/fields/`\n- I need to find where `Field.__hash__` is implemented and make it use immutable attributes (like `id(self)` or creation-time properties)\n\n**Predictions:**\n\n1. **p_solve: 0.85** - The fix is conceptually simple (stable hashing), but Django is large and I need to find the right location and ensure I don't break existing functionality.\n\n2. **p_first_attempt_correct: 0.6** - I might need to iterate once to get the hash implementation right or verify I haven't broken equality contracts.\n\n3. **documentation: 0.25** - I might add a comment explaining why the hash must be stable, but unlikely to add full docstrings for a bug fix.\n\n4. **defensive_code: 0.15** - This is a targeted fix; unlikely to add guard clauses beyond the minimal hash implementation change.\n\n5. **express_uncertainty: 0.35** - I'll likely express some uncertainty while exploring the Django codebase structure and understanding what #31750 changed.\n\n6. **avg_tokens_step: 185** - Typical for code exploration and editing: reasoning text plus 1-3 bash commands.\n\n7. **total_expected_steps: 18** - Breakdown: 7 steps exploring/finding the Field class, 2 steps understanding __hash__ implementation, 2 steps creating/running reproduce script, 2 steps implementing fix, 3 steps testing, 2 steps creating/submitting patch.\n\n8. **explore_edit_ratio: 0.44** - About 8 steps exploring before first edit out of 18 total.\n\n9. **mean_action_block_size: 2.0** - Average of 2 bash commands per step (often `find`+`grep`, or `cat`+multiple pipes).\n\n10. **n_constraint_violations: 0** - I follow rules carefully; will avoid interactive editors, test modifications, and premature submissions.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 185,\n  \"total_expected_steps\": 18,\n  \"explore_edit_ratio\": 0.44,\n  \"mean_action_block_size\": 2.0,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

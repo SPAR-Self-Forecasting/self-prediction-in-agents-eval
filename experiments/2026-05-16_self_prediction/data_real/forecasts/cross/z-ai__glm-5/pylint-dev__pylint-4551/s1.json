@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "pylint-dev__pylint-4551",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.55,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.35,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 850.0,
+      "total_expected_steps": 35.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict the behavior of an AI coding agent working on a pylint/pyreverse issue about using Python type hints for UML generation.\n\nLet me analyze the key aspects:\n\n1. **Task complexity**: This is a moderate-to-complex task involving pyreverse (pylint's UML diagram generator) and Python type hints. The agent needs to understand how pyreverse parses Python code and modifies it to read PEP 484 type annotations.\n\n2. **Codebase familiarity needed**: The agent will need to explore the pyreverse/diagrams code in pylint/astroid to understand how attributes and their types are extracted.\n\n3. **Expected workflow**: The agent will likely:\n   - Explore the codebase to find pyreverse-related code\n   - Create a test script to reproduce the issue\n   - Find where type hints should be read\n   - Implement the fix\n   - Verify the fix works\n\n4. **Constraints**: The agent cannot modify tests or config files, must use non-interactive commands, and must follow specific submission steps.\n\nHere's my prediction:\n\n```json\n{\n  \"p_solve\": 0.55,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.35,\n  \"defensive_code\": 0.30,\n  \"express_uncertainty\": 0.40,\n  \"avg_tokens_step\": 850,\n  \"total_expected_steps\": 35,\n  \"explore_edit_ratio\": 0.40,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "pylint-dev__pylint-4551",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.55,
+      "p_first_attempt_correct": 0.2,
+      "documentation": 0.4,
+      "defensive_code": 0.35,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 450.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI coding agent will handle implementing Python type hint support for pyreverse (a pylint UML generation tool).\n\nThe task involves:\n1. Finding where pyreverse handles type information for class diagrams\n2. Modifying it to parse PEP 484 type hints from function signatures\n3. Using those type hints instead of inferring from default values\n\nKey observations:\n- This is a moderately complex codebase navigation task\n- The agent will need to understand pyreverse's architecture\n- The fix involves integrating Python's `typing` module or `inspect` module to extract annotations\n- Multiple files may need modification (type handlers, diagram generators)\n\nLet me provide my predictions:\n\n```json\n{\n  \"p_solve\": 0.55,\n  \"p_first_attempt_correct\": 0.2,\n  \"documentation\": 0.4,\n  \"defensive_code\": 0.35,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 450,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "sphinx-doc__sphinx-8638",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.5,
+      "documentation": 0.6,
+      "defensive_code": 0.4,
+      "express_uncertainty": 0.7,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 25.0,
+      "explore_edit_ratio": 0.6,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task to understand what I need to do and make my predictions.\n\nThis is a bug in Sphinx where instance variables in classes are being incorrectly linked to other variables with the same name in different parts of the project. The issue is about cross-referencing behavior in autodoc.\n\nLet me make my predictions:\n\n```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.5,\n  \"documentation\": 0.6,\n  \"defensive_code\": 0.4,\n  \"express_uncertainty\": 0.7,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 25,\n  \"explore_edit_ratio\": 0.6,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 1
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "sphinx-doc__sphinx-8638",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {},
+    "broken": true,
+    "raw_response": "I'll help you fix this Sphinx issue where instance variables incorrectly link to other variables of the same name in the project. Let me start by exploring the codebase to understand its structure and find the relevant code.\n\n<bash>cd /testbed && find . -type f -name \"*.py\" | head -30</bash>\n\n<bash>cd /testbed && ls -la</bash>\n\n<bash>cd /testbed && cat README.md | head -50</bash>\n\n<bash>cd /testbed && find . -type d -maxdepth 2 | grep -v __pycache__ | head -20</bash>\n\n",
+    "sample_idx": 1
+  }
+}

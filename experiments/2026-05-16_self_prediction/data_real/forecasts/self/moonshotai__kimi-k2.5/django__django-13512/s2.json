@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-13512",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.75,
+      "documentation": 0.15,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.25,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.75,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.25,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 2
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-13512",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.82,
+      "p_first_attempt_correct": 0.68,
+      "documentation": 0.2,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 125.0,
+      "total_expected_steps": 9.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 1.3,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix a Django issue where JSONField in the admin interface displays Unicode characters (like Chinese) as ASCII escape sequences instead of the actual characters. This happens because `json.dumps()` uses `ensure_ascii=True` by default.\n\nLet me analyze my likely approach and predict the outcomes:\n\n1. **Understanding the fix**: The solution is likely to find where Django serializes JSON for admin display and add `ensure_ascii=False` to the `json.dumps()` call.\n\n2. **Exploration phase**: I'll need to locate the JSONField form field or widget code in Django's codebase, probably in `django/contrib/postgres/forms` or `django/forms/fields.py` or similar.\n\n3. **Implementation**: This should be a minimal one-line or few-line change.\n\n4. **Testing**: I'll create a reproduction script to verify the issue and the fix.\n\nMy predictions:\n\n- **p_solve**: 0.82 - This is a straightforward bug fix with a clear solution, but finding the exact location in Django's large codebase might be tricky.\n- **p_first_attempt_correct**: 0.68 - I might need to explore a bit to find the right file, but once found, the fix is simple and likely correct on first try.\n- **documentation**: 0.20 - I might add a brief comment explaining why `ensure_ascii=False` is used, but probably won't add docstrings.\n- **defensive_code**: 0.05 - This is a minimal fix; no guard clauses needed.\n- **express_uncertainty**: 0.40 - I may express uncertainty while searching for the right file location.\n- **avg_tokens_step**: 125 - Typical exploration and editing steps.\n- **total_expected_steps**: 9 - Explore (2), find file (1), read code (1), reproduce (1), fix (1), verify (1), patch (1), submit (1).\n- **explore_edit_ratio**: 0.33 - About 3 steps exploring before the first edit.\n- **mean_action_block_size**: 1.3 - Sometimes running multiple grep/find commands, usually single commands.\n- **n_constraint_violations**: 0 - I'm careful about not modifying tests or using interactive editors.\n\n```json\n{\n  \"p_solve\": 0.82,\n  \"p_first_attempt_correct\": 0.68,\n  \"documentation\": 0.20,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.40,\n  \"avg_tokens_step\": 125,\n  \"total_expected_steps\": 9,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 1.3,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 2
+  }
+}

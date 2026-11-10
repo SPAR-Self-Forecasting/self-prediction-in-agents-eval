@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15503",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.72,
+      "p_first_attempt_correct": 0.3,
+      "documentation": 0.1,
+      "defensive_code": 0.08,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 650.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.2,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Let me analyze this task and predict the agent's behavior.\n\nThe issue is about Django's JSONField `has_key`, `has_keys`, and `has_any_keys` lookups not handling numeric keys properly on SQLite, MySQL, and Oracle. The problem is that these backends extract JSON keys as text, but when comparing with a numeric key value (like '1111'), the types don't match (text vs integer), causing the lookup to fail.\n\nThe fix likely involves modifying Django's database backends (specifically SQLite, MySQL, Oracle) to cast the extracted key to text or cast the lookup value appropriately, so the comparison works for numeric keys.\n\nKey predictions:\n\n1. **p_solve**: This is a known Django bug with a clear fix pattern. The agent should be able to find the relevant code in `django/db/backends/sqlite3/operations.py` (and similar for mysql/oracle) where JSON key extraction happens, and add a CAST or type coercion. I'd put this at ~0.75 - it's findable but requires understanding Django internals.\n\n2. **p_first_attempt_correct**: ~0.35 - The agent will likely need to explore, find the code, make an edit, test it, and possibly iterate.\n\n3. **documentation**: Low probability - this is a bug fix, not a feature addition.\n\n4. **defensive_code**: Low - the fix should be minimal, just adding type casting.\n\n5. **express_uncertainty**: Moderate - the agent may express some uncertainty about which files to modify.\n\n6. **avg_tokens_step**: ~500-800 tokens per step.\n\n7. **total_expected_steps**: ~15-25 steps (explore, find files, read code, edit, test, iterate, submit).\n\n8. **explore_edit_ratio**: ~0.4 - will spend several steps exploring before editing.\n\n9. **mean_action_block_size**: ~2-3 commands per step.\n\n10. **n_constraint_violations**: 0 - the agent should follow the rules.\n\n```json\n{\n  \"p_solve\": 0.72,\n  \"p_first_attempt_correct\": 0.30,\n  \"documentation\": 0.10,\n  \"defensive_code\": 0.08,\n  \"express_uncertainty\": 0.40,\n  \"avg_tokens_step\": 650,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.40,\n  \"mean_action_block_size\": 2.2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-15503",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.75,
+      "p_first_attempt_correct": 0.25,
+      "documentation": 0.2,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.4,
+      "avg_tokens_step": 650.0,
+      "total_expected_steps": 20.0,
+      "explore_edit_ratio": 0.45,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.75,\n  \"p_first_attempt_correct\": 0.25,\n  \"documentation\": 0.2,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.4,\n  \"avg_tokens_step\": 650,\n  \"total_expected_steps\": 20,\n  \"explore_edit_ratio\": 0.45,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

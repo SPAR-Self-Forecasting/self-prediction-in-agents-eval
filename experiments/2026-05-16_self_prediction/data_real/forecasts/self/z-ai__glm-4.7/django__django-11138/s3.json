@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-11138",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.4,
+      "defensive_code": 0.3,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 180.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to:\n\n1. Understand the issue: The `TIME_ZONE` setting in DATABASES is not being used when making dates timezone-aware on MySQL, SQLite, and Oracle backends\n2. Find the relevant code in the Django codebase\n3. Fix the issue so that the database-specific TIME_ZONE is respected\n\nLet me start by exploring the codebase structure and finding the relevant files.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.4,\n  \"defensive_code\": 0.3,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 180,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "z-ai/glm-4.7",
+    "task_id": "django__django-11138",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.4,
+      "defensive_code": 0.5,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 300.0,
+      "total_expected_steps": 22.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.0,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix an issue where Django's database backends (MySQL, SQLite, Oracle) don't use the TIME_ZONE setting from DATABASES configuration when making dates timezone-aware. Let me start by exploring the codebase.\n\n```json\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.4,\n  \"defensive_code\": 0.5,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 300,\n  \"total_expected_steps\": 22,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

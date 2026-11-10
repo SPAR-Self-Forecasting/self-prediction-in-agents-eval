@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15916",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.35,
+      "defensive_code": 0.15,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 175.0,
+      "total_expected_steps": 12.0,
+      "explore_edit_ratio": 0.25,
+      "mean_action_block_size": 1.4,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.35,\n  \"defensive_code\": 0.15,\n  \"express_uncertainty\": 0.10,\n  \"avg_tokens_step\": 175,\n  \"total_expected_steps\": 12,\n  \"explore_edit_ratio\": 0.25,\n  \"mean_action_block_size\": 1.4,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-15916",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.65,
+      "documentation": 0.15,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 280.0,
+      "total_expected_steps": 14.0,
+      "explore_edit_ratio": 0.29,
+      "mean_action_block_size": 1.7,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to fix Django's `modelform_factory` function to respect `formfield_callback` specified in a ModelForm's Meta class when no explicit callback is provided to the factory.\n\nLet me analyze what this involves:\n1. Finding the `modelform_factory` function (likely in `django/forms/models.py`)\n2. Understanding how it currently handles the `formfield_callback` parameter\n3. Modifying it to check the base form's Meta class for a `formfield_callback` when none is explicitly provided\n4. Creating a reproduction script and verifying the fix\n\nThis is a well-defined bug fix with a clear expected behavior. The fix should be minimal and targeted.\n\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.65,\n  \"documentation\": 0.15,\n  \"defensive_code\": 0.10,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 280,\n  \"total_expected_steps\": 14,\n  \"explore_edit_ratio\": 0.29,\n  \"mean_action_block_size\": 1.7,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  }
+}

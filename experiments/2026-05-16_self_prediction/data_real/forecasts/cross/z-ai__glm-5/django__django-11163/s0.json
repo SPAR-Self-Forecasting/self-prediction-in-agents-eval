@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11163",
+    "condition": "no_thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.98,
+      "p_first_attempt_correct": 0.85,
+      "documentation": 0.05,
+      "defensive_code": 0.02,
+      "express_uncertainty": 0.1,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 7.0,
+      "explore_edit_ratio": 0.43,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "```json\n{\n  \"p_solve\": 0.98,\n  \"p_first_attempt_correct\": 0.85,\n  \"documentation\": 0.05,\n  \"defensive_code\": 0.02,\n  \"express_uncertainty\": 0.1,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 7,\n  \"explore_edit_ratio\": 0.43,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "z-ai/glm-5",
+    "task_id": "django__django-11163",
+    "condition": "thinking",
+    "kind": "cross",
+    "predictions": {
+      "p_solve": 0.95,
+      "p_first_attempt_correct": 0.85,
+      "documentation": 0.1,
+      "defensive_code": 0.05,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 400.0,
+      "total_expected_steps": 10.0,
+      "explore_edit_ratio": 0.35,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Looking at this task, I need to predict how an AI coding agent will handle fixing a Django bug where `model_to_dict()` returns all fields instead of an empty dict when called with `fields=[]`. The fix is explicitly stated in the PR: change `if fields and f.name not in fields:` to `if fields is not None and f.name not in fields:`.\n\nThis is a straightforward, well-specified one-line fix where the PR description literally tells the agent exactly what to change. Let me predict the agent's behavior:\n\n1. **p_solve**: Very high - the fix is explicitly stated and is a simple one-line change\n2. **p_first_attempt_correct**: High - the exact fix is given, unlikely to need backtracking\n3. **documentation**: Low - minimal change doesn't warrant doc additions\n4. **defensive_code**: Very low - the fix is precise, no room for extra guards\n5. **express_uncertainty**: Low-moderate - might express some uncertainty about locating the file\n6. **avg_tokens_step**: Moderate - typical shell commands with reasoning\n7. **total_expected_steps**: ~10 steps (find file, read, reproduce, edit, test, patch, submit)\n8. **explore_edit_ratio**: ~0.35 (3-4 exploration steps before first edit)\n9. **mean_action_block_size**: ~1.5 (usually 1-2 commands per step)\n10. **n_constraint_violations**: 0 - rules are clear and simple to follow\n\n```json\n{\n  \"p_solve\": 0.95,\n  \"p_first_attempt_correct\": 0.85,\n  \"documentation\": 0.1,\n  \"defensive_code\": 0.05,\n  \"express_uncertainty\": 0.2,\n  \"avg_tokens_step\": 400,\n  \"total_expected_steps\": 10,\n  \"explore_edit_ratio\": 0.35,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 0
+  }
+}

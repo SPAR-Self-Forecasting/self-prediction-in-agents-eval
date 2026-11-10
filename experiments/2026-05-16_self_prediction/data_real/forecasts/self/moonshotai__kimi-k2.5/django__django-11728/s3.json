@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11728",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.55,
+      "documentation": 0.3,
+      "defensive_code": 0.1,
+      "express_uncertainty": 0.2,
+      "avg_tokens_step": 135.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.33,
+      "mean_action_block_size": 1.6,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.55,\n  \"documentation\": 0.30,\n  \"defensive_code\": 0.10,\n  \"express_uncertainty\": 0.20,\n  \"avg_tokens_step\": 135,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.33,\n  \"mean_action_block_size\": 1.6,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 3
+  },
+  "thinking": {
+    "model": "moonshotai/kimi-k2.5",
+    "task_id": "django__django-11728",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.78,
+      "p_first_attempt_correct": 0.32,
+      "documentation": 0.25,
+      "defensive_code": 0.08,
+      "express_uncertainty": 0.35,
+      "avg_tokens_step": 620.0,
+      "total_expected_steps": 24.0,
+      "explore_edit_ratio": 0.28,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "Based on my analysis of this Django REST Framework regex bug fix task, here are my predictions:\n\n```json\n{\n  \"p_solve\": 0.78,\n  \"p_first_attempt_correct\": 0.32,\n  \"documentation\": 0.25,\n  \"defensive_code\": 0.08,\n  \"express_uncertainty\": 0.35,\n  \"avg_tokens_step\": 620,\n  \"total_expected_steps\": 24,\n  \"explore_edit_ratio\": 0.28,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}\n```",
+    "sample_idx": 3
+  }
+}

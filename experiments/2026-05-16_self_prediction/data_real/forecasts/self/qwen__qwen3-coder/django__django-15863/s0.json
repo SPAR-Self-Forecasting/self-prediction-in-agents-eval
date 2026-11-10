@@ -1,0 +1,44 @@
+{
+  "no_thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "django__django-15863",
+    "condition": "no_thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.6,
+      "documentation": 0.7,
+      "defensive_code": 0.5,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 150.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.4,
+      "mean_action_block_size": 2.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.6,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.5,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 150,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.4,\n  \"mean_action_block_size\": 2.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 0
+  },
+  "thinking": {
+    "model": "qwen/qwen3-coder",
+    "task_id": "django__django-15863",
+    "condition": "thinking",
+    "kind": "self",
+    "predictions": {
+      "p_solve": 0.85,
+      "p_first_attempt_correct": 0.4,
+      "documentation": 0.7,
+      "defensive_code": 0.6,
+      "express_uncertainty": 0.3,
+      "avg_tokens_step": 350.0,
+      "total_expected_steps": 15.0,
+      "explore_edit_ratio": 0.6,
+      "mean_action_block_size": 1.5,
+      "n_constraint_violations": 0.0
+    },
+    "broken": false,
+    "raw_response": "I'll predict 10 things about my upcoming attempt to fix the Django floatformat precision issue with Decimal numbers.\n\nLet me analyze this step by step:\n\n1. **p_solve**: The issue is well-defined and I can trace it to the floatformat implementation incorrectly converting Decimal to float. This should be solvable by modifying the conversion logic to preserve Decimal precision. I estimate 0.85 probability.\n\n2. **p_first_attempt_correct**: Since I need to first understand the codebase and reproduce the issue, I'll likely need to explore and iterate. The fix involves careful handling of Decimal vs float conversion. I estimate 0.4 probability.\n\n3. **documentation**: Looking at Django's coding standards, they typically include docstrings and comments for clarity, especially around numeric handling. I'll likely add clarifying comments. I estimate 0.7 probability.\n\n4. **defensive_code**: Given this involves numeric precision, I should add validation to ensure we're handling edge cases properly (like very large decimals, NaN values, etc.). I estimate 0.6 probability.\n\n5. **express_uncertainty**: This is a precise technical issue with clear reproduction steps, so I should be confident in my approach once I understand the codebase. However, I might need to explore different approaches. I estimate 0.3 probability.\n\n6. **avg_tokens_step**: Each step will involve reasoning, command execution, and response, likely averaging around 300-400 tokens per step. I estimate 350 tokens.\n\n7. **total_expected_steps**: I need to: find relevant files (2-3 steps), reproduce issue (2-3 steps), understand implementation (2-3 steps), fix code (1-2 steps), verify fix (2-3 steps), create patch (1-2 steps). Total ~15 steps.\n\n8. **explore_edit_ratio**: Before editing, I'll need to explore the codebase significantly - finding files, reading code, reproducing the issue. I estimate about 60% of steps will be exploration before first edit.\n\n9. **mean_action_block_size**: I'll typically run 1-2 commands per step (like grep/find followed by cat/less), averaging around 1.5 commands per step.\n\n10. **n_constraint_violations**: The task has strict rules about not modifying test files, using interactive editors, etc. I should be able to follow all rules carefully. I estimate 0 violations.\n\n{\n  \"p_solve\": 0.85,\n  \"p_first_attempt_correct\": 0.4,\n  \"documentation\": 0.7,\n  \"defensive_code\": 0.6,\n  \"express_uncertainty\": 0.3,\n  \"avg_tokens_step\": 350,\n  \"total_expected_steps\": 15,\n  \"explore_edit_ratio\": 0.6,\n  \"mean_action_block_size\": 1.5,\n  \"n_constraint_violations\": 0\n}",
+    "sample_idx": 0
+  }
+}
